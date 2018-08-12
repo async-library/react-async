@@ -148,3 +148,67 @@ const updateAttendance = attend => fetch(...).then(() => attend, () => !attend)
   )}
 </Async>
 ```
+
+## Helper components
+
+`Async` provides several helper components that make your JSX even more declarative.
+They don't have to be direct children of `<Async>` and you can use the same component several times.
+
+### `<Async.Loading>`
+
+Renders only while the promise is still pending.
+
+#### Props
+
+- `initial` {boolean} Show only on initial load (data is undefined)
+- `children` {Function|Node} Function which receives props object or React node
+
+#### Examples
+
+```js
+<Async.Loading initial>
+  <p>This text is only rendered while performing the initial load.</p>
+</Async.Loading>
+```
+
+```js
+<Async.Loading>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Loading>
+```
+
+### `<Async.Resolved>`
+
+Renders only when the promise is resolved.
+
+#### Props
+
+- `persist` {boolean} Show old data while loading new data. By default it hides as soon as a new promise starts.
+- `children` {Function|Node} Render function which receives data and props object or just a plain React node.
+
+#### Examples
+
+```js
+<Async.Resolved persist>{({ data }) => <pre>{JSON.stringify(data)}</pre>}</Async.Resolved>
+```
+
+```js
+<Async.Resolved>{({ finishedAt }) => `Last updated ${startedAt.toISOString()}`}</Async.Resolved>
+```
+
+### `<Async.Rejected>`
+
+Renders only when the promise is rejected.
+
+#### Props
+
+- `persist` {boolean} Show old error while loading new data. By default it hides as soon as a new promise starts.
+- `children` {Function|Node} Render function which receives error and props object or just a plain React node.
+
+#### Examples
+
+```js
+<Async.Rejected persist>Oops.</Async.Rejected>
+```
+
+```js
+<Async.Rejected>{({ error }) => `Unexpected error: ${error.message}`}</Async.Rejected>
+```
