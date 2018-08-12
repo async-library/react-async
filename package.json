@@ -1,0 +1,31 @@
+{
+  "name": "react-async",
+  "version": "3.0.0",
+  "description": "React component for declarative promise resolution and data fetching",
+  "keywords": [
+    "react",
+    "async",
+    "promise",
+    "loader"
+  ],
+  "author": "Gert Hengeveld <info@ghengeveld.nl>",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-flow": "6.23.0",
+    "babel-preset-react": "6.24.1",
+    "babel-preset-stage-2": "6.24.1",
+    "jest": "23.5.0",
+    "jest-dom": "1.12.0",
+    "react": "16.4.2",
+    "react-dom": "16.4.2",
+    "react-testing-library": "5.0.0"
+  }
+}
