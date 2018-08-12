@@ -1,4 +1,4 @@
-# <Async>
+# `<Async>`
 
 React component for declarative promise resolution and data fetching. Uses render props for full flexibility or React context
 for convenience. Makes it easy to handle loading and error states, without assumptions about the shape of your data or the type of request. Supports optimistic updates.
