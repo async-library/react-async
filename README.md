@@ -1,8 +1,7 @@
-# react-async
+# <Async>
 
-React component for declarative promise resolution and data fetching. Uses render props for full flexibility or Context
-for convenience. Makes no assumptions about the shape of your data, the type of request or how you deal with loading
-states and errors. Supports optimistic updates.
+React component for declarative promise resolution and data fetching. Uses render props for full flexibility or React context
+for convenience. Makes it easy to handle loading and error states, without assumptions about the shape of your data or the type of request. Supports optimistic updates.
 
 ## Install
 
@@ -68,26 +67,26 @@ const MyComponent = () => {
 
 `<Async>` takes the following properties:
 
-- `promiseFn` [() => Promise] A function that returns a promise; invoked immediately in `componentDidMount` and without arguments
-- `deferFn` [() => Promise] A function that returns a promise; invoked only by calling `run`, with arguments being passed through
-- `watch` [any] Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
-- `onResolve` [Function] Callback function invoked when a promise resolves, receives data as argument
-- `onReject` [Function] Callback function invoked when a promise rejects, receives error as argument
+- `promiseFn` {() => Promise} A function that returns a promise; invoked immediately in `componentDidMount` and without arguments
+- `deferFn` {() => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through
+- `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
+- `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
+- `onReject` {Function} Callback function invoked when a promise rejects, receives error as argument
 
 ### Render props
 
 `<Async>` provides the following render props:
 
-- `data` [any] last resolved promise value, maintained when new error arrives
-- `error` [Error] rejected promise reason, cleared when new data arrives
-- `isLoading` [boolean] `true` while a promise is pending
-- `startedAt` [Date] when the current/last promise was started
-- `finishedAt` [Date] when the last promise was resolved or rejected
-- `cancel` [Function] ignores the result of the currently pending promise
-- `run` [Function] runs the `deferFn`, passing any arguments provided
-- `reload` [Function] re-runs the promise when invoked, using the previous arguments
-- `setData` [Function] sets `data` to the passed value, unsets `error` and cancels any pending promise
-- `setError` [Function] sets `error` to the passed value and cancels any pending promise
+- `data` {any} last resolved promise value, maintained when new error arrives
+- `error` {Error} rejected promise reason, cleared when new data arrives
+- `isLoading` {boolean} `true` while a promise is pending
+- `startedAt` {Date} when the current/last promise was started
+- `finishedAt` {Date} when the last promise was resolved or rejected
+- `cancel` {Function} ignores the result of the currently pending promise
+- `run` {Function} runs the `deferFn`, passing any arguments provided
+- `reload` {Function} re-runs the promise when invoked, using the previous arguments
+- `setData` {Function} sets `data` to the passed value, unsets `error` and cancels any pending promise
+- `setError` {Function} sets `error` to the passed value and cancels any pending promise
 
 ## Examples
 
