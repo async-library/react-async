@@ -1,6 +1,7 @@
 # `<Async>`
 
-[![npm version](https://badge.fury.io/js/react-async.svg)](https://www.npmjs.com/package/react-async)
+[![npm version](https://img.shields.io/npm/v/react-async.svg?style=flat)](https://www.npmjs.com/package/react-async)
+[![npm downloads](https://img.shields.io/npm/dm/react-async.svg?style=flat)](https://www.npmjs.com/package/react-async)
 [![install size](https://packagephobia.now.sh/badge?p=react-async)](https://packagephobia.now.sh/result?p=react-async)
 
 React component for declarative promise resolution and data fetching. Leverages the Render Props pattern for ultimate
