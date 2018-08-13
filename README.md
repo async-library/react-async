@@ -3,17 +3,11 @@
 React component for declarative promise resolution and data fetching. Uses render props for full flexibility or React context
 for convenience. Makes it easy to handle loading and error states, without assumptions about the shape of your data or the type of request. Supports optimistic updates.
 
-## Install
-
-`npm install --save react-async`
-
 ## Usage
 
 Using render props for ultimate flexibility:
 
 ```js
-import Async from "react-async"
-
 const loadJson = () => fetch("/some/url").then(res => res.json())
 
 const MyComponent = () => {
@@ -39,8 +33,6 @@ const MyComponent = () => {
 Using helper components (don't have to be direct children) for ease of use:
 
 ```js
-import Async from "react-async"
-
 const loadJson = () => fetch("/some/url").then(res => res.json())
 
 const MyComponent = () => {
@@ -151,7 +143,7 @@ const updateAttendance = attend => fetch(...).then(() => attend, () => !attend)
 
 ## Helper components
 
-`Async` provides several helper components that make your JSX even more declarative.
+`<Async>` provides several helper components that make your JSX even more declarative.
 They don't have to be direct children of `<Async>` and you can use the same component several times.
 
 ### `<Async.Loading>`
