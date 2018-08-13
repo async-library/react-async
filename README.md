@@ -9,6 +9,7 @@ assumptions about the shape of your data or the type of request.
 - Works with any (native) promise
 - Choose between Render Props and Context-based helper components
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
+- Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` prop
 - Accepts `onResolved` and `onRejected` callbacks
 - Supports optimistic updates using `setData`
