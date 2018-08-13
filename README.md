@@ -1,8 +1,11 @@
 # `<Async>`
 
-[![npm version](https://img.shields.io/npm/v/react-async.svg?style=flat)](https://www.npmjs.com/package/react-async)
-[![npm downloads](https://img.shields.io/npm/dm/react-async.svg?style=flat)](https://www.npmjs.com/package/react-async)
-[![install size](https://packagephobia.now.sh/badge?p=react-async)](https://packagephobia.now.sh/result?p=react-async)
+[![npm version](https://img.shields.io/npm/v/react-async.svg)](https://www.npmjs.com/package/react-async)
+[![npm downloads](https://img.shields.io/npm/dm/react-async.svg)](https://www.npmjs.com/package/react-async)
+[![npm license](https://img.shields.io/npm/l/react-async.svg)](https://www.npmjs.com/package/react-async)
+[![minified size](https://img.shields.io/bundlephobia/min/react-async.svg)](https://bundlephobia.com/result?p=react-async)
+[![GitHub issues](https://img.shields.io/github/issues/ghengeveld/react-async.svg)](https://github.com/ghengeveld/react-async/issues)
+[![GitHub PRs](https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg)](https://github.com/ghengeveld/react-async/pulls)
 
 React component for declarative promise resolution and data fetching. Leverages the Render Props pattern for ultimate
 flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states, without
