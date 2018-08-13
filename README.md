@@ -21,9 +21,6 @@ assumptions about the shape of your data or the type of request.
 - Accepts `onResolved` and `onRejected` callbacks
 - Supports optimistic updates using `setData`
 
-> This package is a work-in-progress. It has not yet been published on npm and its API may change before it's released.
-> Feel free to provide feedback.
-
 ## Rationale
 
 `<Async>` is different in that it tries to resolve data as close as possible to where it will be used, while using a
@@ -35,11 +32,19 @@ configure any data fetching or updates on a higher (application global) level, u
 data on-demand and in parallel at component level instead of in bulk at the route / page level. It's entirely decoupled
 from your routes, so it works well in complex applications that have a dynamic routing model or don't use routes at all.
 
+## Install
+
+```
+npm install --save react-async
+```
+
 ## Usage
 
 Using render props for ultimate flexibility:
 
 ```js
+import Async from "react-async"
+
 const loadJson = () => fetch("/some/url").then(res => res.json())
 
 const MyComponent = () => {
@@ -65,6 +70,8 @@ const MyComponent = () => {
 Using helper components (don't have to be direct children) for ease of use:
 
 ```js
+import Async from "react-async"
+
 const loadJson = () => fetch("/some/url").then(res => res.json())
 
 const MyComponent = () => {
