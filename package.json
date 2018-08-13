@@ -10,6 +10,14 @@
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
+  "homepage": "https://github.com/ghengeveld/react-async",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghengeveld/react-async.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src -d lib",
