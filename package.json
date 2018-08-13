@@ -21,7 +21,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src -d lib",
-    "test": "jest"
+    "test": "jest src"
   },
   "dependencies": {},
   "peerDependencies": {
