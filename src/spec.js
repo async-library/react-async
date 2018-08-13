@@ -199,6 +199,24 @@ test("cancels pending promise when unmounted", async () => {
   expect(onResolve).not.toHaveBeenCalled()
 })
 
+test("can be nested", async () => {
+  const outerFn = () => resolveIn(0)("outer")
+  const innerFn = () => resolveIn(100)("inner")
+  const { getByText } = render(
+    <Async promiseFn={outerFn}>
+      {({ data: outer }) => (
+        <Async promiseFn={innerFn}>
+          {({ data: inner }) => {
+            return outer + " " + inner
+          }}
+        </Async>
+      )}
+    </Async>
+  )
+  await waitForElement(() => getByText("outer undefined"))
+  await waitForElement(() => getByText("outer inner"))
+})
+
 test("Async.Resolved renders only after the promise is resolved", async () => {
   const promiseFn = () => resolveTo("done")
   const { getByText, queryByText } = render(
