@@ -1,7 +1,31 @@
 # `<Async>`
 
-React component for declarative promise resolution and data fetching. Uses render props for full flexibility or React context
-for convenience. Makes it easy to handle loading and error states, without assumptions about the shape of your data or the type of request. Supports optimistic updates.
+React component for declarative promise resolution and data fetching. Leverages the Render Props pattern for ultimate
+flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states, without
+assumptions about the shape of your data or the type of request.
+
+- Zero dependencies
+- A little over 150 LOC
+- Works with any (native) promise
+- Choose between Render Props and Context-based helper components
+- Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
+- Automatic re-run using `watch` prop
+- Accepts `onResolved` and `onRejected` callbacks
+- Supports optimistic updates using `setData`
+
+> This package is a work-in-progress. It has not yet been published on npm and its API may change before it's released.
+> Feel free to provide feedback.
+
+## Rationale
+
+`<Async>` is different in that it tries to resolve data as close as possible to where it will be used, while using a
+declarative syntax, using just JSX and native promises. This is in contrast to systems like Redux where you would
+configure any data fetching or updates on a higher (application global) level, using a special construct
+(actions/reducers).
+
+`<Async>` works really well even in larger applications with multiple or nested data dependencies. It encourages loading
+data on-demand and in parallel at component level instead of in bulk at the route / page level. It's entirely decoupled
+from your routes, so it works well in complex applications that have a dynamic routing model or don't use routes at all.
 
 ## Usage
 
