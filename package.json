@@ -1,6 +1,6 @@
 {
   "name": "react-async",
-  "version": "3.0.0",
+  "version": "2.9.9",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
@@ -10,9 +10,9 @@
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "babel src -d lib",
     "test": "jest"
   },
   "dependencies": {},
