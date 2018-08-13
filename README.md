@@ -1,5 +1,8 @@
 # `<Async>`
 
+[![npm version](https://badge.fury.io/js/react-async.svg)](https://www.npmjs.com/package/react-async)
+[![install size](https://packagephobia.now.sh/badge?p=react-async)](https://packagephobia.now.sh/result?p=react-async)
+
 React component for declarative promise resolution and data fetching. Leverages the Render Props pattern for ultimate
 flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states, without
 assumptions about the shape of your data or the type of request.
