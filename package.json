@@ -1,6 +1,6 @@
 {
   "name": "react-async",
-  "version": "2.9.9",
+  "version": "3.0.0",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
