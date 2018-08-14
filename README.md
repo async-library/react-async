@@ -21,6 +21,10 @@ assumptions about the shape of your data or the type of request.
 - Accepts `onResolved` and `onRejected` callbacks
 - Supports optimistic updates using `setData`
 
+> Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
+> kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of
+> `<Async>` is v3.0.0.
+
 ## Rationale
 
 `<Async>` is different in that it tries to resolve data as close as possible to where it will be used, while using a
@@ -243,3 +247,7 @@ Renders only when the promise is rejected.
 ```js
 <Async.Rejected>{({ error }) => `Unexpected error: ${error.message}`}</Async.Rejected>
 ```
+
+## Acknowledgements
+
+Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
