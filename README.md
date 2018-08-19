@@ -97,15 +97,15 @@ const MyComponent = () => (
 Creating a custom instance of Async, bound to a specific promiseFn:
 
 ```js
-import { createInstance } from 'react-async'
+import { createInstance } from "react-async"
 
-const loadCustomer = id => fetch(`/api/customers/${id}`).then(...)
+const loadCustomer = () => fetch("/api/customer").then(...)
 
 const AsyncCustomer = createInstance({ promiseFn: loadCustomer })
 
 const MyComponent = () => (
   <AsyncCustomer>
-    <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</CustomerLoader.Resolved>
+    <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</AsyncCustomer.Resolved>
   </AsyncCustomer>
 )
 ```
