@@ -18,7 +18,7 @@ assumptions about the shape of your data or the type of request.
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` prop
-- Accepts `onResolved` and `onRejected` callbacks
+- Accepts `onResolve` and `onReject` callbacks
 - Supports optimistic updates using `setData`
 
 > Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
