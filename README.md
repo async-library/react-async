@@ -36,6 +36,8 @@ configure any data fetching or updates on a higher (application global) level, u
 data on-demand and in parallel at component level instead of in bulk at the route / page level. It's entirely decoupled
 from your routes, so it works well in complex applications that have a dynamic routing model or don't use routes at all.
 
+`<Async>` is promise-based, so you can resolve anything you want, not just `fetch` requests.
+
 ## Install
 
 ```
@@ -51,24 +53,22 @@ import Async from "react-async"
 
 const loadJson = () => fetch("/some/url").then(res => res.json())
 
-const MyComponent = () => {
-  return (
-    <Async promiseFn={loadJson}>
-      {({ data, error, isLoading }) => {
-        if (isLoading) return "Loading..."
-        if (error) return `Something went wrong: ${error.message}`
-        if (data)
-          return (
-            <div>
-              <strong>Loaded some data:</strong>
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-            </div>
-          )
-        return null
-      }}
-    </Async>
-  )
-}
+const MyComponent = () => (
+  <Async promiseFn={loadJson}>
+    {({ data, error, isLoading }) => {
+      if (isLoading) return "Loading..."
+      if (error) return `Something went wrong: ${error.message}`
+      if (data)
+        return (
+          <div>
+            <strong>Loaded some data:</strong>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+        )
+      return null
+    }}
+  </Async>
+)
 ```
 
 Using helper components (don't have to be direct children) for ease of use:
@@ -78,25 +78,39 @@ import Async from "react-async"
 
 const loadJson = () => fetch("/some/url").then(res => res.json())
 
-const MyComponent = () => {
-  return (
-    <Async promiseFn={loadJson}>
-      <Async.Loading>Loading...</Async.Loading>
-      <Async.Resolved>
-        {data => (
-          <div>
-            <strong>Loaded some data:</strong>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          </div>
-        )}
-      </Async.Resolved>
-      <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-    </Async>
-  )
-}
+const MyComponent = () => (
+  <Async promiseFn={loadJson}>
+    <Async.Loading>Loading...</Async.Loading>
+    <Async.Resolved>
+      {data => (
+        <div>
+          <strong>Loaded some data:</strong>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+    </Async.Resolved>
+    <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
+  </Async>
+)
 ```
 
-`<Async>` is promise-based, so you can resolve anything you want, not just `fetch` requests.
+Creating a custom instance of Async, bound to a specific promiseFn:
+
+```js
+import { createInstance } from 'react-async'
+
+const loadCustomer = id => fetch(`/api/customers/${id}`).then(...)
+
+const AsyncCustomer = createInstance({ promiseFn: loadCustomer })
+
+const MyComponent = () => (
+  <AsyncCustomer>
+    <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</CustomerLoader.Resolved>
+  </AsyncCustomer>
+)
+```
+
+Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
 ### Props
 

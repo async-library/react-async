@@ -8,149 +8,157 @@ const getInitialState = () => ({
   finishedAt: undefined
 })
 
-const { Consumer, Provider } = React.createContext(getInitialState())
-
 /**
- * Renders only when promise is rejected.
- *
- * @prop {boolean} persist Show old error while loading
- * @prop {Function|Node} children Function (passing error and finishedAt) or React node
+ * createInstance allows you to create instances of Async that are bound to a specific promise.
+ * A unique instance also uses its own React context for better nesting capability.
  */
-class Async extends React.Component {
-  mounted = false
-  counter = 0
-  args = []
-  state = getInitialState()
+export const createInstance = (defaultProps = {}) => {
+  const { Consumer, Provider } = React.createContext(getInitialState())
 
-  componentDidMount() {
-    this.mounted = true
-    this.load()
-  }
+  class Async extends React.Component {
+    mounted = false
+    counter = 0
+    args = []
+    state = getInitialState()
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.watch !== this.props.watch) this.load()
-  }
-
-  componentWillUnmount() {
-    this.cancel()
-    this.mounted = false
-  }
-
-  load = () => {
-    if (!this.props.promiseFn) return
-    this.counter++
-    this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-    return this.props.promiseFn().then(this.onResolve(this.counter), this.onReject(this.counter))
-  }
-
-  run = (...args) => {
-    if (!this.props.deferFn) return
-    this.counter++
-    this.args = args
-    this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-    return this.props.deferFn(...args).then(this.onResolve(this.counter), this.onReject(this.counter))
-  }
-
-  cancel = () => {
-    this.counter++
-    this.setState({ isLoading: false, startedAt: undefined })
-  }
-
-  onResolve = counter => data => {
-    if (this.mounted && this.counter === counter) {
-      this.setData(data, () => this.props.onResolve && this.props.onResolve(data))
-    }
-    return data
-  }
-
-  onReject = counter => error => {
-    if (this.mounted && this.counter === counter) {
-      this.setError(error, () => this.props.onReject && this.props.onReject(error))
-    }
-    return error
-  }
-
-  setData = (data, callback) => {
-    this.setState({ data, error: undefined, isLoading: false, finishedAt: new Date() }, callback)
-    return data
-  }
-
-  setError = (error, callback) => {
-    this.setState({ error, isLoading: false, finishedAt: new Date() }, callback)
-    return error
-  }
-
-  render() {
-    const renderProps = {
-      ...this.state,
-      cancel: this.cancel,
-      run: this.run,
-      reload: () => {
-        this.load()
-        this.run(...this.args)
-      },
-      setData: this.setData,
-      setError: this.setError
+    componentDidMount() {
+      this.mounted = true
+      this.load()
     }
 
-    if (typeof this.props.children === "function") {
-      return this.props.children(renderProps)
+    componentDidUpdate(prevProps) {
+      if (prevProps.watch !== this.props.watch) this.load()
     }
 
-    if (this.props.children) {
-      return <Provider value={renderProps}>{this.props.children}</Provider>
+    componentWillUnmount() {
+      this.cancel()
+      this.mounted = false
     }
 
-    return null
+    load = () => {
+      const promiseFn = this.props.promiseFn || defaultProps.promiseFn
+      if (!promiseFn) return
+      this.counter++
+      this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
+      return promiseFn().then(this.onResolve(this.counter), this.onReject(this.counter))
+    }
+
+    run = (...args) => {
+      const deferFn = this.props.deferFn || defaultProps.deferFn
+      if (!deferFn) return
+      this.counter++
+      this.args = args
+      this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
+      return deferFn(...args).then(this.onResolve(this.counter), this.onReject(this.counter))
+    }
+
+    cancel = () => {
+      this.counter++
+      this.setState({ isLoading: false, startedAt: undefined })
+    }
+
+    onResolve = counter => data => {
+      if (this.mounted && this.counter === counter) {
+        const onResolve = this.props.onResolve || defaultProps.onResolve
+        this.setData(data, () => onResolve && onResolve(data))
+      }
+      return data
+    }
+
+    onReject = counter => error => {
+      if (this.mounted && this.counter === counter) {
+        const onReject = this.props.onReject || defaultProps.onReject
+        this.setError(error, () => onReject && onReject(error))
+      }
+      return error
+    }
+
+    setData = (data, callback) => {
+      this.setState({ data, error: undefined, isLoading: false, finishedAt: new Date() }, callback)
+      return data
+    }
+
+    setError = (error, callback) => {
+      this.setState({ error, isLoading: false, finishedAt: new Date() }, callback)
+      return error
+    }
+
+    render() {
+      const { children } = this.props
+
+      const renderProps = {
+        ...this.state,
+        cancel: this.cancel,
+        run: this.run,
+        reload: () => {
+          this.load()
+          this.run(...this.args)
+        },
+        setData: this.setData,
+        setError: this.setError
+      }
+
+      if (typeof children === "function") {
+        return <Provider value={renderProps}>{children(renderProps)}</Provider>
+      }
+
+      if (children !== undefined && children !== null) {
+        return <Provider value={renderProps}>{children}</Provider>
+      }
+
+      return null
+    }
   }
+
+  /**
+   * Renders only while loading.
+   *
+   * @prop {boolean} initial Show only on initial load (data is undefined)
+   * @prop {Function|Node} children Function (passing props) or React node
+   */
+  Async.Loading = ({ children, initial }) => (
+    <Consumer>
+      {props => {
+        if (!props.isLoading) return null
+        if (initial && props.data !== undefined) return null
+        return typeof children === "function" ? children(props) : children || null
+      }}
+    </Consumer>
+  )
+
+  /**
+   * Renders only when promise is resolved.
+   *
+   * @prop {boolean} persist Show old data while loading
+   * @prop {Function|Node} children Function (passing data and props) or React node
+   */
+  Async.Resolved = ({ children, persist }) => (
+    <Consumer>
+      {props => {
+        if (props.data === undefined) return null
+        if (props.isLoading && !persist) return null
+        return typeof children === "function" ? children(props.data, props) : children || null
+      }}
+    </Consumer>
+  )
+
+  /**
+   * Renders only when promise is rejected.
+   *
+   * @prop {boolean} persist Show old error while loading
+   * @prop {Function|Node} children Function (passing error and props) or React node
+   */
+  Async.Rejected = ({ children, persist }) => (
+    <Consumer>
+      {props => {
+        if (props.error === undefined) return null
+        if (props.isLoading && !persist) return null
+        return typeof children === "function" ? children(props.error, props) : children || null
+      }}
+    </Consumer>
+  )
+
+  return Async
 }
 
-/**
- * Renders only while loading.
- *
- * @prop {boolean} initial Show only on initial load (data is undefined)
- * @prop {Function|Node} children Function (passing props) or React node
- */
-Async.Loading = ({ children, initial }) => (
-  <Consumer>
-    {props => {
-      if (!props.isLoading) return null
-      if (initial && props.data !== undefined) return null
-      return typeof children === "function" ? children(props) : children || null
-    }}
-  </Consumer>
-)
-
-/**
- * Renders only when promise is resolved.
- *
- * @prop {boolean} persist Show old data while loading
- * @prop {Function|Node} children Function (passing data and props) or React node
- */
-Async.Resolved = ({ children, persist }) => (
-  <Consumer>
-    {props => {
-      if (props.data === undefined) return null
-      if (props.isLoading && !persist) return null
-      return typeof children === "function" ? children(props.data, props) : children || null
-    }}
-  </Consumer>
-)
-
-/**
- * Renders only when promise is rejected.
- *
- * @prop {boolean} persist Show old error while loading
- * @prop {Function|Node} children Function (passing error and props) or React node
- */
-Async.Rejected = ({ children, persist }) => (
-  <Consumer>
-    {props => {
-      if (props.error === undefined) return null
-      if (props.isLoading && !persist) return null
-      return typeof children === "function" ? children(props.error, props) : children || null
-    }}
-  </Consumer>
-)
-
-export default Async
+export default createInstance()

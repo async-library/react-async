@@ -1,7 +1,7 @@
 import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
-import Async from "./"
+import Async, { createInstance } from "./"
 
 afterEach(cleanup)
 
@@ -252,4 +252,35 @@ test("Async.Rejected renders only after the promise is rejected", async () => {
   expect(queryByText("err")).toBeNull()
   await waitForElement(() => getByText("err"))
   expect(queryByText("err")).toBeInTheDocument()
+})
+
+test("Async.Resolved works also with nested Async", async () => {
+  const outer = () => resolveIn(0)("outer")
+  const inner = () => resolveIn(100)("inner")
+  const { getByText, queryByText } = render(
+    <Async promiseFn={outer}>
+      <Async.Resolved>
+        {outer => (
+          <Async promiseFn={inner}>
+            <Async.Loading>{outer} loading</Async.Loading>
+            <Async.Resolved>{inner => outer + " " + inner}</Async.Resolved>
+          </Async>
+        )}
+      </Async.Resolved>
+    </Async>
+  )
+  expect(queryByText("outer loading")).toBeNull()
+  await waitForElement(() => getByText("outer loading"))
+  expect(queryByText("outer inner")).toBeNull()
+  await waitForElement(() => getByText("outer inner"))
+  expect(queryByText("outer inner")).toBeInTheDocument()
+})
+
+test("createInstance allows setting default props", async () => {
+  const promiseFn = () => resolveTo("done")
+  const onResolve = jest.fn()
+  const CustomAsync = createInstance({ promiseFn, onResolve })
+  const { getByText } = render(<CustomAsync>{({ data }) => data || null}</CustomAsync>)
+  await waitForElement(() => getByText("done"))
+  expect(onResolve).toHaveBeenCalledWith("done")
 })
