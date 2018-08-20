@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/react-async.svg)](https://www.npmjs.com/package/react-async)
 [![npm downloads](https://img.shields.io/npm/dm/react-async.svg)](https://www.npmjs.com/package/react-async)
-[![npm license](https://img.shields.io/npm/l/react-async.svg)](https://www.npmjs.com/package/react-async)
+[![ISC license](https://img.shields.io/npm/l/react-async.svg)](https://opensource.org/licenses/ISC)
 [![minified size](https://img.shields.io/bundlephobia/min/react-async.svg)](https://bundlephobia.com/result?p=react-async)
 [![GitHub issues](https://img.shields.io/github/issues/ghengeveld/react-async.svg)](https://github.com/ghengeveld/react-async/issues)
 [![GitHub PRs](https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg)](https://github.com/ghengeveld/react-async/pulls)
