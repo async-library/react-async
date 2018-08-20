@@ -99,12 +99,12 @@ Creating a custom instance of Async, bound to a specific promiseFn:
 ```js
 import { createInstance } from "react-async"
 
-const loadCustomer = () => fetch("/api/customer").then(...)
+const loadCustomer = ({ customerId }) => fetch(`/api/customers/${customerId}`).then(...)
 
 const AsyncCustomer = createInstance({ promiseFn: loadCustomer })
 
 const MyComponent = () => (
-  <AsyncCustomer>
+  <AsyncCustomer customerId="123">
     <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</AsyncCustomer.Resolved>
   </AsyncCustomer>
 )
@@ -116,7 +116,7 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
 `<Async>` takes the following properties:
 
-- `promiseFn` {() => Promise} A function that returns a promise; invoked immediately in `componentDidMount` and without arguments
+- `promiseFn` {() => Promise} A function that returns a promise; invoked immediately in `componentDidMount` and receives props (object) as arguments
 - `deferFn` {() => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through
 - `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
 - `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument

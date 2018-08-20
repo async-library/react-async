@@ -40,7 +40,7 @@ export const createInstance = (defaultProps = {}) => {
       if (!promiseFn) return
       this.counter++
       this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-      return promiseFn().then(this.onResolve(this.counter), this.onReject(this.counter))
+      return promiseFn(this.props).then(this.onResolve(this.counter), this.onReject(this.counter))
     }
 
     run = (...args) => {

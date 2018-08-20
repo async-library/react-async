@@ -16,6 +16,12 @@ test("runs promiseFn on mount", () => {
   expect(promiseFn).toHaveBeenCalledTimes(1)
 })
 
+test("calls promiseFn with props", () => {
+  const promiseFn = jest.fn().mockReturnValue(Promise.resolve())
+  render(<Async promiseFn={promiseFn} anotherProp="123" />)
+  expect(promiseFn).toHaveBeenCalledWith({ promiseFn, anotherProp: "123" })
+})
+
 test("passes resolved data to children as render prop", async () => {
   const promiseFn = () => resolveTo("done")
   const { getByText } = render(<Async promiseFn={promiseFn}>{({ data }) => data || null}</Async>)
