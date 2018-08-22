@@ -205,7 +205,7 @@ They don't have to be direct children of `<Async>` and you can use the same comp
 
 ### `<Async.Loading>`
 
-Renders only while the promise is still pending.
+Renders only while the promise is loading.
 
 #### Props
 
@@ -260,6 +260,28 @@ Renders only when the promise is rejected.
 
 ```js
 <Async.Rejected>{({ error }) => `Unexpected error: ${error.message}`}</Async.Rejected>
+```
+
+### `<Async.Pending>`
+
+Renders only while the deferred promise is still pending (not yet run).
+
+#### Props
+
+- `children` {Function|Node} Function which receives props object or React node
+
+#### Examples
+
+```js
+<Async deferFn={deferFn}>
+  <Async.Pending>
+    <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
+  </Async.Pending>
+</Async>
+```
+
+```js
+<Async.Pending>{({ run }) => <button onClick={run}>Run</button>}</Async.Pending>
 ```
 
 ## Acknowledgements

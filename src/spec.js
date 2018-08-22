@@ -235,7 +235,7 @@ test("Async.Resolved renders only after the promise is resolved", async () => {
   expect(queryByText("done")).toBeInTheDocument()
 })
 
-test("Async.Loading renders only while the promise is pending", async () => {
+test("Async.Loading renders only while the promise is loading", async () => {
   const promiseFn = () => resolveTo("ok")
   const { getByText, queryByText } = render(
     <Async promiseFn={promiseFn}>
@@ -243,6 +243,23 @@ test("Async.Loading renders only while the promise is pending", async () => {
       <Async.Resolved>done</Async.Resolved>
     </Async>
   )
+  expect(queryByText("loading")).toBeInTheDocument()
+  await waitForElement(() => getByText("done"))
+  expect(queryByText("loading")).toBeNull()
+})
+
+test("Async.Pending renders only while the deferred promise is pending", async () => {
+  const deferFn = () => resolveTo("ok")
+  const { getByText, queryByText } = render(
+    <Async deferFn={deferFn}>
+      <Async.Pending>{({ run }) => <button onClick={run}>pending</button>}</Async.Pending>
+      <Async.Loading>loading</Async.Loading>
+      <Async.Resolved>done</Async.Resolved>
+    </Async>
+  )
+  expect(queryByText("pending")).toBeInTheDocument()
+  fireEvent.click(getByText("pending"))
+  expect(queryByText("pending")).toBeNull()
   expect(queryByText("loading")).toBeInTheDocument()
   await waitForElement(() => getByText("done"))
   expect(queryByText("loading")).toBeNull()
