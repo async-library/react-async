@@ -113,12 +113,15 @@ export const createInstance = (defaultProps = {}) => {
   /**
    * Renders only when deferred promise is pending (not yet run).
    *
+   * @prop {boolean} persist Show until we have data, even while loading or when an error occurred
    * @prop {Function|Node} children Function (passing error and props) or React node
    */
-  Async.Pending = ({ children }) => (
+  Async.Pending = ({ children, persist }) => (
     <Consumer>
       {props => {
-        if (props.isLoading || props.data || props.error) return null
+        if (props.data !== undefined) return null
+        if (!persist && props.isLoading) return null
+        if (!persist && props.error !== undefined) return null
         return typeof children === "function" ? children(props) : children || null
       }}
     </Consumer>

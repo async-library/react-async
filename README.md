@@ -268,7 +268,8 @@ Renders only while the deferred promise is still pending (not yet run).
 
 #### Props
 
-- `children` {Function|Node} Function which receives props object or React node
+- `persist` {boolean} Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
+- `children` {Function|Node} Function which receives props object or React node.
 
 #### Examples
 
@@ -281,7 +282,17 @@ Renders only while the deferred promise is still pending (not yet run).
 ```
 
 ```js
-<Async.Pending>{({ run }) => <button onClick={run}>Run</button>}</Async.Pending>
+<Async.Pending persist>
+  {({ error, isLoading, run }) => (
+    <div>
+      <p>This text is only rendered while the promise has not resolved yet.</p>
+      <button onClick={run} disabled={!isLoading}>
+        Run
+      </button>
+      {error && <p>{error.message}</p>}
+    </div>
+  )}
+</Async.Pending>
 ```
 
 ## Acknowledgements
