@@ -236,7 +236,7 @@ Renders only when the promise is resolved.
 #### Examples
 
 ```js
-<Async.Resolved persist>{({ data }) => <pre>{JSON.stringify(data)}</pre>}</Async.Resolved>
+<Async.Resolved persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Resolved>
 ```
 
 ```js
@@ -259,7 +259,7 @@ Renders only when the promise is rejected.
 ```
 
 ```js
-<Async.Rejected>{({ error }) => `Unexpected error: ${error.message}`}</Async.Rejected>
+<Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
 ```
 
 ### `<Async.Pending>`
