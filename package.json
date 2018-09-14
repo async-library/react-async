@@ -22,7 +22,7 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "jest src",
-    "prepublish": "npm run build"
+    "prepublish": "npm test && npm run build"
   },
   "dependencies": {},
   "peerDependencies": {
