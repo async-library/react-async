@@ -1,25 +1,23 @@
 import React from "react"
 
-const getInitialState = () => ({
-  data: undefined,
-  error: undefined,
-  isLoading: false,
-  startedAt: undefined,
-  finishedAt: undefined
-})
-
 /**
  * createInstance allows you to create instances of Async that are bound to a specific promise.
  * A unique instance also uses its own React context for better nesting capability.
  */
 export const createInstance = (defaultProps = {}) => {
-  const { Consumer, Provider } = React.createContext(getInitialState())
+  const { Consumer, Provider } = React.createContext()
 
   class Async extends React.Component {
     mounted = false
     counter = 0
     args = []
-    state = getInitialState()
+    state = {
+      data: undefined,
+      error: undefined,
+      isLoading: false,
+      startedAt: undefined,
+      finishedAt: undefined
+    }
 
     componentDidMount() {
       this.mounted = true
