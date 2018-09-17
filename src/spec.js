@@ -307,3 +307,27 @@ test("createInstance allows setting default props", async () => {
   await waitForElement(() => getByText("done"))
   expect(onResolve).toHaveBeenCalledWith("done")
 })
+
+test("An unrelated change in props does not update the Context", async () => {
+  let one
+  let two
+  const { rerender } = render(
+    <Async>
+      <Async.Pending>
+        {value => {
+          one = value
+        }}
+      </Async.Pending>
+    </Async>
+  )
+  rerender(
+    <Async someProp>
+      <Async.Pending>
+        {value => {
+          two = value
+        }}
+      </Async.Pending>
+    </Async>
+  )
+  expect(one).toBe(two)
+})

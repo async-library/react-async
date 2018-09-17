@@ -8,15 +8,26 @@ export const createInstance = (defaultProps = {}) => {
   const { Consumer, Provider } = React.createContext()
 
   class Async extends React.Component {
-    mounted = false
-    counter = 0
-    args = []
-    state = {
-      data: undefined,
-      error: undefined,
-      isLoading: false,
-      startedAt: undefined,
-      finishedAt: undefined
+    constructor(props) {
+      super(props)
+      this.mounted = false
+      this.counter = 0
+      this.args = []
+      this.state = {
+        data: undefined,
+        error: undefined,
+        isLoading: false,
+        startedAt: undefined,
+        finishedAt: undefined,
+        cancel: this.cancel,
+        run: this.run,
+        reload: () => {
+          this.load()
+          this.run(...this.args)
+        },
+        setData: this.setData,
+        setError: this.setError
+      }
     }
 
     componentDidMount() {
@@ -83,27 +94,12 @@ export const createInstance = (defaultProps = {}) => {
 
     render() {
       const { children } = this.props
-
-      const renderProps = {
-        ...this.state,
-        cancel: this.cancel,
-        run: this.run,
-        reload: () => {
-          this.load()
-          this.run(...this.args)
-        },
-        setData: this.setData,
-        setError: this.setError
-      }
-
       if (typeof children === "function") {
-        return <Provider value={renderProps}>{children(renderProps)}</Provider>
+        return <Provider value={this.state}>{children(this.state)}</Provider>
       }
-
       if (children !== undefined && children !== null) {
-        return <Provider value={renderProps}>{children}</Provider>
+        return <Provider value={this.state}>{children}</Provider>
       }
-
       return null
     }
   }
@@ -112,15 +108,15 @@ export const createInstance = (defaultProps = {}) => {
    * Renders only when deferred promise is pending (not yet run).
    *
    * @prop {boolean} persist Show until we have data, even while loading or when an error occurred
-   * @prop {Function|Node} children Function (passing props) or React node
+   * @prop {Function|Node} children Function (passing state) or React node
    */
   Async.Pending = ({ children, persist }) => (
     <Consumer>
-      {props => {
-        if (props.data !== undefined) return null
-        if (!persist && props.isLoading) return null
-        if (!persist && props.error !== undefined) return null
-        return typeof children === "function" ? children(props) : children || null
+      {state => {
+        if (state.data !== undefined) return null
+        if (!persist && state.isLoading) return null
+        if (!persist && state.error !== undefined) return null
+        return typeof children === "function" ? children(state) : children || null
       }}
     </Consumer>
   )
@@ -129,14 +125,14 @@ export const createInstance = (defaultProps = {}) => {
    * Renders only while loading.
    *
    * @prop {boolean} initial Show only on initial load (data is undefined)
-   * @prop {Function|Node} children Function (passing props) or React node
+   * @prop {Function|Node} children Function (passing state) or React node
    */
   Async.Loading = ({ children, initial }) => (
     <Consumer>
-      {props => {
-        if (!props.isLoading) return null
-        if (initial && props.data !== undefined) return null
-        return typeof children === "function" ? children(props) : children || null
+      {state => {
+        if (!state.isLoading) return null
+        if (initial && state.data !== undefined) return null
+        return typeof children === "function" ? children(state) : children || null
       }}
     </Consumer>
   )
@@ -145,14 +141,14 @@ export const createInstance = (defaultProps = {}) => {
    * Renders only when promise is resolved.
    *
    * @prop {boolean} persist Show old data while loading
-   * @prop {Function|Node} children Function (passing data and props) or React node
+   * @prop {Function|Node} children Function (passing data and state) or React node
    */
   Async.Resolved = ({ children, persist }) => (
     <Consumer>
-      {props => {
-        if (props.data === undefined) return null
-        if (props.isLoading && !persist) return null
-        return typeof children === "function" ? children(props.data, props) : children || null
+      {state => {
+        if (state.data === undefined) return null
+        if (state.isLoading && !persist) return null
+        return typeof children === "function" ? children(state.data, state) : children || null
       }}
     </Consumer>
   )
@@ -161,14 +157,14 @@ export const createInstance = (defaultProps = {}) => {
    * Renders only when promise is rejected.
    *
    * @prop {boolean} persist Show old error while loading
-   * @prop {Function|Node} children Function (passing error and props) or React node
+   * @prop {Function|Node} children Function (passing error and state) or React node
    */
   Async.Rejected = ({ children, persist }) => (
     <Consumer>
-      {props => {
-        if (props.error === undefined) return null
-        if (props.isLoading && !persist) return null
-        return typeof children === "function" ? children(props.error, props) : children || null
+      {state => {
+        if (state.error === undefined) return null
+        if (state.isLoading && !persist) return null
+        return typeof children === "function" ? children(state.error, state) : children || null
       }}
     </Consumer>
   )
