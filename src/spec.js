@@ -46,7 +46,7 @@ test("passes isLoading boolean while the promise is running", async () => {
     </Async>
   )
   await waitForElement(() => getByText("done"))
-  expect(states).toEqual([false, true, false])
+  expect(states).toEqual([true, true, false])
 })
 
 test("passes startedAt date when the promise starts", async () => {
