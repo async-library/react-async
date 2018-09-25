@@ -12,7 +12,6 @@ flexibility as well as the new Context API for ease of use. Makes it easy to han
 assumptions about the shape of your data or the type of request.
 
 - Zero dependencies
-- A little over 150 LOC
 - Works with any (native) promise
 - Choose between Render Props and Context-based helper components
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
@@ -111,6 +110,8 @@ const MyComponent = () => (
 ```
 
 Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
+
+## API
 
 ### Props
 
