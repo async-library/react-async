@@ -39,5 +39,9 @@
     "react": "16.4.2",
     "react-dom": "16.4.2",
     "react-testing-library": "5.0.0"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
