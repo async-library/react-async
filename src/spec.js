@@ -205,6 +205,48 @@ test("cancels pending promise when unmounted", async () => {
   expect(onResolve).not.toHaveBeenCalled()
 })
 
+test("does not run promiseFn on mount when initialValue is provided", () => {
+  const promiseFn = jest.fn().mockReturnValue(Promise.resolve())
+  render(<Async promiseFn={promiseFn} initialValue={{}} />)
+  expect(promiseFn).not.toHaveBeenCalled()
+})
+
+test("does not start loading when using initialValue", async () => {
+  const promiseFn = () => resolveTo("done")
+  const states = []
+  const { getByText } = render(
+    <Async promiseFn={promiseFn} initialValue="done">
+      {({ data, isLoading }) => {
+        states.push(isLoading)
+        return data
+      }}
+    </Async>
+  )
+  await waitForElement(() => getByText("done"))
+  expect(states).toEqual([false])
+})
+
+test("passes initialValue to children immediately", async () => {
+  const promiseFn = () => resolveTo("done")
+  const { getByText } = render(
+    <Async promiseFn={promiseFn} initialValue="done">
+      {({ data }) => data}
+    </Async>
+  )
+  await waitForElement(() => getByText("done"))
+})
+
+test("sets error instead of data when initialValue is an Error object", async () => {
+  const promiseFn = () => resolveTo("done")
+  const error = new Error("oops")
+  const { getByText } = render(
+    <Async promiseFn={promiseFn} initialValue={error}>
+      {({ error }) => error.message}
+    </Async>
+  )
+  await waitForElement(() => getByText("oops"))
+})
+
 test("can be nested", async () => {
   const outerFn = () => resolveIn(0)("outer")
   const innerFn = () => resolveIn(100)("inner")

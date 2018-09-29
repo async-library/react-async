@@ -12,15 +12,22 @@ export const createInstance = (defaultProps = {}) => {
   class Async extends React.Component {
     constructor(props) {
       super(props)
+
+      const promiseFn = props.promiseFn || defaultProps.promiseFn
+      const initialValue = props.initialValue || defaultProps.initialValue
+      const initialError = initialValue instanceof Error ? initialValue : undefined
+      const initialData = initialError ? undefined : initialValue
+
       this.mounted = false
       this.counter = 0
       this.args = []
       this.state = {
-        data: undefined,
-        error: undefined,
-        isLoading: isFunction(props.promiseFn) || isFunction(defaultProps.promiseFn),
+        initialValue,
+        data: initialData,
+        error: initialError,
+        isLoading: !initialValue && isFunction(promiseFn),
         startedAt: undefined,
-        finishedAt: undefined,
+        finishedAt: initialValue ? new Date() : undefined,
         cancel: this.cancel,
         run: this.run,
         reload: () => {
@@ -34,7 +41,7 @@ export const createInstance = (defaultProps = {}) => {
 
     componentDidMount() {
       this.mounted = true
-      this.load()
+      this.state.initialValue || this.load()
     }
 
     componentDidUpdate(prevProps) {

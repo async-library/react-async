@@ -21,6 +21,7 @@ assumptions about the shape of your data or the type of request.
 - Automatic re-run using `watch` prop
 - Accepts `onResolve` and `onReject` callbacks
 - Supports optimistic updates using `setData`
+- Supports server-side rendering through `initialValue`
 
 > Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
 > kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of
@@ -119,9 +120,10 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
 `<Async>` takes the following properties:
 
-- `promiseFn` {() => Promise} A function that returns a promise; invoked immediately in `componentDidMount` and receives props (object) as arguments
+- `promiseFn` {() => Promise} A function that returns a promise; invoked immediately in `componentDidMount` and receives props (object) as argument
 - `deferFn` {() => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through
 - `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
+- `initialValue` {any} initial state for `data` or `error` (if instance of Error); useful for server-side rendering
 - `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
 - `onReject` {Function} Callback function invoked when a promise rejects, receives error as argument
 
@@ -131,6 +133,7 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
 - `data` {any} last resolved promise value, maintained when new error arrives
 - `error` {Error} rejected promise reason, cleared when new data arrives
+- `initialValue` {any} the data or error that was provided through the `initialValue` prop
 - `isLoading` {boolean} `true` while a promise is pending
 - `startedAt` {Date} when the current/last promise was started
 - `finishedAt` {Date} when the last promise was resolved or rejected
@@ -199,6 +202,36 @@ const updateAttendance = attend => fetch(...).then(() => attend, () => !attend)
     />
   )}
 </Async>
+```
+
+### Server-side rendering using `initialValue` (e.g. Next.js)
+
+```js
+static async getInitialProps() {
+  // Resolve the promise server-side
+  const sessions = await loadSessions()
+  return { sessions }
+}
+
+render() {
+  const { sessions } = this.props // injected by getInitialProps
+  return (
+    <Async promiseFn={loadSessions} initialValue={sessions}>
+      {({ data, error, isLoading, initialValue }) => { // initialValue is passed along for convenience
+        if (isLoading) {
+          return <div>Loading...</div>
+        }
+        if (error) {
+          return <p>{error.toString()}</p>
+        }
+        if (data) {
+          return <pre>{JSON.stringify(data, null, 2)}</pre>
+        }
+        return null
+      }}
+    </Async>
+  )
+}
 ```
 
 ## Helper components
