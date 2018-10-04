@@ -205,6 +205,17 @@ test("cancels pending promise when unmounted", async () => {
   expect(onResolve).not.toHaveBeenCalled()
 })
 
+test("cancels and restarts the promise when promiseFn changes", async () => {
+  const promiseFn1 = jest.fn().mockReturnValue(Promise.resolve("one"))
+  const promiseFn2 = jest.fn().mockReturnValue(Promise.resolve("two"))
+  const onResolve = jest.fn()
+  const { rerender } = render(<Async promiseFn={promiseFn1} onResolve={onResolve} />)
+  rerender(<Async promiseFn={promiseFn2} onResolve={onResolve} />)
+  await Promise.resolve()
+  expect(onResolve).not.toHaveBeenCalledWith("one")
+  expect(onResolve).toHaveBeenCalledWith("two")
+})
+
 test("does not run promiseFn on mount when initialValue is provided", () => {
   const promiseFn = jest.fn().mockReturnValue(Promise.resolve())
   render(<Async promiseFn={promiseFn} initialValue={{}} />)
@@ -376,7 +387,7 @@ test("createInstance allows setting default props", async () => {
   expect(onResolve).toHaveBeenCalledWith("done")
 })
 
-test("An unrelated change in props does not update the Context", async () => {
+test("an unrelated change in props does not update the Context", async () => {
   let one
   let two
   const { rerender } = render(
