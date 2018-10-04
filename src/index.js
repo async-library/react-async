@@ -156,7 +156,8 @@ export const createInstance = (defaultProps = {}) => {
     <Consumer>
       {state => {
         if (state.data === undefined) return null
-        if (state.isLoading && !persist) return null
+        if (!persist && state.isLoading) return null
+        if (!persist && state.error !== undefined) return null
         return isFunction(children) ? children(state.data, state) : children || null
       }}
     </Consumer>
