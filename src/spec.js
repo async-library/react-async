@@ -266,15 +266,41 @@ test("can be nested", async () => {
 })
 
 test("Async.Resolved renders only after the promise is resolved", async () => {
-  const promiseFn = () => resolveTo("done")
+  const promiseFn = () => resolveTo("ok")
+  const deferFn = () => rejectTo("fail")
   const { getByText, queryByText } = render(
-    <Async promiseFn={promiseFn}>
-      <Async.Resolved>{data => data}</Async.Resolved>
+    <Async promiseFn={promiseFn} deferFn={deferFn}>
+      <Async.Resolved>{(data, { run }) => <button onClick={run}>{data}</button>}</Async.Resolved>
+      <Async.Rejected>{error => error}</Async.Rejected>
     </Async>
   )
-  expect(queryByText("done")).toBeNull()
-  await waitForElement(() => getByText("done"))
-  expect(queryByText("done")).toBeInTheDocument()
+  expect(queryByText("ok")).toBeNull()
+  await waitForElement(() => getByText("ok"))
+  expect(queryByText("ok")).toBeInTheDocument()
+  expect(queryByText("fail")).toBeNull()
+  fireEvent.click(getByText("ok"))
+  await waitForElement(() => getByText("fail"))
+  expect(queryByText("ok")).toBeNull()
+  expect(queryByText("fail")).toBeInTheDocument()
+})
+
+test("Async.Resolved with persist renders old data on error", async () => {
+  const promiseFn = () => resolveTo("ok")
+  const deferFn = () => rejectTo("fail")
+  const { getByText, queryByText } = render(
+    <Async promiseFn={promiseFn} deferFn={deferFn}>
+      <Async.Resolved persist>{(data, { run }) => <button onClick={run}>{data}</button>}</Async.Resolved>
+      <Async.Rejected>{error => error}</Async.Rejected>
+    </Async>
+  )
+  expect(queryByText("ok")).toBeNull()
+  await waitForElement(() => getByText("ok"))
+  expect(queryByText("ok")).toBeInTheDocument()
+  expect(queryByText("fail")).toBeNull()
+  fireEvent.click(getByText("ok"))
+  await waitForElement(() => getByText("fail"))
+  expect(queryByText("ok")).toBeInTheDocument()
+  expect(queryByText("fail")).toBeInTheDocument()
 })
 
 test("Async.Loading renders only while the promise is loading", async () => {
@@ -372,44 +398,4 @@ test("An unrelated change in props does not update the Context", async () => {
     </Async>
   )
   expect(one).toBe(two)
-})
-
-test("Async.Resolved does not render after deferFn rejection", async () => {
-  const promiseFn = () => resolveTo("ok")
-  const deferFn = () => rejectTo("notok")
-  const { getByText, queryByText } = render(
-    <Async promiseFn={promiseFn} deferFn={deferFn}>
-      <Async.Rejected>fail</Async.Rejected>
-      <Async.Resolved>{(data, { run }) => <button onClick={run}>next</button>}</Async.Resolved>
-    </Async>
-  )
-
-  expect(queryByText("next")).toBeNull()
-  await waitForElement(() => getByText("next"))
-  expect(queryByText("next")).toBeInTheDocument()
-  expect(queryByText("fail")).toBeNull()
-  fireEvent.click(getByText("next"))
-  await waitForElement(() => getByText("fail"))
-  expect(queryByText("next")).toBeNull()
-  expect(queryByText("fail")).toBeInTheDocument()
-})
-
-test("Async.Resolved renders after deferFn rejection with persist", async () => {
-  const promiseFn = () => resolveTo("ok")
-  const deferFn = () => rejectTo("notok")
-  const { getByText, queryByText } = render(
-    <Async promiseFn={promiseFn} deferFn={deferFn}>
-      <Async.Rejected>fail</Async.Rejected>
-      <Async.Resolved persist>{(data, { run }) => <button onClick={run}>next</button>}</Async.Resolved>
-    </Async>
-  )
-
-  expect(queryByText("next")).toBeNull()
-  await waitForElement(() => getByText("next"))
-  expect(queryByText("next")).toBeInTheDocument()
-  expect(queryByText("fail")).toBeNull()
-  fireEvent.click(getByText("next"))
-  await waitForElement(() => getByText("fail"))
-  expect(queryByText("next")).toBeInTheDocument()
-  expect(queryByText("fail")).toBeInTheDocument()
 })
