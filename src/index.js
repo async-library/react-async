@@ -71,7 +71,7 @@ export const createInstance = (defaultProps = {}) => {
       this.counter++
       this.args = args
       this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-      return deferFn(...args).then(this.onResolve(this.counter), this.onReject(this.counter))
+      return deferFn(...args, this.props).then(this.onResolve(this.counter), this.onReject(this.counter))
     }
 
     cancel = () => {

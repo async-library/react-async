@@ -117,11 +117,11 @@ test("re-runs the promise when the value of 'watch' changes", () => {
   expect(promiseFn).toHaveBeenCalledTimes(3)
 })
 
-test("runs deferFn only when explicitly invoked, passing arguments", () => {
+test("runs deferFn only when explicitly invoked, passing arguments and props", () => {
   let counter = 1
   const deferFn = jest.fn().mockReturnValue(resolveTo())
   const { getByText } = render(
-    <Async deferFn={deferFn}>
+    <Async deferFn={deferFn} foo="bar">
       {({ run }) => {
         return <button onClick={() => run("go", counter++)}>run</button>
       }}
@@ -129,9 +129,9 @@ test("runs deferFn only when explicitly invoked, passing arguments", () => {
   )
   expect(deferFn).not.toHaveBeenCalled()
   fireEvent.click(getByText("run"))
-  expect(deferFn).toHaveBeenCalledWith("go", 1)
+  expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn, foo: "bar" }))
   fireEvent.click(getByText("run"))
-  expect(deferFn).toHaveBeenCalledWith("go", 2)
+  expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn, foo: "bar" }))
 })
 
 test("reload uses the arguments of the previous run", () => {
@@ -151,11 +151,11 @@ test("reload uses the arguments of the previous run", () => {
   )
   expect(deferFn).not.toHaveBeenCalled()
   fireEvent.click(getByText("run"))
-  expect(deferFn).toHaveBeenCalledWith("go", 1)
+  expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }))
   fireEvent.click(getByText("run"))
-  expect(deferFn).toHaveBeenCalledWith("go", 2)
+  expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }))
   fireEvent.click(getByText("reload"))
-  expect(deferFn).toHaveBeenCalledWith("go", 2)
+  expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }))
 })
 
 test("only accepts the last invocation of the promise", async () => {
