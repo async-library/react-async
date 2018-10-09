@@ -19,6 +19,10 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "build": "babel src -d lib",
     "test": "jest src",
