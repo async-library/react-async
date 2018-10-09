@@ -120,12 +120,18 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
 `<Async>` takes the following properties:
 
-- `promiseFn` {() => Promise} A function that returns a promise; invoked immediately in `componentDidMount` and receives props (object) as argument
-- `deferFn` {() => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through
+- `promiseFn` {() => Promise} A function that returns a promise; invoked in `componentDidMount` and `componentDidUpdate`; receives props (object) as argument
+- `deferFn` {() => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through, as well as props (object) as final argument
 - `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
 - `initialValue` {any} initial state for `data` or `error` (if instance of Error); useful for server-side rendering
 - `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
 - `onReject` {Function} Callback function invoked when a promise rejects, receives error as argument
+
+> Be aware that updating `promiseFn` will trigger it to cancel any pending promise and load the new promise. Passing an
+> arrow function will cause it to change and reload on every render of the parent component. You can avoid this by
+> defining the `promiseFn` value **outside** of the render method. If you need to pass variables to the `promiseFn`,
+> pass them as additional props to `<Async>`, as `promiseFn` will be invoked with these props. Alternatively you can
+> use [memoization](https://github.com/alexreardon/memoize-one) to avoid unnecessary updates.
 
 ### Render props
 
@@ -148,25 +154,34 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 ### Basic data fetching with loading indicator, error state and retry
 
 ```js
-<Async promiseFn={loadJson}>
-  {({ data, error, isLoading, reload }) => {
-    if (isLoading) {
-      return <div>Loading...</div>
-    }
-    if (error) {
-      return (
-        <div>
-          <p>{error.toString()}</p>
-          <button onClick={reload}>try again</button>
-        </div>
-      )
-    }
-    if (data) {
-      return <pre>{JSON.stringify(data, null, 2)}</pre>
-    }
-    return null
-  }}
-</Async>
+class App extends Component {
+  getSession = ({ sessionId }) => fetch(...)
+
+  render() {
+    // The promiseFn should be defined outside of render()
+    return (
+      <Async promiseFn={this.getSession} sessionId={123}>
+        {({ data, error, isLoading, reload }) => {
+          if (isLoading) {
+            return <div>Loading...</div>
+          }
+          if (error) {
+            return (
+              <div>
+                <p>{error.toString()}</p>
+                <button onClick={reload}>try again</button>
+              </div>
+            )
+          }
+          if (data) {
+            return <pre>{JSON.stringify(data, null, 2)}</pre>
+          }
+          return null
+        }}
+      </Async>
+    )
+  }
+}
 ```
 
 ### Using `deferFn` to trigger an update (e.g. POST / PUT request)
