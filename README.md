@@ -1,13 +1,38 @@
-# `<Async>`
+<br/>
+<p align="center">
+  <a href="https://github.com/ghengeveld/react-async"><img src="./react-async.png" width="435" height="132" /></a>
+</p>
+<p align="center">
+  Handle promises with ease.
+</p>
+<br/>
 
-[![npm version](https://img.shields.io/npm/v/react-async.svg)](https://www.npmjs.com/package/react-async)
-[![npm downloads](https://img.shields.io/npm/dm/react-async.svg)](https://www.npmjs.com/package/react-async)
-[![minified size](https://img.shields.io/bundlephobia/min/react-async.svg)](https://bundlephobia.com/result?p=react-async)
-[![Build status](https://img.shields.io/travis/ghengeveld/react-async.svg)](https://travis-ci.org/ghengeveld/react-async)
-[![Code coverage](https://img.shields.io/codecov/c/github/ghengeveld/react-async.svg)](https://codecov.io/github/ghengeveld/react-async)
-[![ISC license](https://img.shields.io/npm/l/react-async.svg)](https://opensource.org/licenses/ISC)
-[![GitHub issues](https://img.shields.io/github/issues/ghengeveld/react-async.svg)](https://github.com/ghengeveld/react-async/issues)
-[![GitHub PRs](https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg)](https://github.com/ghengeveld/react-async/pulls)
+<p align="center">
+  <a href="https://www.npmjs.com/package/react-async">
+    <img src="https://img.shields.io/npm/v/react-async.svg" alt="npm version">
+  </a>
+  <a href="https://www.npmjs.com/package/react-async">
+    <img src="https://img.shields.io/npm/dm/react-async.svg" alt="npm downloads">
+  </a>
+  <a href="https://bundlephobia.com/result?p=react-async">
+    <img src="https://img.shields.io/bundlephobia/min/react-async.svg" alt="minified size">
+  </a>
+  <a href="https://travis-ci.org/ghengeveld/react-async">
+    <img src="https://img.shields.io/travis/ghengeveld/react-async.svg" alt="build status">
+  </a>
+  <a href="https://codecov.io/github/ghengeveld/react-async">
+    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async.svg" alt="code coverage">
+  </a>
+  <a href="https://opensource.org/licenses/ISC">
+    <img src="https://img.shields.io/npm/l/react-async.svg" alt="license">
+  </a>
+  <a href="https://github.com/ghengeveld/react-async/issues">
+    <img src="https://img.shields.io/github/issues/ghengeveld/react-async.svg" alt="issues">
+  </a>
+  <a href="https://github.com/ghengeveld/react-async/pulls">
+    <img src="https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg" alt="pull requests">
+  </a>
+</p>
 
 React component for declarative promise resolution and data fetching. Leverages the Render Props pattern for ultimate
 flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states, without
