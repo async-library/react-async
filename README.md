@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <a href="https://github.com/ghengeveld/react-async"><img src="./react-async.png" width="435" height="132" /></a>
+  <a href="https://github.com/ghengeveld/react-async"><img src="./react-async.png" width="435" /></a>
 </p>
 <p align="center">
   Handle promises with ease.
