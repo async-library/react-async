@@ -51,20 +51,20 @@ assumptions about the shape of your data or the type of request.
 
 > Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
 > kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of
-> `<Async>` is v3.0.0.
+> React Async is v3.0.0.
 
 ## Rationale
 
-`<Async>` is different in that it tries to resolve data as close as possible to where it will be used, while using a
+React Async is different in that it tries to resolve data as close as possible to where it will be used, while using a
 declarative syntax, using just JSX and native promises. This is in contrast to systems like Redux where you would
 configure any data fetching or updates on a higher (application global) level, using a special construct
 (actions/reducers).
 
-`<Async>` works really well even in larger applications with multiple or nested data dependencies. It encourages loading
+React Async works really well even in larger applications with multiple or nested data dependencies. It encourages loading
 data on-demand and in parallel at component level instead of in bulk at the route / page level. It's entirely decoupled
 from your routes, so it works well in complex applications that have a dynamic routing model or don't use routes at all.
 
-`<Async>` is promise-based, so you can resolve anything you want, not just `fetch` requests.
+React Async is promise-based, so you can resolve anything you want, not just `fetch` requests.
 
 ## Install
 
@@ -277,7 +277,7 @@ render() {
 
 ## Helper components
 
-`<Async>` provides several helper components that make your JSX even more declarative.
+React Async provides several helper components that make your JSX even more declarative.
 They don't have to be direct children of `<Async>` and you can use the same component several times.
 
 ### `<Async.Loading>`
