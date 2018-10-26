@@ -387,6 +387,19 @@ test("createInstance allows setting default props", async () => {
   expect(onResolve).toHaveBeenCalledWith("done")
 })
 
+test("custom instances also have helper components", async () => {
+  const promiseFn = () => resolveTo("done")
+  const CustomAsync = createInstance({ promiseFn })
+  const { getByText } = render(
+    <CustomAsync>
+      <CustomAsync.Loading>loading</CustomAsync.Loading>
+      <CustomAsync.Resolved>resolved</CustomAsync.Resolved>
+    </CustomAsync>
+  )
+  await waitForElement(() => getByText("loading"))
+  await waitForElement(() => getByText("resolved"))
+})
+
 test("an unrelated change in props does not update the Context", async () => {
   let one
   let two
