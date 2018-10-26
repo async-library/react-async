@@ -4,6 +4,6 @@ node_js:
 cache:
   directories:
     - node_modules
-script: npm test:compat
+script: npm run test:compat
 after_success:
   - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
