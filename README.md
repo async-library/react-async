@@ -93,6 +93,15 @@ const MyComponent = () => {
 }
 ```
 
+Or using the shorthand version:
+
+```js
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync(loadJson)
+  // ...
+}
+```
+
 Using render props for ultimate flexibility:
 
 ```js
@@ -193,6 +202,14 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 - `reload` {Function} re-runs the promise when invoked, using the previous arguments
 - `setData` {Function} sets `data` to the passed value, unsets `error` and cancels any pending promise
 - `setError` {Function} sets `error` to the passed value and cancels any pending promise
+
+### `useState`
+
+The `useState` hook accepts an object with the same props as `<Async>`. Alternatively you can use the shorthand syntax:
+
+```js
+useState(promiseFn, initialValue)
+```
 
 ## Examples
 

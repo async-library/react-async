@@ -1,16 +1,17 @@
 import { useState, useEffect, useMemo } from "react"
 
-const useAsync = props => {
+const useAsync = (opts, init) => {
   let counter = 0
   let isMounted = false
   let lastArgs = undefined
 
-  const initialError = props.initialValue instanceof Error ? props.initialValue : undefined
-  const initialData = initialError ? undefined : props.initialValue
-  const [data, setData] = useState(initialData)
-  const [error, setError] = useState(initialError)
-  const [startedAt, setStartedAt] = useState(props.promiseFn ? new Date() : undefined)
-  const [finishedAt, setFinishedAt] = useState(props.initialValue ? new Date() : undefined)
+  const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
+  const { promiseFn, deferFn, initialValue, onResolve, onReject, watch } = options
+
+  const [data, setData] = useState(initialValue instanceof Error ? undefined : initialValue)
+  const [error, setError] = useState(initialValue instanceof Error ? initialValue : undefined)
+  const [startedAt, setStartedAt] = useState(promiseFn ? new Date() : undefined)
+  const [finishedAt, setFinishedAt] = useState(initialValue ? new Date() : undefined)
 
   const cancel = () => {
     counter++
@@ -44,21 +45,21 @@ const useAsync = props => {
     return error
   }
 
-  const onResolve = count => data => count === counter && handleData(data, props.onResolve)
-  const onReject = count => error => count === counter && handleError(error, props.onReject)
+  const handleResolve = count => data => count === counter && handleData(data, onResolve)
+  const handleReject = count => error => count === counter && handleError(error, onReject)
 
   const load = () => {
-    if (props.promiseFn) {
+    if (promiseFn) {
       start()
-      props.promiseFn(props).then(onResolve(counter), onReject(counter))
+      promiseFn(options).then(handleResolve(counter), handleReject(counter))
     }
   }
 
   const run = (...args) => {
-    if (props.deferFn) {
+    if (deferFn) {
       lastArgs = args
       start()
-      return props.deferFn(...args, props).then(onResolve(counter), onReject(counter))
+      return deferFn(...args, options).then(handleResolve(counter), handleReject(counter))
     }
   }
 
@@ -69,7 +70,7 @@ const useAsync = props => {
     return () => (isMounted = false)
   }, [])
 
-  useEffect(load, [props.promiseFn, props.watch])
+  useEffect(load, [promiseFn, watch])
 
   return useMemo(
     () => ({
@@ -78,12 +79,12 @@ const useAsync = props => {
       finishedAt,
       data,
       error,
+      initialValue,
       cancel,
       run,
       reload,
       setData: handleData,
-      setError: handleError,
-      initialValue: props.initialValue
+      setError: handleError
     }),
     [data, error, startedAt, finishedAt]
   )
