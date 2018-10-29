@@ -24,7 +24,7 @@
     "src"
   ],
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
     "test": "jest src",
     "test:watch": "npm run test -- --watch",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
@@ -47,7 +47,8 @@
     "jest-dom": "2.1.0",
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0",
-    "react-testing-library": "5.2.3"
+    "react-testing-library": "5.2.3",
+    "rimraf": "2.6.2"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
