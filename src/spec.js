@@ -5,9 +5,9 @@ import Async, { createInstance } from "./"
 
 afterEach(cleanup)
 
-const resolveIn = ms => value => new Promise(resolve => setTimeout(() => resolve(value), ms))
+const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
 const resolveTo = resolveIn(0)
-const rejectIn = ms => err => new Promise((resolve, reject) => setTimeout(() => reject(err), ms))
+const rejectIn = ms => err => new Promise((resolve, reject) => setTimeout(reject, ms, err))
 const rejectTo = rejectIn(0)
 
 test("runs promiseFn on mount", () => {
