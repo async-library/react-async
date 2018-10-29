@@ -15,10 +15,10 @@
     <img src="https://img.shields.io/bundlephobia/min/react-async.svg" alt="minified size">
   </a>
   <a href="https://travis-ci.org/ghengeveld/react-async">
-    <img src="https://img.shields.io/travis/ghengeveld/react-async.svg" alt="build status">
+    <img src="https://img.shields.io/travis/ghengeveld/react-async/master.svg" alt="build status">
   </a>
   <a href="https://codecov.io/github/ghengeveld/react-async">
-    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async.svg" alt="code coverage">
+    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async/master.svg" alt="code coverage">
   </a>
   <a href="https://opensource.org/licenses/ISC">
     <img src="https://img.shields.io/npm/l/react-async.svg" alt="license">
