@@ -63,6 +63,19 @@ from your routes, so it works well in complex applications that have a dynamic r
 
 React Async is promise-based, so you can resolve anything you want, not just `fetch` requests.
 
+## Concurrent React and Suspense
+
+The React team is currently working on a large rewrite called [Concurrent React], previously known as "Async React".
+Part of this rewrite is Suspense, which is a generic way for components to suspend rendering while they load data from
+a cache. It can render a fallback UI while loading data, much like `<Async.Loading>`.
+
+React Async has no direct relation to Concurrent React. They are conceptually close, but not the same. React Async is
+meant to make dealing with asynchronous business logic easier. Concurrent React will make those features have less
+impact on performance and usability. When Suspense lands, React Async will make full use of Suspense features. In fact
+you can already **start using React Async right now**, and in a later update you'll **get Suspense features for free**.
+
+[concurrent react]: https://github.com/sw-yx/fresh-concurrent-react/blob/master/Intro.md#introduction-what-is-concurrent-react
+
 ## Install
 
 ```
