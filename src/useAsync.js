@@ -1,92 +1,81 @@
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 
 const useAsync = (opts, init) => {
-  let counter = 0
-  let isMounted = false
-  let lastArgs = undefined
+  const counter = useRef(0)
+  const isMounted = useRef(true)
+  const lastArgs = useRef(undefined)
 
   const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
   const { promiseFn, deferFn, initialValue, onResolve, onReject, watch } = options
 
-  const [data, setData] = useState(initialValue instanceof Error ? undefined : initialValue)
-  const [error, setError] = useState(initialValue instanceof Error ? initialValue : undefined)
-  const [startedAt, setStartedAt] = useState(promiseFn ? new Date() : undefined)
-  const [finishedAt, setFinishedAt] = useState(initialValue ? new Date() : undefined)
-
-  const cancel = () => {
-    counter++
-    setStartedAt(undefined)
-  }
-
-  const start = () => {
-    counter++
-    setStartedAt(new Date())
-    setFinishedAt(undefined)
-  }
-
-  const end = () => setFinishedAt(new Date())
+  const [state, setState] = useState({
+    data: initialValue instanceof Error ? undefined : initialValue,
+    error: initialValue instanceof Error ? initialValue : undefined,
+    startedAt: promiseFn ? new Date() : undefined,
+    finishedAt: initialValue ? new Date() : undefined,
+  })
 
   const handleData = (data, callback = () => {}) => {
-    if (isMounted) {
-      end()
-      setData(data)
-      setError(undefined)
+    if (isMounted.current) {
+      setState(state => ({ ...state, data, error: undefined, finishedAt: new Date() }))
       callback(data)
     }
     return data
   }
 
   const handleError = (error, callback = () => {}) => {
-    if (isMounted) {
-      end()
-      setError(error)
+    if (isMounted.current) {
+      setState(state => ({ ...state, error, finishedAt: new Date() }))
       callback(error)
     }
     return error
   }
 
-  const handleResolve = count => data => count === counter && handleData(data, onResolve)
-  const handleReject = count => error => count === counter && handleError(error, onReject)
+  const handleResolve = count => data => count === counter.current && handleData(data, onResolve)
+  const handleReject = count => error => count === counter.current && handleError(error, onReject)
+
+  const start = () => {
+    counter.current++
+    setState(state => ({
+      ...state,
+      startedAt: new Date(),
+      finishedAt: undefined,
+    }))
+  }
 
   const load = () => {
-    if (promiseFn) {
+    if (promiseFn && !(initialValue && counter.current === 0)) {
       start()
-      promiseFn(options).then(handleResolve(counter), handleReject(counter))
+      promiseFn(options).then(handleResolve(counter.current), handleReject(counter.current))
     }
   }
 
   const run = (...args) => {
     if (deferFn) {
-      lastArgs = args
       start()
-      return deferFn(...args, options).then(handleResolve(counter), handleReject(counter))
+      lastArgs.current = args
+      return deferFn(...args, options).then(handleResolve(counter.current), handleReject(counter.current))
     }
   }
 
-  const reload = () => (lastArgs ? run(...lastArgs) : load())
-
-  useEffect(() => {
-    isMounted = true
-    return () => (isMounted = false)
-  }, [])
-
   useEffect(load, [promiseFn, watch])
+  useEffect(() => () => (isMounted.current = false), [])
 
   return useMemo(
     () => ({
-      isLoading: startedAt && (!finishedAt || finishedAt < startedAt),
-      startedAt,
-      finishedAt,
-      data,
-      error,
+      ...state,
+      isLoading: state.startedAt && (!state.finishedAt || state.finishedAt < state.startedAt),
       initialValue,
-      cancel,
       run,
-      reload,
+      reload: () => (lastArgs ? run(...lastArgs) : load()),
+      cancel: () => {
+        counter.current++
+        setState(state => ({ ...state, startedAt: undefined }))
+      },
       setData: handleData,
-      setError: handleError
+      setError: handleError,
     }),
-    [data, error, startedAt, finishedAt]
+    [state]
   )
 }
 

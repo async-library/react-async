@@ -1,7 +1,7 @@
 import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
-import Async, { createInstance, useAsync } from "./"
+import Async, { createInstance } from "./"
 
 afterEach(cleanup)
 
@@ -422,11 +422,4 @@ test("an unrelated change in props does not update the Context", async () => {
     </Async>
   )
   expect(one).toBe(two)
-})
-
-test("useAsync returns render props", async () => {
-  const promiseFn = () => new Promise(resolve => setTimeout(resolve, 0, "done"))
-  const Async = ({ children, ...props }) => children(useAsync(props))
-  const { getByText } = render(<Async promiseFn={promiseFn}>{({ data }) => data || null}</Async>)
-  await waitForElement(() => getByText("done"))
 })
