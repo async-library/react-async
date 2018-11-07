@@ -79,15 +79,9 @@ test("useAsync passes finishedAt date when the promise finishes", async () => {
   await waitForElement(() => getByText("done"))
 })
 
-test("useAsync passes reload function that re-runs the promise", () => {
-  const promiseFn = jest.fn().mockReturnValue(resolveTo())
-  const component = (
-    <Async promiseFn={promiseFn}>
-      {({ reload }) => {
-        return <button onClick={reload}>reload</button>
-      }}
-    </Async>
-  )
+test("useAsync passes reload function that re-runs the promise", async () => {
+  const promiseFn = jest.fn().mockReturnValue(resolveTo("done"))
+  const component = <Async promiseFn={promiseFn}>{({ reload }) => <button onClick={reload}>reload</button>}</Async>
   const { getByText, rerender } = render(component)
   rerender(component)
   expect(promiseFn).toHaveBeenCalledTimes(1)
@@ -221,16 +215,20 @@ test("useAsync cancels pending promise when unmounted", async () => {
 })
 
 test("useAsync cancels and restarts the promise when promiseFn changes", async () => {
-  const promiseFn1 = jest.fn().mockReturnValue(resolveIn(10)("one"))
-  const promiseFn2 = jest.fn().mockReturnValue(resolveIn(10)("two"))
+  const promiseFn1 = jest.fn().mockReturnValue(Promise.resolve("one"))
+  const promiseFn2 = jest.fn().mockReturnValue(Promise.resolve("two"))
   const onResolve = jest.fn()
   const component1 = <Async promiseFn={promiseFn1} onResolve={onResolve} />
   const component2 = <Async promiseFn={promiseFn2} onResolve={onResolve} />
   const { rerender } = render(component1)
+  await Promise.resolve()
+  rerender(component1)
+  expect(promiseFn1).toHaveBeenCalled()
   rerender(component2)
-  await resolveIn(10)()
   rerender(component2)
+  expect(promiseFn2).toHaveBeenCalled()
   expect(onResolve).not.toHaveBeenCalledWith("one")
+  await Promise.resolve()
   expect(onResolve).toHaveBeenCalledWith("two")
 })
 

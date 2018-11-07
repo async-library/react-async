@@ -44,7 +44,8 @@ const useAsync = (opts, init) => {
   }
 
   const load = () => {
-    if (promiseFn && !(initialValue && counter.current === 0)) {
+    const isPreInitialized = initialValue && counter.current === 0
+    if (promiseFn && !isPreInitialized) {
       start()
       promiseFn(options).then(handleResolve(counter.current), handleReject(counter.current))
     }
@@ -67,7 +68,7 @@ const useAsync = (opts, init) => {
       isLoading: state.startedAt && (!state.finishedAt || state.finishedAt < state.startedAt),
       initialValue,
       run,
-      reload: () => (lastArgs ? run(...lastArgs) : load()),
+      reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
       cancel: () => {
         counter.current++
         setState(state => ({ ...state, startedAt: undefined }))
