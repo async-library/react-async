@@ -39,6 +39,6 @@ declare class Async extends React.Component<AsyncProps, any> {
   public static Rejected: React.SFC<RejectedProps>
 }
 
-declare function createInstance(defaultProps?: object): Async
+declare function createInstance(defaultProps?: AsyncProps): Async
 
 export default createInstance
