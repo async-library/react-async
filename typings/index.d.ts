@@ -1,44 +1,38 @@
 import * as React from "react"
 
-type ChildrenFunction = (state: object) => React.ReactNode
+type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
 
-interface AsyncProps {
-  children?: React.ReactNode | ChildrenFunction
-  promiseFn?(props: object): Promise<any>
-  deferFn?(props: object): Promise<any>
+interface AsyncProps<T> {
+  promiseFn?: (props: object) => Promise<T>
+  deferFn?: (...args, props: object) => Promise<T>
   watch?: any
-  initialValue?: any
-  onResolve?(data: any): any
-  onReject?(error: Error): any
+  initialValue?: T
+  onResolve?: (data: T) => void
+  onError?: (error: Error) => void
+  children?: AsyncChildren<T>
 }
 
-interface PendingProps {
-  children?: React.ReactNode | ChildrenFunction
-  persist?: boolean
+interface AsyncState<T> {
+  initialValue?: T
+  data?: T
+  error?: Error
+  isLoading: boolean
+  startedAt?: Date
+  finishedAt?: Date
+  cancel: () => void
+  run: (...args) => Promise<T>
+  reload: () => void
+  setData: (data: T, callback?: () => void) => T
+  setError: (error: Error, callback?: () => void) => Error
 }
 
-interface LoadingProps {
-  children?: React.ReactNode | ChildrenFunction
-  initial?: boolean
+class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {
+  static Pending: React.FunctionComponent<{ children?: AsyncChildren; persist?: boolean }>
+  static Loading: React.FunctionComponent<{ children?: AsyncChildren; initial?: boolean }>
+  static Resolved: React.FunctionComponent<{ children?: AsyncChildren; persist?: boolean }>
+  static Rejected: React.FunctionComponent<{ children?: AsyncChildren; persist?: boolean }>
 }
 
-interface ResolvedProps {
-  children?: React.ReactNode | ChildrenFunction
-  persist?: boolean
-}
-
-interface RejectedProps {
-  children?: React.ReactNode | ChildrenFunction
-  persist?: boolean
-}
-
-declare class Async extends React.Component<AsyncProps, any> {
-  public static Pending: React.SFC<PendingProps>
-  public static Loading: React.SFC<LoadingProps>
-  public static Resolved: React.SFC<ResolvedProps>
-  public static Rejected: React.SFC<RejectedProps>
-}
-
-declare function createInstance(defaultProps?: AsyncProps): Async
+function createInstance<T>(defaultProps?: AsyncProps<T> = {}): Async<T>
 
 export default createInstance
