@@ -4,7 +4,7 @@ type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.Reac
 
 interface AsyncProps<T> {
   promiseFn?: (props: object) => Promise<T>
-  deferFn?: (...args, props: object) => Promise<T>
+  deferFn?: (...args) => Promise<T>
   watch?: any
   initialValue?: T
   onResolve?: (data: T) => void
