@@ -22,7 +22,8 @@
   "typings": "typings/index.d.ts",
   "files": [
     "lib",
-    "src"
+    "src",
+    "typings"
   ],
   "scripts": {
     "build": "babel src -d lib",
