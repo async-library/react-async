@@ -19,6 +19,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "lib/index.js",
+  "typings": "typings/index.d.ts",
   "files": [
     "lib",
     "src"
