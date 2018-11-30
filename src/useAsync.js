@@ -81,7 +81,9 @@ const useAsync = (opts, init) => {
 }
 
 const unsupported = () => {
-  throw new Error("useAsync requires react@16.7.0 or later")
+  throw new Error(
+    "useAsync requires react@16.7.0 or later. Upgrade your React version or use the <Async> component instead."
+  )
 }
 
 export default (useState ? useAsync : unsupported)

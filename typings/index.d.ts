@@ -1,14 +1,18 @@
 import * as React from "react"
 
 type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
+type PromiseFn<T> = (props: object) => Promise<T>
 
-interface AsyncProps<T> {
-  promiseFn?: (props: object) => Promise<T>
+interface AsyncOptions<T> {
+  promiseFn?: PromiseFn<T>
   deferFn?: (...args) => Promise<T>
   watch?: any
   initialValue?: T
   onResolve?: (data: T) => void
   onError?: (error: Error) => void
+}
+
+interface AsyncProps<T> extends AsyncOptions<T> {
   children?: AsyncChildren<T>
 }
 
@@ -36,5 +40,7 @@ declare namespace Async {
 }
 
 declare function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
+
+export function useAsync<T>(opts: AsyncOptions<T> | PromiseFn<T>, init?: T): AsyncState<T>
 
 export default createInstance
