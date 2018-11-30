@@ -26,11 +26,13 @@ interface AsyncState<T> {
   setError: (error: Error, callback?: () => void) => Error
 }
 
-declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {
-  static Pending: React.FunctionComponent<{ children?: AsyncChildren<T>; persist?: boolean }>
-  static Loading: React.FunctionComponent<{ children?: AsyncChildren<T>; initial?: boolean }>
-  static Resolved: React.FunctionComponent<{ children?: AsyncChildren<T>; persist?: boolean }>
-  static Rejected: React.FunctionComponent<{ children?: AsyncChildren<T>; persist?: boolean }>
+declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+
+namespace Async {
+  export const Pending: React.FunctionComponent<{ children?: AsyncChildren<T>; persist?: boolean }>
+  export const Loading: React.FunctionComponent<{ children?: AsyncChildren<T>; initial?: boolean }>
+  export const Resolved: React.FunctionComponent<{ children?: AsyncChildren<T>; persist?: boolean }>
+  export const Rejected: React.FunctionComponent<{ children?: AsyncChildren<T>; persist?: boolean }>
 }
 
 declare function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
