@@ -15,10 +15,10 @@
     <img src="https://img.shields.io/bundlephobia/min/react-async.svg" alt="minified size">
   </a>
   <a href="https://travis-ci.org/ghengeveld/react-async">
-    <img src="https://img.shields.io/travis/ghengeveld/react-async.svg" alt="build status">
+    <img src="https://img.shields.io/travis/ghengeveld/react-async/master.svg" alt="build status">
   </a>
   <a href="https://codecov.io/github/ghengeveld/react-async">
-    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async.svg" alt="code coverage">
+    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async/master.svg" alt="code coverage">
   </a>
   <a href="https://opensource.org/licenses/ISC">
     <img src="https://img.shields.io/npm/l/react-async.svg" alt="license">
@@ -62,6 +62,19 @@ data on-demand and in parallel at component level instead of in bulk at the rout
 from your routes, so it works well in complex applications that have a dynamic routing model or don't use routes at all.
 
 React Async is promise-based, so you can resolve anything you want, not just `fetch` requests.
+
+## Concurrent React and Suspense
+
+The React team is currently working on a large rewrite called [Concurrent React], previously known as "Async React".
+Part of this rewrite is Suspense, which is a generic way for components to suspend rendering while they load data from
+a cache. It can render a fallback UI while loading data, much like `<Async.Loading>`.
+
+React Async has no direct relation to Concurrent React. They are conceptually close, but not the same. React Async is
+meant to make dealing with asynchronous business logic easier. Concurrent React will make those features have less
+impact on performance and usability. When Suspense lands, React Async will make full use of Suspense features. In fact
+you can already **start using React Async right now**, and in a later update you'll **get Suspense features for free**.
+
+[concurrent react]: https://github.com/sw-yx/fresh-concurrent-react/blob/master/Intro.md#introduction-what-is-concurrent-react
 
 ## Install
 

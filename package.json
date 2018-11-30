@@ -1,6 +1,6 @@
 {
   "name": "react-async",
-  "version": "3.8.1",
+  "version": "3.8.2",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
@@ -19,9 +19,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "main": "lib/index.js",
+  "typings": "typings/index.d.ts",
   "files": [
     "lib",
-    "src"
+    "src",
+    "typings"
   ],
   "scripts": {
     "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
