@@ -6,7 +6,7 @@ const isFunction = arg => typeof arg === "function"
  * createInstance allows you to create instances of Async that are bound to a specific promise.
  * A unique instance also uses its own React context for better nesting capability.
  */
-export const createInstance = (defaultProps = {}) => {
+export const createInstance = (defaultProps = {}, displayName = "Async") => {
   const { Consumer, Provider } = React.createContext()
 
   class Async extends React.Component {
@@ -202,6 +202,12 @@ export const createInstance = (defaultProps = {}) => {
   Async.Loading = Loading
   Async.Resolved = Resolved
   Async.Rejected = Rejected
+
+  Async.displayName = displayName
+  Async.Pending.displayName = `${displayName}.Pending`
+  Async.Loading.displayName = `${displayName}.Loading`
+  Async.Resolved.displayName = `${displayName}.Resolved`
+  Async.Rejected.displayName = `${displayName}.Rejected`
 
   return Async
 }
