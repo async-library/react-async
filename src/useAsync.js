@@ -47,7 +47,7 @@ const useAsync = (opts, init) => {
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
       start()
-      promiseFn(options).then(handleResolve(counter.current), handleReject(counter.current))
+      return promiseFn(options).then(handleResolve(counter.current), handleReject(counter.current))
     }
   }
 
@@ -55,11 +55,14 @@ const useAsync = (opts, init) => {
     if (deferFn) {
       start()
       lastArgs.current = args
-      return deferFn(...args, options).then(handleResolve(counter.current), handleReject(counter.current))
+      return deferFn(...args, options).then(
+        handleResolve(counter.current),
+        handleReject(counter.current)
+      )
     }
   }
 
-  useEffect(load, [promiseFn, watch])
+  useEffect(() => load() && undefined, [promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
 
   return useMemo(

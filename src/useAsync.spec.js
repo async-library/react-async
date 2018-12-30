@@ -83,7 +83,9 @@ describe("useAsync", () => {
   test("passes reload function that re-runs the promise", async () => {
     const promiseFn = jest.fn().mockReturnValue(resolveTo("done"))
     const component = (
-      <Async promiseFn={promiseFn}>{({ reload }) => <button onClick={reload}>reload</button>}</Async>
+      <Async promiseFn={promiseFn}>
+        {({ reload }) => <button onClick={reload}>reload</button>}
+      </Async>
     )
     const { getByText } = render(component)
     flushEffects()
