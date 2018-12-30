@@ -8,9 +8,7 @@ const loadUser = ({ userId }) =>
     .then(res => (res.ok ? res : Promise.reject(res)))
     .then(res => res.json())
 
-const AsyncUser = createInstance({
-  promiseFn: loadUser,
-})
+const AsyncUser = createInstance({ promiseFn: loadUser }, "AsyncUser")
 
 const UserPlaceholder = () => (
   <div className="user placeholder">
