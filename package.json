@@ -34,7 +34,7 @@
     "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 && npm test",
     "test:forwards": "npm i react@next react-dom@next && npm test",
     "test:latest": "npm i react@latest react-dom@latest && npm test",
-    "test:hook": "npm i react@16.7.0-alpha.0 react-dom@16.7.0-alpha.0 && jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
+    "test:hook": "npm i react@16.7.0-alpha.2 react-dom@16.7.0-alpha.2 && jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
     "prepublishOnly": "npm run lint && npm run test:compat && npm run test:hook && npm run build"
   },
   "dependencies": {},
