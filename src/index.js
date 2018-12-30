@@ -1,4 +1,5 @@
 import React from "react"
+export { default as useAsync } from "./useAsync"
 
 const isFunction = arg => typeof arg === "function"
 

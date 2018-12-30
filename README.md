@@ -31,13 +31,13 @@
   </a>
 </p>
 
-React component for declarative promise resolution and data fetching. Leverages the Render Props pattern for ultimate
-flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states, without
-assumptions about the shape of your data or the type of request.
+React component for declarative promise resolution and data fetching. Leverages the Render Props pattern and Hooks for
+ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states,
+without assumptions about the shape of your data or the type of request.
 
 - Zero dependencies
 - Works with any (native) promise
-- Choose between Render Props and Context-based helper components
+- Choose between Render Props, Context-based helper components or the `useAsync` hook
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` prop
@@ -83,6 +83,37 @@ npm install --save react-async
 ```
 
 ## Usage
+
+As a hook with `useAsync`:
+
+```js
+import { useAsync } from "react-async"
+
+const loadJson = () => fetch("/some/url").then(res => res.json())
+
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync({ promiseFn: loadJson })
+  if (isLoading) return "Loading..."
+  if (error) return `Something went wrong: ${error.message}`
+  if (data)
+    return (
+      <div>
+        <strong>Loaded some data:</strong>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    )
+  return null
+}
+```
+
+Or using the shorthand version:
+
+```js
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync(loadJson)
+  // ...
+}
+```
 
 Using render props for ultimate flexibility:
 
@@ -185,6 +216,14 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 - `reload` {Function} re-runs the promise when invoked, using the previous arguments
 - `setData` {Function} sets `data` to the passed value, unsets `error` and cancels any pending promise
 - `setError` {Function} sets `error` to the passed value and cancels any pending promise
+
+### `useState`
+
+The `useState` hook accepts an object with the same props as `<Async>`. Alternatively you can use the shorthand syntax:
+
+```js
+useState(promiseFn, initialValue)
+```
 
 ## Examples
 

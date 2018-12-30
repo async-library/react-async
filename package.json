@@ -26,15 +26,16 @@
     "typings"
   ],
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
     "lint": "eslint src",
-    "test": "jest src",
+    "test": "jest src/spec.js  --collectCoverageFrom=src/index.js",
     "test:watch": "npm run test -- --watch",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
     "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 && npm test",
     "test:forwards": "npm i react@next react-dom@next && npm test",
     "test:latest": "npm i react@latest react-dom@latest && npm test",
-    "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
+    "test:hook": "npm i react@16.7.0-alpha.2 react-dom@16.7.0-alpha.2 && jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
+    "prepublishOnly": "npm run lint && npm run test:compat && npm run test:hook && npm run build"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -58,7 +59,8 @@
     "prettier": "1.15.3",
     "react": "16.6.3",
     "react-dom": "16.6.3",
-    "react-testing-library": "5.2.3"
+    "react-testing-library": "5.4.2",
+    "rimraf": "2.6.2"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
