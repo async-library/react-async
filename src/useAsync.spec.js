@@ -81,7 +81,9 @@ test("useAsync passes finishedAt date when the promise finishes", async () => {
 
 test("useAsync passes reload function that re-runs the promise", async () => {
   const promiseFn = jest.fn().mockReturnValue(resolveTo("done"))
-  const component = <Async promiseFn={promiseFn}>{({ reload }) => <button onClick={reload}>reload</button>}</Async>
+  const component = (
+    <Async promiseFn={promiseFn}>{({ reload }) => <button onClick={reload}>reload</button>}</Async>
+  )
   const { getByText } = render(component)
   flushEffects()
   expect(promiseFn).toHaveBeenCalledTimes(1)
@@ -132,6 +134,21 @@ test("useAsync runs deferFn only when explicitly invoked, passing arguments and 
   expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn, foo: "bar" }))
   fireEvent.click(getByText("run"))
   expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn, foo: "bar" }))
+})
+
+test("useAsync cancel will prevent the resolved promise from propagating", async () => {
+  const promiseFn = jest.fn().mockReturnValue(Promise.resolve("ok"))
+  const onResolve = jest.fn()
+  const component = (
+    <Async promiseFn={promiseFn} onResolve={onResolve}>
+      {({ cancel }) => <button onClick={cancel}>cancel</button>}
+    </Async>
+  )
+  const { getByText } = render(component)
+  flushEffects()
+  fireEvent.click(getByText("cancel"))
+  await Promise.resolve()
+  expect(onResolve).not.toHaveBeenCalled()
 })
 
 test("useAsync reload uses the arguments of the previous run", () => {
