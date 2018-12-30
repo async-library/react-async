@@ -1,6 +1,6 @@
 {
   "name": "react-async",
-  "version": "3.8.2",
+  "version": "3.10.0",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
@@ -27,6 +27,7 @@
   ],
   "scripts": {
     "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
+    "lint": "eslint src",
     "test": "jest src/spec.js  --collectCoverageFrom=src/index.js",
     "test:watch": "npm run test -- --watch",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
@@ -34,7 +35,7 @@
     "test:forwards": "npm i react@next react-dom@next && npm test",
     "test:latest": "npm i react@latest react-dom@latest && npm test",
     "test:hook": "npm i react@16.7.0-alpha.0 react-dom@16.7.0-alpha.0 && jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
-    "prepublishOnly": "npm run test:compat && npm run build"
+    "prepublishOnly": "npm run lint && npm run test:compat && npm run test:hook && npm run build"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -42,16 +43,30 @@
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
+    "babel-eslint": "10.0.1",
     "babel-preset-env": "1.7.0",
     "babel-preset-flow": "6.23.0",
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-2": "6.24.1",
+    "eslint": "5.11.1",
+    "eslint-config-prettier": "3.3.0",
+    "eslint-plugin-jest": "22.1.2",
+    "eslint-plugin-prettier": "3.0.1",
+    "eslint-plugin-promise": "4.0.1",
+    "eslint-plugin-react": "7.12.0",
     "jest": "23.6.0",
     "jest-dom": "2.1.0",
+<<<<<<< HEAD
     "react": "16.7.0-alpha.0",
     "react-dom": "16.7.0-alpha.0",
     "react-testing-library": "5.3.1",
     "rimraf": "2.6.2"
+=======
+    "prettier": "1.15.3",
+    "react": "16.6.3",
+    "react-dom": "16.6.3",
+    "react-testing-library": "5.2.3"
+>>>>>>> master
   },
   "jest": {
     "coverageDirectory": "./coverage/",

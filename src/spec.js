@@ -31,7 +31,9 @@ describe("Async", () => {
 
   test("passes rejection error to children as render prop", async () => {
     const promiseFn = () => Promise.reject("oops")
-    const { getByText } = render(<Async promiseFn={promiseFn}>{({ error }) => error || null}</Async>)
+    const { getByText } = render(
+      <Async promiseFn={promiseFn}>{({ error }) => error || null}</Async>
+    )
     await waitForElement(() => getByText("oops"))
   })
 
@@ -110,7 +112,9 @@ describe("Async", () => {
       }
     }
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
-    const { getByText } = render(<Counter>{count => <Async promiseFn={promiseFn} watch={count} />}</Counter>)
+    const { getByText } = render(
+      <Counter>{count => <Async promiseFn={promiseFn} watch={count} />}</Counter>
+    )
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
@@ -327,7 +331,9 @@ describe("Async.Resolved", () => {
     const deferFn = () => rejectTo("fail")
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn} deferFn={deferFn}>
-        <Async.Resolved persist>{(data, { run }) => <button onClick={run}>{data}</button>}</Async.Resolved>
+        <Async.Resolved persist>
+          {(data, { run }) => <button onClick={run}>{data}</button>}
+        </Async.Resolved>
         <Async.Rejected>{error => error}</Async.Rejected>
       </Async>
     )

@@ -170,7 +170,8 @@ import { createInstance } from "react-async"
 
 const loadCustomer = ({ customerId }) => fetch(`/api/customers/${customerId}`).then(...)
 
-const AsyncCustomer = createInstance({ promiseFn: loadCustomer })
+// createInstance takes a defaultProps object and a displayName (both optional)
+const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer")
 
 const MyComponent = () => (
   <AsyncCustomer customerId="123">

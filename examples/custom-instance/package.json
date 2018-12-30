@@ -1,0 +1,25 @@
+{
+  "name": "custom-instance",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.7.0",
+    "react-async": "latest",
+    "react-dom": "^16.7.0",
+    "react-scripts": "2.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "now-build": "npm run build && mv build dist"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
