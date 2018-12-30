@@ -13,6 +13,14 @@ export const createInstance = (defaultProps = {}) => {
     constructor(props) {
       super(props)
 
+      this.load = this.load.bind(this)
+      this.run = this.run.bind(this)
+      this.cancel = this.cancel.bind(this)
+      this.onResolve = this.onResolve.bind(this)
+      this.onReject = this.onReject.bind(this)
+      this.setData = this.setData.bind(this)
+      this.setError = this.setError.bind(this)
+
       const promiseFn = props.promiseFn || defaultProps.promiseFn
       const initialValue = props.initialValue || defaultProps.initialValue
       const initialError = initialValue instanceof Error ? initialValue : undefined
@@ -35,7 +43,7 @@ export const createInstance = (defaultProps = {}) => {
           this.run(...this.args)
         },
         setData: this.setData,
-        setError: this.setError
+        setError: this.setError,
       }
     }
 
@@ -57,7 +65,7 @@ export const createInstance = (defaultProps = {}) => {
       this.mounted = false
     }
 
-    load = () => {
+    load() {
       const promiseFn = this.props.promiseFn || defaultProps.promiseFn
       if (!promiseFn) return
       this.counter++
@@ -65,42 +73,49 @@ export const createInstance = (defaultProps = {}) => {
       return promiseFn(this.props).then(this.onResolve(this.counter), this.onReject(this.counter))
     }
 
-    run = (...args) => {
+    run(...args) {
       const deferFn = this.props.deferFn || defaultProps.deferFn
       if (!deferFn) return
       this.counter++
       this.args = args
       this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-      return deferFn(...args, this.props).then(this.onResolve(this.counter), this.onReject(this.counter))
+      return deferFn(...args, this.props).then(
+        this.onResolve(this.counter),
+        this.onReject(this.counter)
+      )
     }
 
-    cancel = () => {
+    cancel() {
       this.counter++
       this.setState({ isLoading: false, startedAt: undefined })
     }
 
-    onResolve = counter => data => {
-      if (this.mounted && this.counter === counter) {
-        const onResolve = this.props.onResolve || defaultProps.onResolve
-        this.setData(data, () => onResolve && onResolve(data))
+    onResolve(counter) {
+      return data => {
+        if (this.mounted && this.counter === counter) {
+          const onResolve = this.props.onResolve || defaultProps.onResolve
+          this.setData(data, () => onResolve && onResolve(data))
+        }
+        return data
       }
-      return data
     }
 
-    onReject = counter => error => {
-      if (this.mounted && this.counter === counter) {
-        const onReject = this.props.onReject || defaultProps.onReject
-        this.setError(error, () => onReject && onReject(error))
+    onReject(counter) {
+      return error => {
+        if (this.mounted && this.counter === counter) {
+          const onReject = this.props.onReject || defaultProps.onReject
+          this.setError(error, () => onReject && onReject(error))
+        }
+        return error
       }
-      return error
     }
 
-    setData = (data, callback) => {
+    setData(data, callback) {
       this.setState({ data, error: undefined, isLoading: false, finishedAt: new Date() }, callback)
       return data
     }
 
-    setError = (error, callback) => {
+    setError(error, callback) {
       this.setState({ error, isLoading: false, finishedAt: new Date() }, callback)
       return error
     }
