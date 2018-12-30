@@ -27,7 +27,12 @@ const UserDetails = ({ data }) => (
 const App = () => (
   <>
     <Async promiseFn={loadUser} userId={1}>
-      {({ data, isLoading }) => (isLoading ? <UserPlaceholder /> : <UserDetails data={data} />)}
+      {({ data, error, isLoading }) => {
+        if (isLoading) return <UserPlaceholder />
+        if (error) return <p>{error.message}</p>
+        if (data) return <UserDetails data={data} />
+        return null
+      }}
     </Async>
 
     <Async promiseFn={loadUser} userId={2}>
@@ -35,6 +40,7 @@ const App = () => (
         <UserPlaceholder />
       </Async.Loading>
       <Async.Resolved>{data => <UserDetails data={data} />}</Async.Resolved>
+      <Async.Rejected>{error => <p>{error.message}</p>}</Async.Rejected>
     </Async>
   </>
 )
