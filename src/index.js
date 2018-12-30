@@ -138,7 +138,7 @@ export const createInstance = (defaultProps = {}) => {
    * @prop {boolean} persist Show until we have data, even while loading or when an error occurred
    * @prop {Function|Node} children Function (passing state) or React node
    */
-  Async.Pending = ({ children, persist }) => (
+  const Pending = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.data !== undefined) return null
@@ -155,7 +155,7 @@ export const createInstance = (defaultProps = {}) => {
    * @prop {boolean} initial Show only on initial load (data is undefined)
    * @prop {Function|Node} children Function (passing state) or React node
    */
-  Async.Loading = ({ children, initial }) => (
+  const Loading = ({ children, initial }) => (
     <Consumer>
       {state => {
         if (!state.isLoading) return null
@@ -171,7 +171,7 @@ export const createInstance = (defaultProps = {}) => {
    * @prop {boolean} persist Show old data while loading
    * @prop {Function|Node} children Function (passing data and state) or React node
    */
-  Async.Resolved = ({ children, persist }) => (
+  const Resolved = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.data === undefined) return null
@@ -188,7 +188,7 @@ export const createInstance = (defaultProps = {}) => {
    * @prop {boolean} persist Show old error while loading
    * @prop {Function|Node} children Function (passing error and state) or React node
    */
-  Async.Rejected = ({ children, persist }) => (
+  const Rejected = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.error === undefined) return null
@@ -197,6 +197,11 @@ export const createInstance = (defaultProps = {}) => {
       }}
     </Consumer>
   )
+
+  Async.Pending = Pending
+  Async.Loading = Loading
+  Async.Resolved = Resolved
+  Async.Rejected = Rejected
 
   return Async
 }
