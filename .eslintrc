@@ -1,0 +1,23 @@
+{
+  "extends": [
+    "plugin:prettier/recommended",
+    "plugin:promise/recommended",
+    "plugin:react/recommended"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["jest", "promise", "react"],
+  "rules": {
+    "react/display-name": "off",
+    "react/prop-types": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "16.3"
+    }
+  }
+}
