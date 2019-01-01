@@ -14,6 +14,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     constructor(props) {
       super(props)
 
+      this.start = this.start.bind(this)
       this.load = this.load.bind(this)
       this.run = this.run.bind(this)
       this.cancel = this.cancel.bind(this)
@@ -30,6 +31,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.mounted = false
       this.counter = 0
       this.args = []
+      this.abortController = { abort: () => {} }
       this.state = {
         initialValue,
         data: initialData,
@@ -66,21 +68,31 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.mounted = false
     }
 
+    start() {
+      if ("AbortController" in window) {
+        this.abortController.abort()
+        this.abortController = new window.AbortController()
+      }
+      this.counter++
+      this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
+    }
+
     load() {
       const promiseFn = this.props.promiseFn || defaultProps.promiseFn
       if (!promiseFn) return
-      this.counter++
-      this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-      return promiseFn(this.props).then(this.onResolve(this.counter), this.onReject(this.counter))
+      this.start()
+      return promiseFn(this.props, this.abortController).then(
+        this.onResolve(this.counter),
+        this.onReject(this.counter)
+      )
     }
 
     run(...args) {
       const deferFn = this.props.deferFn || defaultProps.deferFn
       if (!deferFn) return
-      this.counter++
       this.args = args
-      this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
-      return deferFn(...args, this.props).then(
+      this.start()
+      return deferFn(...args, this.props, this.abortController).then(
         this.onResolve(this.counter),
         this.onReject(this.counter)
       )
@@ -88,6 +100,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     cancel() {
       this.counter++
+      this.abortController.abort()
       this.setState({ isLoading: false, startedAt: undefined })
     }
 

@@ -4,6 +4,7 @@ const useAsync = (opts, init) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
+  const abortController = useRef({ abort: () => {} })
 
   const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
   const { promiseFn, deferFn, initialValue, onResolve, onReject, watch } = options
@@ -35,6 +36,10 @@ const useAsync = (opts, init) => {
   const handleReject = count => error => count === counter.current && handleError(error, onReject)
 
   const start = () => {
+    if ("AbortController" in window) {
+      abortController.current.abort()
+      abortController.current = new window.AbortController()
+    }
     counter.current++
     setState(state => ({
       ...state,
@@ -47,15 +52,18 @@ const useAsync = (opts, init) => {
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
       start()
-      return promiseFn(options).then(handleResolve(counter.current), handleReject(counter.current))
+      return promiseFn(options, abortController.current).then(
+        handleResolve(counter.current),
+        handleReject(counter.current)
+      )
     }
   }
 
   const run = (...args) => {
     if (deferFn) {
-      start()
       lastArgs.current = args
-      return deferFn(...args, options).then(
+      start()
+      return deferFn(...args, options, abortController.current).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
@@ -64,6 +72,7 @@ const useAsync = (opts, init) => {
 
   useEffect(() => load() && undefined, [promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
+  useEffect(() => abortController.current.abort, [])
 
   return useMemo(
     () => ({
@@ -74,6 +83,7 @@ const useAsync = (opts, init) => {
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
       cancel: () => {
         counter.current++
+        abortController.current.abort()
         setState(state => ({ ...state, startedAt: undefined }))
       },
       setData: handleData,
