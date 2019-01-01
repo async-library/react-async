@@ -3,6 +3,9 @@ import React from "react"
 import { render, fireEvent, cleanup, waitForElement, flushEffects } from "react-testing-library"
 import { useAsync } from "."
 
+const abortController = { abort: () => {} }
+window.AbortController = jest.fn().mockImplementation(() => abortController)
+
 afterEach(cleanup)
 
 const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
@@ -134,9 +137,19 @@ describe("useAsync", () => {
     flushEffects()
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn, foo: "bar" }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      1,
+      expect.objectContaining({ deferFn, foo: "bar" }),
+      abortController
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn, foo: "bar" }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      2,
+      expect.objectContaining({ deferFn, foo: "bar" }),
+      abortController
+    )
   })
 
   test("cancel will prevent the resolved promise from propagating", async () => {
@@ -173,11 +186,26 @@ describe("useAsync", () => {
     flushEffects()
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      1,
+      expect.objectContaining({ deferFn }),
+      abortController
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      2,
+      expect.objectContaining({ deferFn }),
+      abortController
+    )
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      2,
+      expect.objectContaining({ deferFn }),
+      abortController
+    )
   })
 
   test("only accepts the last invocation of the promise", async () => {

@@ -3,6 +3,9 @@ import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
 import Async, { createInstance } from "./"
 
+const abortController = { abort: () => {} }
+window.AbortController = jest.fn().mockImplementation(() => abortController)
+
 afterEach(cleanup)
 
 const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
@@ -20,7 +23,7 @@ describe("Async", () => {
   test("calls promiseFn with props", () => {
     const promiseFn = jest.fn().mockReturnValue(Promise.resolve())
     render(<Async promiseFn={promiseFn} anotherProp="123" />)
-    expect(promiseFn).toHaveBeenCalledWith({ promiseFn, anotherProp: "123" })
+    expect(promiseFn).toHaveBeenCalledWith({ promiseFn, anotherProp: "123" }, abortController)
   })
 
   test("passes resolved data to children as render prop", async () => {
@@ -134,9 +137,19 @@ describe("Async", () => {
     )
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn, foo: "bar" }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      1,
+      expect.objectContaining({ deferFn, foo: "bar" }),
+      abortController
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn, foo: "bar" }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      2,
+      expect.objectContaining({ deferFn, foo: "bar" }),
+      abortController
+    )
   })
 
   test("reload uses the arguments of the previous run", () => {
@@ -156,11 +169,26 @@ describe("Async", () => {
     )
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      1,
+      expect.objectContaining({ deferFn }),
+      abortController
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      2,
+      expect.objectContaining({ deferFn }),
+      abortController
+    )
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }))
+    expect(deferFn).toHaveBeenCalledWith(
+      "go",
+      2,
+      expect.objectContaining({ deferFn }),
+      abortController
+    )
   })
 
   test("only accepts the last invocation of the promise", async () => {
