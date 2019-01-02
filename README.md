@@ -36,19 +36,18 @@ ultimate flexibility as well as the new Context API for ease of use. Makes it ea
 without assumptions about the shape of your data or the type of request.
 
 - Zero dependencies
-- Works with any (native) promise
+- Works with any (native) Promise and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` hook
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` prop
 - Accepts `onResolve` and `onReject` callbacks
+- Supports [abortable fetch] by providing an AbortController
 - Supports optimistic updates using `setData`
 - Supports server-side rendering through `initialValue`
 - Works well in React Native too!
 
-> Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
-> kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of
-> React Async is v3.0.0.
+[abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
 
 ## Rationale
 
@@ -84,46 +83,19 @@ npm install --save react-async
 
 ## Usage
 
-As a hook with `useAsync`:
-
-```js
-import { useAsync } from "react-async"
-
-const loadJson = () => fetch("/some/url").then(res => res.json())
-
-const MyComponent = () => {
-  const { data, error, isLoading } = useAsync({ promiseFn: loadJson })
-  if (isLoading) return "Loading..."
-  if (error) return `Something went wrong: ${error.message}`
-  if (data)
-    return (
-      <div>
-        <strong>Loaded some data:</strong>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </div>
-    )
-  return null
-}
-```
-
-Or using the shorthand version:
-
-```js
-const MyComponent = () => {
-  const { data, error, isLoading } = useAsync(loadJson)
-  // ...
-}
-```
-
-Using render props for ultimate flexibility:
+Using render props for flexibility:
 
 ```js
 import Async from "react-async"
 
-const loadJson = () => fetch("/some/url").then(res => res.json())
+// Your promiseFn receives all props from Async and an AbortController instance
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
 
 const MyComponent = () => (
-  <Async promiseFn={loadJson}>
+  <Async promiseFn={loadCustomer} customerId={1}>
     {({ data, error, isLoading }) => {
       if (isLoading) return "Loading..."
       if (error) return `Something went wrong: ${error.message}`
@@ -145,10 +117,13 @@ Using helper components (don't have to be direct children) for ease of use:
 ```js
 import Async from "react-async"
 
-const loadJson = () => fetch("/some/url").then(res => res.json())
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
 
 const MyComponent = () => (
-  <Async promiseFn={loadJson}>
+  <Async promiseFn={loadCustomer} customerId={1}>
     <Async.Loading>Loading...</Async.Loading>
     <Async.Resolved>
       {data => (
@@ -168,19 +143,58 @@ Creating a custom instance of Async, bound to a specific promiseFn:
 ```js
 import { createInstance } from "react-async"
 
-const loadCustomer = ({ customerId }) => fetch(`/api/customers/${customerId}`).then(...)
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
 
 // createInstance takes a defaultProps object and a displayName (both optional)
 const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer")
 
 const MyComponent = () => (
-  <AsyncCustomer customerId="123">
+  <AsyncCustomer customerId={1}>
     <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</AsyncCustomer.Resolved>
   </AsyncCustomer>
 )
 ```
 
-Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
+> Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
+
+As a hook with `useAsync` (currently [only in React v16.7.0-alpha](https://reactjs.org/hooks)):
+
+```js
+import { useAsync } from "react-async"
+
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
+  if (isLoading) return "Loading..."
+  if (error) return `Something went wrong: ${error.message}`
+  if (data)
+    return (
+      <div>
+        <strong>Loaded some data:</strong>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    )
+  return null
+}
+```
+
+Or using the shorthand version:
+
+```js
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync(loadCustomer)
+  // ...
+}
+```
+
+The shorthand version does not support passing additional props.
 
 ## API
 
@@ -188,8 +202,8 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
 `<Async>` takes the following properties:
 
-- `promiseFn` {() => Promise} A function that returns a promise; invoked in `componentDidMount` and `componentDidUpdate`; receives props (object) as argument
-- `deferFn` {() => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through, as well as props (object) as final argument
+- `promiseFn` {(props, controller) => Promise} A function that returns a promise; invoked in `componentDidMount` and `componentDidUpdate`; receives component props (object) and AbortController instance as arguments
+- `deferFn` {(...args, props, controller) => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through, as well as component props (object) and AbortController as final arguments
 - `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
 - `initialValue` {any} initial state for `data` or `error` (if instance of Error); useful for server-side rendering
 - `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
@@ -217,12 +231,12 @@ Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 - `setData` {Function} sets `data` to the passed value, unsets `error` and cancels any pending promise
 - `setError` {Function} sets `error` to the passed value and cancels any pending promise
 
-### `useState`
+### `useAsync`
 
-The `useState` hook accepts an object with the same props as `<Async>`. Alternatively you can use the shorthand syntax:
+The `useAsync` hook accepts an object with the same props as `<Async>`. Alternatively you can use the shorthand syntax:
 
 ```js
-useState(promiseFn, initialValue)
+useAsync(promiseFn, initialValue)
 ```
 
 ## Examples
@@ -424,4 +438,6 @@ Renders only while the deferred promise is still pending (not yet run).
 
 ## Acknowledgements
 
-Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
+Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
+kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of
+React Async is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
