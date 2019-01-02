@@ -4,7 +4,7 @@ type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.Reac
 type PromiseFn<T> = (props: object) => Promise<T>
 
 interface AsyncProps<T> {
-  promiseFn?: (props: object) => Promise<T>
+  promiseFn?: (props: object, controller: AbortController) => Promise<T>
   deferFn?: (...args: any[]) => Promise<T>
   watch?: any
   initialValue?: T
