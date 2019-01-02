@@ -3,9 +3,10 @@ import React from "react"
 import { render, fireEvent, cleanup, waitForElement, flushEffects } from "react-testing-library"
 import { useAsync } from "."
 
-const abortController = { abort: () => {} }
-window.AbortController = jest.fn().mockImplementation(() => abortController)
+const abortCtrl = { abort: jest.fn() }
+window.AbortController = jest.fn().mockImplementation(() => abortCtrl)
 
+beforeEach(abortCtrl.abort.mockClear)
 afterEach(cleanup)
 
 const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
@@ -95,6 +96,7 @@ describe("useAsync", () => {
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("reload"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
   test("re-runs the promise when the value of 'watch' changes", () => {
@@ -118,9 +120,11 @@ describe("useAsync", () => {
     fireEvent.click(getByText("increment"))
     flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(2)
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
     flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(3)
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(2)
   })
 
   test("runs deferFn only when explicitly invoked, passing arguments and props", () => {
@@ -134,25 +138,16 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
+    const props = { deferFn, foo: "bar" }
     flushEffects()
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(
-      "go",
-      1,
-      expect.objectContaining({ deferFn, foo: "bar" }),
-      abortController
-    )
+    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(props), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(
-      "go",
-      2,
-      expect.objectContaining({ deferFn, foo: "bar" }),
-      abortController
-    )
+    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining(props), abortCtrl)
   })
 
-  test("cancel will prevent the resolved promise from propagating", async () => {
+  test("cancel will prevent the resolved promise from propagating and attempts to abort it", async () => {
     const promiseFn = jest.fn().mockReturnValue(Promise.resolve("ok"))
     const onResolve = jest.fn()
     const component = (
@@ -165,6 +160,7 @@ describe("useAsync", () => {
     fireEvent.click(getByText("cancel"))
     await Promise.resolve()
     expect(onResolve).not.toHaveBeenCalled()
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
   test("reload uses the arguments of the previous run", () => {
@@ -186,26 +182,11 @@ describe("useAsync", () => {
     flushEffects()
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(
-      "go",
-      1,
-      expect.objectContaining({ deferFn }),
-      abortController
-    )
+    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(
-      "go",
-      2,
-      expect.objectContaining({ deferFn }),
-      abortController
-    )
+    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith(
-      "go",
-      2,
-      expect.objectContaining({ deferFn }),
-      abortController
-    )
+    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
   })
 
   test("only accepts the last invocation of the promise", async () => {
@@ -260,6 +241,7 @@ describe("useAsync", () => {
     unmount()
     await Promise.resolve()
     expect(onResolve).not.toHaveBeenCalled()
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
   test("cancels and restarts the promise when promiseFn changes", async () => {
@@ -278,6 +260,23 @@ describe("useAsync", () => {
     expect(onResolve).not.toHaveBeenCalledWith("one")
     await Promise.resolve()
     expect(onResolve).toHaveBeenCalledWith("two")
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
+  })
+
+  test("cancels the promise when promiseFn is unset", async () => {
+    const promiseFn = jest.fn().mockReturnValue(Promise.resolve("one"))
+    const onResolve = jest.fn()
+    const component1 = <Async promiseFn={promiseFn} onResolve={onResolve} />
+    const component2 = <Async onResolve={onResolve} />
+    const { rerender } = render(component1)
+    await Promise.resolve()
+    flushEffects()
+    expect(promiseFn).toHaveBeenCalled()
+    rerender(component2)
+    flushEffects()
+    expect(onResolve).not.toHaveBeenCalledWith("one")
+    await Promise.resolve()
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
   test("does not run promiseFn on mount when initialValue is provided", () => {

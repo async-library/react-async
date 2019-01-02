@@ -58,8 +58,8 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     componentDidUpdate(prevProps) {
       if (prevProps.watch !== this.props.watch) this.load()
       if (prevProps.promiseFn !== this.props.promiseFn) {
-        this.cancel()
         if (this.props.promiseFn) this.load()
+        else this.cancel()
       }
     }
 

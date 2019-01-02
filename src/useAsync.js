@@ -70,7 +70,13 @@ const useAsync = (opts, init) => {
     }
   }
 
-  useEffect(() => load() && undefined, [promiseFn, watch])
+  const cancel = () => {
+    counter.current++
+    abortController.current.abort()
+    setState(state => ({ ...state, startedAt: undefined }))
+  }
+
+  useEffect(() => (promiseFn ? load() && undefined : cancel()), [promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
   useEffect(() => abortController.current.abort, [])
 
@@ -81,11 +87,7 @@ const useAsync = (opts, init) => {
       initialValue,
       run,
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
-      cancel: () => {
-        counter.current++
-        abortController.current.abort()
-        setState(state => ({ ...state, startedAt: undefined }))
-      },
+      cancel,
       setData: handleData,
       setError: handleError,
     }),
