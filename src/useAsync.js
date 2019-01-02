@@ -4,6 +4,7 @@ const useAsync = (opts, init) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
+  const abortController = useRef({ abort: () => {} })
 
   const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
   const { promiseFn, deferFn, initialValue, onResolve, onReject, watch } = options
@@ -35,6 +36,10 @@ const useAsync = (opts, init) => {
   const handleReject = count => error => count === counter.current && handleError(error, onReject)
 
   const start = () => {
+    if ("AbortController" in window) {
+      abortController.current.abort()
+      abortController.current = new window.AbortController()
+    }
     counter.current++
     setState(state => ({
       ...state,
@@ -47,23 +52,33 @@ const useAsync = (opts, init) => {
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
       start()
-      return promiseFn(options).then(handleResolve(counter.current), handleReject(counter.current))
-    }
-  }
-
-  const run = (...args) => {
-    if (deferFn) {
-      start()
-      lastArgs.current = args
-      return deferFn(...args, options).then(
+      return promiseFn(options, abortController.current).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
     }
   }
 
-  useEffect(() => load() && undefined, [promiseFn, watch])
+  const run = (...args) => {
+    if (deferFn) {
+      lastArgs.current = args
+      start()
+      return deferFn(...args, options, abortController.current).then(
+        handleResolve(counter.current),
+        handleReject(counter.current)
+      )
+    }
+  }
+
+  const cancel = () => {
+    counter.current++
+    abortController.current.abort()
+    setState(state => ({ ...state, startedAt: undefined }))
+  }
+
+  useEffect(() => (promiseFn ? load() && undefined : cancel()), [promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
+  useEffect(() => abortController.current.abort, [])
 
   return useMemo(
     () => ({
@@ -72,10 +87,7 @@ const useAsync = (opts, init) => {
       initialValue,
       run,
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
-      cancel: () => {
-        counter.current++
-        setState(state => ({ ...state, startedAt: undefined }))
-      },
+      cancel,
       setData: handleData,
       setError: handleError,
     }),
