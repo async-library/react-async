@@ -160,7 +160,7 @@ const MyComponent = () => (
 
 > Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
 
-As a hook with `useAsync` (currently [only in React v16.7.0-alpha](https://reactjs.org/hooks)):
+As a hook with `useAsync` (currently [only in React v16.7.0-alpha](https://reactjs.org/hooks); API is subject to change):
 
 ```js
 import { useAsync } from "react-async"
@@ -194,7 +194,7 @@ const MyComponent = () => {
 }
 ```
 
-The shorthand version does not support passing additional props.
+The shorthand version currently does not support passing additional props.
 
 ## API
 
@@ -203,7 +203,7 @@ The shorthand version does not support passing additional props.
 `<Async>` takes the following properties:
 
 - `promiseFn` {(props, controller) => Promise} A function that returns a promise; invoked in `componentDidMount` and `componentDidUpdate`; receives component props (object) and AbortController instance as arguments
-- `deferFn` {(...args, props, controller) => Promise} A function that returns a promise; invoked only by calling `run`, with arguments being passed through, as well as component props (object) and AbortController as final arguments
+- `deferFn` {(...args, props, controller) => Promise} A function that returns a promise; invoked only by calling `run(...args)`, with arguments being passed through, as well as component props (object) and AbortController as final arguments
 - `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
 - `initialValue` {any} initial state for `data` or `error` (if instance of Error); useful for server-side rendering
 - `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
@@ -225,19 +225,21 @@ The shorthand version does not support passing additional props.
 - `isLoading` {boolean} `true` while a promise is pending
 - `startedAt` {Date} when the current/last promise was started
 - `finishedAt` {Date} when the last promise was resolved or rejected
-- `cancel` {Function} ignores the result of the currently pending promise
+- `cancel` {Function} ignores the result of the currently pending promise and calls `abort()` on the AbortController
 - `run` {Function} runs the `deferFn`, passing any arguments provided
 - `reload` {Function} re-runs the promise when invoked, using the previous arguments
 - `setData` {Function} sets `data` to the passed value, unsets `error` and cancels any pending promise
 - `setError` {Function} sets `error` to the passed value and cancels any pending promise
 
-### `useAsync`
+### `useAsync` (API may change until Hooks are officially released)
 
 The `useAsync` hook accepts an object with the same props as `<Async>`. Alternatively you can use the shorthand syntax:
 
 ```js
 useAsync(promiseFn, initialValue)
 ```
+
+Note that the `useAsync` API is subject to change while Hooks are not officially released.
 
 ## Examples
 
@@ -277,6 +279,8 @@ class App extends Component {
 ### Using `deferFn` to trigger an update (e.g. POST / PUT request)
 
 ```js
+const subscribeToNewsletter = (event, props, controller) => fetch(...)
+
 <Async deferFn={subscribeToNewsletter}>
   {({ error, isLoading, run }) => (
     <form onSubmit={run}>
@@ -314,14 +318,14 @@ const updateAttendance = attend => fetch(...).then(() => attend, () => !attend)
 ```js
 static async getInitialProps() {
   // Resolve the promise server-side
-  const sessions = await loadSessions()
-  return { sessions }
+  const customers = await loadCustomers()
+  return { customers }
 }
 
 render() {
-  const { sessions } = this.props // injected by getInitialProps
+  const { customers } = this.props // injected by getInitialProps
   return (
-    <Async promiseFn={loadSessions} initialValue={sessions}>
+    <Async promiseFn={loadCustomers} initialValue={customers}>
       {({ data, error, isLoading, initialValue }) => { // initialValue is passed along for convenience
         if (isLoading) {
           return <div>Loading...</div>
