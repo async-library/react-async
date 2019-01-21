@@ -460,4 +460,46 @@ describe("createInstance", () => {
     await waitForElement(() => getByText("loading"))
     await waitForElement(() => getByText("resolved"))
   })
+
+  test("custom instance also passes defaultProps to deferFn", async () => {
+    const deferFn = jest.fn().mockReturnValue(resolveTo())
+    const CustomAsync = createInstance({ deferFn })
+
+    let counter = 1
+    const { getByText } = render(
+      <CustomAsync foo="bar">
+        {({ run }) => <button onClick={() => run("go", counter++)}>run</button>}
+      </CustomAsync>
+    )
+    const expectedProps = { deferFn, foo: "bar" }
+    expect(deferFn).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(expectedProps), abortCtrl)
+    fireEvent.click(getByText("run"))
+    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining(expectedProps), abortCtrl)
+  })
+
+  test("custom instance correctly passes props to deferFn on reload", async () => {
+    const deferFn = jest.fn().mockReturnValue(resolveTo())
+    const CustomAsync = createInstance({ deferFn })
+
+    let counter = 1
+    const { getByText } = render(
+      <CustomAsync foo="bar">
+        {({ run, reload }) =>
+          counter === 1 ? (
+            <button onClick={() => run("go", counter++)}>run</button>
+          ) : (
+            <button onClick={reload}>reload</button>
+          )
+        }
+      </CustomAsync>
+    )
+    const expectedProps = { deferFn, foo: "bar" }
+    expect(deferFn).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(expectedProps), abortCtrl)
+    fireEvent.click(getByText("reload"))
+    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(expectedProps), abortCtrl)
+  })
 })
