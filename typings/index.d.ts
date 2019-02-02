@@ -3,7 +3,7 @@ import * as React from "react"
 type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
 type PromiseFn<T> = (props: object) => Promise<T>
 
-interface AsyncProps<T> {
+interface AsyncOptions<T> {
   promiseFn?: (props: object, controller: AbortController) => Promise<T>
   deferFn?: (...args: any[]) => Promise<T>
   watch?: any
