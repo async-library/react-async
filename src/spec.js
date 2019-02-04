@@ -475,6 +475,18 @@ describe("createInstance", () => {
     expect(onResolve).toHaveBeenCalledWith("done")
   })
 
+  test("accepts watchFn from defaultProps and passes the defaultProps along", async () => {
+    const promiseFn = () => resolveTo("done")
+    const watchFn = jest.fn()
+    const CustomAsync = createInstance({ promiseFn, watchFn })
+    const { getByText } = render(<CustomAsync>{({ data }) => data || null}</CustomAsync>)
+    await waitForElement(() => getByText("done"))
+    expect(watchFn).toHaveBeenCalledWith(
+      expect.objectContaining({ promiseFn, watchFn }),
+      expect.objectContaining({ promiseFn, watchFn })
+    )
+  })
+
   test("custom instances also have helper components", async () => {
     const promiseFn = () => resolveTo("done")
     const CustomAsync = createInstance({ promiseFn })
