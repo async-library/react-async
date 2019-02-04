@@ -127,6 +127,37 @@ describe("useAsync", () => {
     expect(abortCtrl.abort).toHaveBeenCalledTimes(2)
   })
 
+  test("re-runs the promise when 'watchFn' returns truthy", () => {
+    class Counter extends React.Component {
+      state = { count: 0 }
+      inc = () => this.setState(state => ({ count: state.count + 1 }))
+      render() {
+        return (
+          <div>
+            <button onClick={this.inc}>increment</button>
+            {this.props.children(this.state.count)}
+          </div>
+        )
+      }
+    }
+    const promiseFn = jest.fn().mockReturnValue(resolveTo())
+    const watchFn = ({ count }, prevProps) => count !== prevProps.count && count === 2
+    const component = (
+      <Counter>{count => <Async promiseFn={promiseFn} watchFn={watchFn} count={count} />}</Counter>
+    )
+    const { getByText } = render(component)
+    flushEffects()
+    expect(promiseFn).toHaveBeenCalledTimes(1)
+    fireEvent.click(getByText("increment"))
+    flushEffects()
+    expect(promiseFn).toHaveBeenCalledTimes(1)
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(0)
+    fireEvent.click(getByText("increment"))
+    flushEffects()
+    expect(promiseFn).toHaveBeenCalledTimes(2)
+    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
+  })
+
   test("runs deferFn only when explicitly invoked, passing arguments and props", () => {
     let counter = 1
     const deferFn = jest.fn().mockReturnValue(resolveTo())

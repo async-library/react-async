@@ -40,7 +40,7 @@ without assumptions about the shape of your data or the type of request.
 - Choose between Render Props, Context-based helper components or the `useAsync` hook
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
-- Automatic re-run using `watch` prop
+- Automatic re-run using `watch` or `watchFn` prop
 - Accepts `onResolve` and `onReject` callbacks
 - Supports [abortable fetch] by providing an AbortController
 - Supports optimistic updates using `setData`
@@ -205,6 +205,7 @@ The shorthand version currently does not support passing additional props.
 - `promiseFn` {(props, controller) => Promise} A function that returns a promise; invoked in `componentDidMount` and `componentDidUpdate`; receives component props (object) and AbortController instance as arguments
 - `deferFn` {(...args, props, controller) => Promise} A function that returns a promise; invoked only by calling `run(...args)`, with arguments being passed through, as well as component props (object) and AbortController as final arguments
 - `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
+- `watchFn` {(props, prevProps) => any} Re-runs the `promiseFn` when this callback returns truthy (called on every update).
 - `initialValue` {any} initial state for `data` or `error` (if instance of Error); useful for server-side rendering
 - `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
 - `onReject` {Function} Callback function invoked when a promise rejects, receives error as argument

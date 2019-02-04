@@ -4,10 +4,11 @@ const useAsync = (opts, init) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
+  const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: () => {} })
 
   const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
-  const { promiseFn, deferFn, initialValue, onResolve, onReject, watch } = options
+  const { promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
   const [state, setState] = useState({
     data: initialValue instanceof Error ? undefined : initialValue,
@@ -76,9 +77,13 @@ const useAsync = (opts, init) => {
     setState(state => ({ ...state, startedAt: undefined }))
   }
 
+  useEffect(() => {
+    if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
+  })
   useEffect(() => (promiseFn ? load() && undefined : cancel()), [promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
   useEffect(() => abortController.current.abort, [])
+  useEffect(() => (prevOptions.current = options) && undefined)
 
   return useMemo(
     () => ({
