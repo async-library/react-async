@@ -7,6 +7,9 @@ const useAsync = (opts, init) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: () => {} })
 
+  if (typeof opts === "function" && init) {
+    console.warn("`useAsync(promiseFn, initialValue)` is deprecated and will be removed soon.")
+  }
   const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
   const { promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
