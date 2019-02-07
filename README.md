@@ -31,9 +31,9 @@
   </a>
 </p>
 
-React component for declarative promise resolution and data fetching. Leverages the Render Props pattern and Hooks for
-ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states,
-without assumptions about the shape of your data or the type of request.
+React component and hook for declarative promise resolution and data fetching. Leverages the Render Props pattern and
+Hooks for ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and
+error states, without assumptions about the shape of your data or the type of request.
 
 - Zero dependencies
 - Works with any (native) Promise and the Fetch API
@@ -82,6 +82,40 @@ npm install --save react-async
 ```
 
 ## Usage
+
+As a hook with `useAsync` (available [from React v16.8.0](https://reactjs.org/hooks)):
+
+```js
+import { useAsync } from "react-async"
+
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
+  if (isLoading) return "Loading..."
+  if (error) return `Something went wrong: ${error.message}`
+  if (data)
+    return (
+      <div>
+        <strong>Loaded some data:</strong>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    )
+  return null
+}
+```
+
+Or using the shorthand version:
+
+```js
+const MyComponent = () => {
+  const { data, error, isLoading } = useAsync(loadCustomer, options)
+  // ...
+}
+```
 
 Using render props for flexibility:
 
@@ -159,42 +193,6 @@ const MyComponent = () => (
 ```
 
 > Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
-
-As a hook with `useAsync` (currently [only in React v16.7.0-alpha](https://reactjs.org/hooks); API is subject to change):
-
-```js
-import { useAsync } from "react-async"
-
-const loadCustomer = ({ customerId }, { signal }) =>
-  fetch(`/api/customers/${customerId}`, { signal })
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
-
-const MyComponent = () => {
-  const { data, error, isLoading } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
-  if (isLoading) return "Loading..."
-  if (error) return `Something went wrong: ${error.message}`
-  if (data)
-    return (
-      <div>
-        <strong>Loaded some data:</strong>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </div>
-    )
-  return null
-}
-```
-
-Or using the shorthand version:
-
-```js
-const MyComponent = () => {
-  const { data, error, isLoading } = useAsync(loadCustomer)
-  // ...
-}
-```
-
-The shorthand version currently does not support passing additional props.
 
 ## API
 

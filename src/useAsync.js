@@ -1,16 +1,13 @@
 import { useState, useEffect, useMemo, useRef } from "react"
 
-const useAsync = (opts, init) => {
+const useAsync = (arg1, arg2) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: () => {} })
 
-  if (typeof opts === "function" && init) {
-    console.warn("`useAsync(promiseFn, initialValue)` is deprecated and will be removed soon.")
-  }
-  const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
+  const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
   const { promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
   const [state, setState] = useState({
@@ -105,7 +102,7 @@ const useAsync = (opts, init) => {
 
 const unsupported = () => {
   throw new Error(
-    "useAsync requires react@16.7.0-alpha. Upgrade your React version or use the <Async> component instead."
+    "useAsync requires React v16.8 or up. Upgrade your React version or use the <Async> component instead."
   )
 }
 
