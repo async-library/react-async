@@ -5,8 +5,9 @@ type PromiseFn<T> = (props: object) => Promise<T>
 
 interface AsyncOptions<T> {
   promiseFn?: (props: object, controller: AbortController) => Promise<T>
-  deferFn?: (...args: any[]) => Promise<T>
+  deferFn?: (props: object, controller: AbortController, args: any[]) => Promise<T>
   watch?: any
+  watchFn?: (props: object, prevProps: object) => any
   initialValue?: T
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
@@ -17,9 +18,9 @@ interface AsyncProps<T> extends AsyncOptions<T> {
 }
 
 interface AsyncState<T> {
-  initialValue?: T
   data?: T
   error?: Error
+  initialValue?: T
   isLoading: boolean
   startedAt?: Date
   finishedAt?: Date
@@ -53,6 +54,9 @@ declare namespace Async {
 
 declare function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
 
-export function useAsync<T>(opts: AsyncOptions<T> | PromiseFn<T>, init?: T): AsyncState<T>
+export function useAsync<T>(
+  arg1: AsyncOptions<T> | PromiseFn<T>,
+  arg2?: AsyncOptions<T>
+): AsyncState<T>
 
 export default createInstance

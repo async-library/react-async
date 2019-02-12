@@ -307,13 +307,13 @@ Initial state for `data` or `error` (if instance of Error); useful for server-si
 
 #### `onResolve`
 
-> `function(data: any): any`
+> `function(data: any): void`
 
 Callback function invoked when a promise resolves, receives data as argument.
 
 #### `onReject`
 
-> `function(reason: Error): any`
+> `function(reason: Error): void`
 
 Callback function invoked when a promise rejects, receives rejection reason (error) as argument.
 
@@ -389,15 +389,17 @@ Re-runs the promise when invoked, using the previous arguments.
 
 #### `setData`
 
-> `function(data: any): any`
+> `function(data: any, callback?: () => void): any`
 
-Sets `data` to the passed value, unsets `error` and cancels any pending promise. Returns the data to enable chaining.
+Function that sets `data` to the passed value, unsets `error` and cancels any pending promise. Takes an optional
+callback which is invoked after the state update is completed. Returns the data to enable chaining.
 
 #### `setError`
 
-> `function(error: Error): Error`
+> `function(error: Error, callback?: () => void): Error`
 
-Sets `error` to the passed value and cancels any pending promise. Returns the error to enable chaining.
+Function that sets `error` to the passed value and cancels any pending promise. Takes an optional callback which is
+invoked after the state update is completed. Returns the error to enable chaining.
 
 ## Helper components
 
