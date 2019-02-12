@@ -372,7 +372,7 @@ Renders only while the promise is loading.
 
 ### `<Async.Resolved>`
 
-Renders only when the promise is resolved.
+Renders only when the promise is resolved with data (`data !== undefined`).
 
 #### Props
 
