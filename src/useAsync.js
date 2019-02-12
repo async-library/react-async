@@ -64,7 +64,7 @@ const useAsync = (arg1, arg2) => {
     if (deferFn) {
       lastArgs.current = args
       start()
-      return deferFn(...args, options, abortController.current).then(
+      return deferFn(args, options, abortController.current).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )

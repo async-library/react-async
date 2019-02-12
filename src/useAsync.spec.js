@@ -160,9 +160,9 @@ describe("useAsync", () => {
     const props = { deferFn, foo: "bar" }
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining(props), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining(props), abortCtrl)
   })
 
   test("cancel will prevent the resolved promise from propagating and attempts to abort it", async () => {
@@ -198,11 +198,11 @@ describe("useAsync", () => {
     const { getByText } = render(component)
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
   })
 
   test("only accepts the last invocation of the promise", async () => {

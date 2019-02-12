@@ -169,9 +169,9 @@ describe("Async", () => {
     const props = { deferFn, foo: "bar" }
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining(props), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining(props), abortCtrl)
   })
 
   test("reload uses the arguments of the previous run", () => {
@@ -191,11 +191,11 @@ describe("Async", () => {
     )
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
   })
 
   test("only accepts the last invocation of the promise", async () => {
@@ -513,9 +513,17 @@ describe("createInstance", () => {
     const expectedProps = { deferFn, foo: "bar" }
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(expectedProps), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      ["go", 1],
+      expect.objectContaining(expectedProps),
+      abortCtrl
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining(expectedProps), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      ["go", 2],
+      expect.objectContaining(expectedProps),
+      abortCtrl
+    )
   })
 
   test("custom instance correctly passes props to deferFn on reload", async () => {
@@ -537,8 +545,16 @@ describe("createInstance", () => {
     const expectedProps = { deferFn, foo: "bar" }
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(expectedProps), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      ["go", 1],
+      expect.objectContaining(expectedProps),
+      abortCtrl
+    )
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(expectedProps), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      ["go", 1],
+      expect.objectContaining(expectedProps),
+      abortCtrl
+    )
   })
 })

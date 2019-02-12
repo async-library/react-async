@@ -95,7 +95,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       if (!deferFn) return
       this.args = args
       this.start()
-      return deferFn(...args, { ...defaultProps, ...this.props }, this.abortController).then(
+      return deferFn(args, { ...defaultProps, ...this.props }, this.abortController).then(
         this.onResolve(this.counter),
         this.onReject(this.counter)
       )
