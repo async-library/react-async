@@ -85,7 +85,7 @@ const useAsync = (opts, init) => {
   })
   useEffect(() => (promiseFn ? load() && undefined : cancel()), [promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
-  useEffect(() => abortController.current.abort, [])
+  useEffect(() => () => abortController.current.abort(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
 
   return useMemo(
