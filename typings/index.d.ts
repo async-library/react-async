@@ -9,7 +9,7 @@ interface AsyncOptions<T> {
   watch?: any
   initialValue?: T
   onResolve?: (data: T) => void
-  onError?: (error: Error) => void
+  onReject?: (error: Error) => void
 }
 
 interface AsyncProps<T> extends AsyncOptions<T> {
@@ -33,10 +33,22 @@ interface AsyncState<T> {
 declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 
 declare namespace Async {
-  export function Pending<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): React.ReactNode
-  export function Loading<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): React.ReactNode
-  export function Resolved<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): React.ReactNode
-  export function Rejected<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): React.ReactNode
+  export function Pending<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
+  }): React.ReactNode
+  export function Loading<T>(props: {
+    children?: AsyncChildren<T>
+    initial?: boolean
+  }): React.ReactNode
+  export function Resolved<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
+  }): React.ReactNode
+  export function Rejected<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
+  }): React.ReactNode
 }
 
 declare function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
