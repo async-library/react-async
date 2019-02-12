@@ -53,7 +53,7 @@ error states, without assumptions about the shape of your data or the type of re
 >
 > When upgrading to React Async v4, please note the following breaking API changes:
 >
-> - `deferFn` now receives an `args` array as the third argument, instead of arguments to `run` being spread at the front
+> - `deferFn` now receives an `args` array as the first argument, instead of arguments to `run` being spread at the front
 >   of the arguments list. This enables better interop with TypeScript. You can use destructuring to keep using your
 >   existing variables.
 > - The shorthand version of `useAsync` now takes the `options` object as optional second argument. This used to be
@@ -275,7 +275,7 @@ The function receives all component props (or options) and an AbortController in
 
 #### `deferFn`
 
-> `function(props: object, controller: AbortController, args: any[]): Promise`
+> `function(args: any[], props: object, controller: AbortController): Promise`
 
 A function that returns a promise. This is invoked only by manually calling `run(...args)`. Receives the same arguments
 as `promiseFn`, as well as any arguments to `run` which are passed through as an array. The `deferFn` is commonly used
@@ -543,7 +543,7 @@ class App extends Component {
 This uses `deferFn` to trigger an update (e.g. POST / PUT request) after a form submit.
 
 ```js
-const subscribeToNewsletter = (props, controller, args) => fetch(...)
+const subscribeToNewsletter = (args, props, controller) => fetch(...)
 
 <Async deferFn={subscribeToNewsletter}>
   {({ error, isLoading, run }) => (
@@ -563,7 +563,7 @@ const subscribeToNewsletter = (props, controller, args) => fetch(...)
 This uses both `promiseFn` and `deferFn` along with `setData` to implement optimistic updates.
 
 ```js
-const updateAttendance = (props, ctrl, [attend]) => fetch(...).then(() => attend, () => !attend)
+const updateAttendance = ([attend]) => fetch(...).then(() => attend, () => !attend)
 
 <Async promiseFn={getAttendance} deferFn={updateAttendance}>
   {({ data: isAttending, isLoading, run, setData }) => (
