@@ -1,25 +1,30 @@
 import "jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, cleanup, waitForElement, flushEffects } from "react-testing-library"
-import { useAsync } from "."
+import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
+import { useAsync, useFetch } from "."
 
-const abortCtrl = { abort: jest.fn() }
-window.AbortController = jest.fn().mockImplementation(() => abortCtrl)
+const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
+window.AbortController = jest.fn(() => abortCtrl)
+
+const json = jest.fn(() => ({}))
+window.fetch = jest.fn(() => Promise.resolve({ ok: true, json }))
 
 beforeEach(abortCtrl.abort.mockClear)
+beforeEach(window.fetch.mockClear)
 afterEach(cleanup)
 
 const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
 const resolveTo = resolveIn(0)
 
 const Async = ({ children = () => null, ...props }) => children(useAsync(props))
+const Fetch = ({ children = () => null, input, init, ...props }) =>
+  children(useFetch(input, init, props))
 
 describe("useAsync", () => {
   test("returns render props", async () => {
-    const promiseFn = () => new Promise(resolve => setTimeout(resolve, 0, "done"))
+    const promiseFn = () => Promise.resolve("done")
     const component = <Async promiseFn={promiseFn}>{({ data }) => data || null}</Async>
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("done"))
   })
 
@@ -27,7 +32,6 @@ describe("useAsync", () => {
     const promiseFn = () => Promise.reject("oops")
     const component = <Async promiseFn={promiseFn}>{({ error }) => error || null}</Async>
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("oops"))
   })
 
@@ -43,7 +47,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("done"))
     expect(states).toEqual([true, true, false])
   })
@@ -62,7 +65,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("started"))
   })
 
@@ -80,7 +82,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("done"))
   })
 
@@ -92,7 +93,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("reload"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
@@ -115,14 +115,11 @@ describe("useAsync", () => {
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
     const component = <Counter>{count => <Async promiseFn={promiseFn} watch={count} />}</Counter>
     const { getByText } = render(component)
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(2)
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(3)
     expect(abortCtrl.abort).toHaveBeenCalledTimes(2)
   })
@@ -146,14 +143,11 @@ describe("useAsync", () => {
       <Counter>{count => <Async promiseFn={promiseFn} watchFn={watchFn} count={count} />}</Counter>
     )
     const { getByText } = render(component)
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(1)
     expect(abortCtrl.abort).toHaveBeenCalledTimes(0)
     fireEvent.click(getByText("increment"))
-    flushEffects()
     expect(promiseFn).toHaveBeenCalledTimes(2)
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
@@ -170,12 +164,11 @@ describe("useAsync", () => {
     )
     const { getByText } = render(component)
     const props = { deferFn, foo: "bar" }
-    flushEffects()
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining(props), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining(props), abortCtrl)
   })
 
   test("cancel will prevent the resolved promise from propagating and attempts to abort it", async () => {
@@ -187,7 +180,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     fireEvent.click(getByText("cancel"))
     await Promise.resolve()
     expect(onResolve).not.toHaveBeenCalled()
@@ -210,14 +202,13 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 1, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith("go", 2, expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
   })
 
   test("only accepts the last invocation of the promise", async () => {
@@ -248,7 +239,6 @@ describe("useAsync", () => {
     const onResolve = jest.fn()
     const component = <Async promiseFn={promiseFn} onResolve={onResolve} />
     render(component)
-    flushEffects()
     await Promise.resolve()
     expect(onResolve).toHaveBeenCalledWith("ok")
   })
@@ -258,7 +248,6 @@ describe("useAsync", () => {
     const onReject = jest.fn()
     const component = <Async promiseFn={promiseFn} onReject={onReject} />
     render(component)
-    flushEffects()
     await Promise.resolve()
     expect(onReject).toHaveBeenCalledWith("err")
   })
@@ -268,7 +257,6 @@ describe("useAsync", () => {
     const onResolve = jest.fn()
     const component = <Async promiseFn={promiseFn} onResolve={onResolve} />
     const { unmount } = render(component)
-    flushEffects()
     unmount()
     await Promise.resolve()
     expect(onResolve).not.toHaveBeenCalled()
@@ -276,37 +264,31 @@ describe("useAsync", () => {
   })
 
   test("cancels and restarts the promise when promiseFn changes", async () => {
-    const promiseFn1 = jest.fn().mockReturnValue(Promise.resolve("one"))
-    const promiseFn2 = jest.fn().mockReturnValue(Promise.resolve("two"))
+    const promiseFn1 = jest.fn().mockReturnValue(resolveTo("one"))
+    const promiseFn2 = jest.fn().mockReturnValue(resolveTo("two"))
     const onResolve = jest.fn()
     const component1 = <Async promiseFn={promiseFn1} onResolve={onResolve} />
     const component2 = <Async promiseFn={promiseFn2} onResolve={onResolve} />
     const { rerender } = render(component1)
-    await Promise.resolve()
-    flushEffects()
     expect(promiseFn1).toHaveBeenCalled()
     rerender(component2)
-    flushEffects()
     expect(promiseFn2).toHaveBeenCalled()
+    await resolveTo()
     expect(onResolve).not.toHaveBeenCalledWith("one")
-    await Promise.resolve()
     expect(onResolve).toHaveBeenCalledWith("two")
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
   test("cancels the promise when promiseFn is unset", async () => {
-    const promiseFn = jest.fn().mockReturnValue(Promise.resolve("one"))
+    const promiseFn = jest.fn().mockReturnValue(resolveTo("one"))
     const onResolve = jest.fn()
     const component1 = <Async promiseFn={promiseFn} onResolve={onResolve} />
     const component2 = <Async onResolve={onResolve} />
     const { rerender } = render(component1)
-    await Promise.resolve()
-    flushEffects()
     expect(promiseFn).toHaveBeenCalled()
     rerender(component2)
-    flushEffects()
+    await resolveTo()
     expect(onResolve).not.toHaveBeenCalledWith("one")
-    await Promise.resolve()
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
@@ -314,7 +296,6 @@ describe("useAsync", () => {
     const promiseFn = jest.fn().mockReturnValue(Promise.resolve())
     const component = <Async promiseFn={promiseFn} initialValue={{}} />
     render(component)
-    flushEffects()
     expect(promiseFn).not.toHaveBeenCalled()
   })
 
@@ -330,7 +311,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("done"))
     expect(states).toEqual([false])
   })
@@ -343,7 +323,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("done"))
   })
 
@@ -356,7 +335,6 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("oops"))
   })
 
@@ -375,8 +353,54 @@ describe("useAsync", () => {
       </Async>
     )
     const { getByText } = render(component)
-    flushEffects()
     await waitForElement(() => getByText("outer undefined"))
     await waitForElement(() => getByText("outer inner"))
+  })
+
+  test("accepts [promiseFn, options] shorthand, with the former taking precedence", async () => {
+    const promiseFn1 = () => Promise.resolve("done")
+    const promiseFn2 = () => Promise.resolve("nope")
+    const Async = ({ children, ...props }) => children(useAsync(promiseFn1, props))
+    const onResolve = jest.fn()
+    const component = (
+      <Async promiseFn={promiseFn2} onResolve={onResolve}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    const { getByText } = render(component)
+    await waitForElement(() => getByText("done"))
+    expect(onResolve).toHaveBeenCalledWith("done")
+  })
+})
+
+describe("useFetch", () => {
+  test("sets up a fetch request", () => {
+    render(<Fetch input="/test" />)
+    expect(window.fetch).toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ signal: abortCtrl.signal })
+    )
+    expect(json).not.toHaveBeenCalled()
+  })
+
+  test("automatically switches to deferFn", () => {
+    const component = (
+      <Fetch input="/test" init={{ method: "POST" }}>
+        {({ run }) => <button onClick={run}>run</button>}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(window.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(window.fetch).toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal })
+    )
+  })
+
+  test("automatically handles JSON parsing", async () => {
+    render(<Fetch input="/test" init={{ headers: { accept: "application/json" } }} />)
+    await Promise.resolve()
+    expect(json).toHaveBeenCalled()
   })
 })

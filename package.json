@@ -29,13 +29,13 @@
     "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
     "lint": "eslint src",
     "test": "jest src/spec.js  --collectCoverageFrom=src/index.js",
+    "test:hook": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
     "test:watch": "npm run test -- --watch",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
     "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 && npm test",
-    "test:forwards": "npm i react@next react-dom@next && npm test",
-    "test:latest": "npm i react@latest react-dom@latest && npm test",
-    "test:hook": "npm i react@16.7.0-alpha.2 react-dom@16.7.0-alpha.2 && jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
-    "prepublishOnly": "npm run lint && npm run test:compat && npm run test:hook && npm run build"
+    "test:forwards": "npm i react@next react-dom@next && npm test && npm run test:hook",
+    "test:latest": "npm i react@latest react-dom@latest && npm test && npm run test:hook",
+    "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
   },
   "dependencies": {},
   "peerDependencies": {
@@ -57,9 +57,9 @@
     "jest": "23.6.0",
     "jest-dom": "2.1.0",
     "prettier": "1.15.3",
-    "react": "16.6.3",
-    "react-dom": "16.6.3",
-    "react-testing-library": "5.4.2",
+    "react": "16.8.1",
+    "react-dom": "16.8.1",
+    "react-testing-library": "5.5.3",
     "rimraf": "2.6.2"
   },
   "jest": {

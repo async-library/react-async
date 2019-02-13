@@ -1,16 +1,13 @@
 import { useState, useEffect, useMemo, useRef } from "react"
 
-const useAsync = (opts, init) => {
+const useAsync = (arg1, arg2) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: () => {} })
 
-  if (typeof opts === "function" && init) {
-    console.warn("`useAsync(promiseFn, initialValue)` is deprecated and will be removed soon.")
-  }
-  const options = typeof opts === "function" ? { promiseFn: opts, initialValue: init } : opts
+  const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
   const { promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
   const [state, setState] = useState({
@@ -67,7 +64,7 @@ const useAsync = (opts, init) => {
     if (deferFn) {
       lastArgs.current = args
       start()
-      return deferFn(...args, options, abortController.current).then(
+      return deferFn(args, options, abortController.current).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
@@ -103,10 +100,27 @@ const useAsync = (opts, init) => {
   )
 }
 
+const parseResponse = accept => res => {
+  if (!res.ok) return Promise.reject(res)
+  if (accept === "application/json") return res.json()
+  return res
+}
+
+const useAsyncFetch = (input, init, options) => {
+  const method = input.method || (init && init.method)
+  const headers = input.headers || (init && init.headers) || {}
+  const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
+  const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept))
+  return ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
+    ? useAsync({ ...options, deferFn: (_, __, { signal }) => doFetch(input, { signal, ...init }) })
+    : useAsync({ ...options, promiseFn: (_, { signal }) => doFetch(input, { signal, ...init }) })
+}
+
 const unsupported = () => {
   throw new Error(
-    "useAsync requires react@16.7.0-alpha. Upgrade your React version or use the <Async> component instead."
+    "useAsync requires React v16.8 or up. Upgrade your React version or use the <Async> component instead."
   )
 }
 
 export default (useState ? useAsync : unsupported)
+export const useFetch = useState ? useAsyncFetch : unsupported

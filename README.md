@@ -31,13 +31,13 @@
   </a>
 </p>
 
-React component for declarative promise resolution and data fetching. Leverages the Render Props pattern and Hooks for
-ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and error states,
-without assumptions about the shape of your data or the type of request.
+React component and hook for declarative promise resolution and data fetching. Leverages the Render Props pattern and
+Hooks for ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and
+error states, without assumptions about the shape of your data or the type of request.
 
 - Zero dependencies
 - Works with any (native) Promise and the Fetch API
-- Choose between Render Props, Context-based helper components or the `useAsync` hook
+- Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
@@ -48,6 +48,38 @@ without assumptions about the shape of your data or the type of request.
 - Works well in React Native too!
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
+
+> ## Upgrading to v4
+>
+> When upgrading to React Async v4, please note the following breaking API changes:
+>
+> - `deferFn` now receives an `args` array as the first argument, instead of arguments to `run` being spread at the front
+>   of the arguments list. This enables better interop with TypeScript. You can use destructuring to keep using your
+>   existing variables.
+> - The shorthand version of `useAsync` now takes the `options` object as optional second argument. This used to be
+>   `initialValue`, but was undocumented and inflexible.
+
+# Table of Contents
+
+- [Rationale](#rationale)
+  - [Concurrent React and Suspense](#concurrent-react-and-suspense)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [As a hook](#as-a-hook)
+    - [With `useFetch`](#with-usefetch)
+  - [As a component](#as-a-component)
+    - [With helper components](#with-helper-components)
+  - [As a factory](#as-a-factory)
+- [API](#api)
+  - [Options](#options)
+  - [Render props](#render-props)
+- [Helper components](#helper-components)
+- [Usage examples](#usage-examples)
+  - [Data fetching](#data-fetching)
+  - [Form submission](#form-submission)
+  - [Optimistic updates](#optimistic-updates)
+  - [Server-side rendering](#server-side-rendering)
+- [Acknowledgements](#acknowledgements)
 
 ## Rationale
 
@@ -62,7 +94,7 @@ from your routes, so it works well in complex applications that have a dynamic r
 
 React Async is promise-based, so you can resolve anything you want, not just `fetch` requests.
 
-## Concurrent React and Suspense
+### Concurrent React and Suspense
 
 The React team is currently working on a large rewrite called [Concurrent React], previously known as "Async React".
 Part of this rewrite is Suspense, which is a generic way for components to suspend rendering while they load data from
@@ -75,92 +107,30 @@ you can already **start using React Async right now**, and in a later update you
 
 [concurrent react]: https://github.com/sw-yx/fresh-concurrent-react/blob/master/Intro.md#introduction-what-is-concurrent-react
 
-## Install
+## Installation
 
 ```
 npm install --save react-async
 ```
 
+Or with Yarn:
+
+```
+yarn add react-async
+```
+
+> This package requires `react` as a peer dependency. Please make sure to install that as well.
+> If you want to use the `useAsync` hook, you'll need `react@16.8.0` or later.
+
 ## Usage
 
-Using render props for flexibility:
+React Async offers three primary APIs: the `useAsync` hook, the `<Async>` component and the `createInstance`
+factory function. Each has its unique benefits and downsides.
 
-```js
-import Async from "react-async"
+### As a hook
 
-// Your promiseFn receives all props from Async and an AbortController instance
-const loadCustomer = ({ customerId }, { signal }) =>
-  fetch(`/api/customers/${customerId}`, { signal })
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
-
-const MyComponent = () => (
-  <Async promiseFn={loadCustomer} customerId={1}>
-    {({ data, error, isLoading }) => {
-      if (isLoading) return "Loading..."
-      if (error) return `Something went wrong: ${error.message}`
-      if (data)
-        return (
-          <div>
-            <strong>Loaded some data:</strong>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          </div>
-        )
-      return null
-    }}
-  </Async>
-)
-```
-
-Using helper components (don't have to be direct children) for ease of use:
-
-```js
-import Async from "react-async"
-
-const loadCustomer = ({ customerId }, { signal }) =>
-  fetch(`/api/customers/${customerId}`, { signal })
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
-
-const MyComponent = () => (
-  <Async promiseFn={loadCustomer} customerId={1}>
-    <Async.Loading>Loading...</Async.Loading>
-    <Async.Resolved>
-      {data => (
-        <div>
-          <strong>Loaded some data:</strong>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-        </div>
-      )}
-    </Async.Resolved>
-    <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
-  </Async>
-)
-```
-
-Creating a custom instance of Async, bound to a specific promiseFn:
-
-```js
-import { createInstance } from "react-async"
-
-const loadCustomer = ({ customerId }, { signal }) =>
-  fetch(`/api/customers/${customerId}`, { signal })
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
-
-// createInstance takes a defaultProps object and a displayName (both optional)
-const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer")
-
-const MyComponent = () => (
-  <AsyncCustomer customerId={1}>
-    <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</AsyncCustomer.Resolved>
-  </AsyncCustomer>
-)
-```
-
-> Similarly, this allows you to set default `onResolve` and `onReject` callbacks.
-
-As a hook with `useAsync` (currently [only in React v16.7.0-alpha](https://reactjs.org/hooks); API is subject to change):
+The `useAsync` hook (available [from React v16.8.0](https://reactjs.org/hooks)) offers direct access to React Async's
+core functionality from within your own function components:
 
 ```js
 import { useAsync } from "react-async"
@@ -189,26 +159,136 @@ Or using the shorthand version:
 
 ```js
 const MyComponent = () => {
-  const { data, error, isLoading } = useAsync(loadCustomer)
+  const { data, error, isLoading } = useAsync(loadCustomer, options)
   // ...
 }
 ```
 
-The shorthand version currently does not support passing additional props.
+#### With `useFetch`
+
+Because fetch is so commonly used with `useAsync`, there's a dedicated `useFetch` hook for it:
+
+```js
+import { useFetch } from "react-async"
+
+const MyComponent = () => {
+  const headers = { Accept: "application/json" }
+  const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)
+  // This will setup a promiseFn with a fetch request and JSON deserialization.
+}
+```
+
+`useFetch` takes the same arguments as [fetch] itself, as well as options to the underlying `useAsync` hook. `useFetch`
+automatically uses `promiseFn` or `deferFn` based on the request method (`deferFn` for POST / PUT / PATCH / DELETE) and
+handles JSON parsing if the `Accept` header is set to `"application/json"`.
+
+[fetch]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+
+### As a component
+
+The classic interface to React Async. Simply use <Async> directly in your JSX component tree, leveraging the render
+props pattern:
+
+```js
+import Async from "react-async"
+
+// Your promiseFn receives all props from Async and an AbortController instance
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+
+const MyComponent = () => (
+  <Async promiseFn={loadCustomer} customerId={1}>
+    {({ data, error, isLoading }) => {
+      if (isLoading) return "Loading..."
+      if (error) return `Something went wrong: ${error.message}`
+      if (data)
+        return (
+          <div>
+            <strong>Loaded some data:</strong>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+        )
+      return null
+    }}
+  </Async>
+)
+```
+
+#### With helper components
+
+Several [helper components](#helper-components) are available for better legibility. These don't have to be direct
+children of `<Async>`, because they use Context, offering full flexibility. You can even use render props and helper
+components together.
+
+```js
+import Async from "react-async"
+
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+
+const MyComponent = () => (
+  <Async promiseFn={loadCustomer} customerId={1}>
+    <Async.Loading>Loading...</Async.Loading>
+    <Async.Resolved>
+      {data => (
+        <div>
+          <strong>Loaded some data:</strong>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      )}
+    </Async.Resolved>
+    <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
+  </Async>
+)
+```
+
+### As a factory
+
+You can also create your own component instances, allowing you to preconfigure them with options such as default
+`onResolve` and `onReject` callbacks.
+
+```js
+import { createInstance } from "react-async"
+
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+
+// createInstance takes a defaultProps object and a displayName (both optional)
+const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer")
+
+const MyComponent = () => (
+  <AsyncCustomer customerId={1}>
+    <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</AsyncCustomer.Resolved>
+  </AsyncCustomer>
+)
+```
 
 ## API
 
-### Props
+### Options
 
-`<Async>` takes the following properties:
+These can be passes in an object to `useAsync`, or as props to `<Async>` and custom instances.
 
-- `promiseFn` {(props, controller) => Promise} A function that returns a promise; invoked in `componentDidMount` and `componentDidUpdate`; receives component props (object) and AbortController instance as arguments
-- `deferFn` {(...args, props, controller) => Promise} A function that returns a promise; invoked only by calling `run(...args)`, with arguments being passed through, as well as component props (object) and AbortController as final arguments
-- `watch` {any} Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes (`oldValue !== newValue`)
-- `watchFn` {(props, prevProps) => any} Re-runs the `promiseFn` when this callback returns truthy (called on every update).
-- `initialValue` {any} initial state for `data` or `error` (if instance of Error); useful for server-side rendering
-- `onResolve` {Function} Callback function invoked when a promise resolves, receives data as argument
-- `onReject` {Function} Callback function invoked when a promise rejects, receives error as argument
+- `promiseFn` Function that returns a Promise, automatically invoked.
+- `deferFn` Function that returns a Promise, manually invoked with `run`.
+- `watch` Watch a value and automatically reload when it changes.
+- `watchFn` Watch this function and automatically reload when it returns truthy.
+- `initialValue` Provide initial data or error for server-side rendering.
+- `onResolve` Callback invoked when Promise resolves.
+- `onReject` Callback invoked when Promise rejects.
+
+#### `promiseFn`
+
+> `function(props: object, controller: AbortController): Promise`
+
+A function that returns a promise. It is automatically invoked in `componentDidMount` and `componentDidUpdate`.
+The function receives all component props (or options) and an AbortController instance as arguments.
 
 > Be aware that updating `promiseFn` will trigger it to cancel any pending promise and load the new promise. Passing an
 > arrow function will cause it to change and reload on every render of the parent component. You can avoid this by
@@ -216,35 +296,239 @@ The shorthand version currently does not support passing additional props.
 > pass them as additional props to `<Async>`, as `promiseFn` will be invoked with these props. Alternatively you can
 > use [memoization](https://github.com/alexreardon/memoize-one) to avoid unnecessary updates.
 
+#### `deferFn`
+
+> `function(args: any[], props: object, controller: AbortController): Promise`
+
+A function that returns a promise. This is invoked only by manually calling `run(...args)`. Receives the same arguments
+as `promiseFn`, as well as any arguments to `run` which are passed through as an array. The `deferFn` is commonly used
+to send data to the server following a user action, such as submitting a form. You can use this in conjunction with
+`promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
+
+> Be aware that when using both `promiseFn` and `deferFn`, the shape of their resolved value should match, because they
+> both update the `data`.
+
+#### `watch`
+
+> `boolean | any`
+
+Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes, using a simple
+reference check (`oldValue !== newValue`). If you need a more complex update check, use `watchFn` instead.
+
+#### `watchFn`
+
+> `function(props: object, prevProps: object): boolean | any`
+
+Re-runs the `promiseFn` when this callback returns truthy (called on every update). Any default props specified by
+`createInstance` are available too.
+
+#### `initialValue`
+
+> `any | Error`
+
+Initial state for `data` or `error` (if instance of Error); useful for server-side rendering.
+
+#### `onResolve`
+
+> `function(data: any): void`
+
+Callback function invoked when a promise resolves, receives data as argument.
+
+#### `onReject`
+
+> `function(reason: Error): void`
+
+Callback function invoked when a promise rejects, receives rejection reason (error) as argument.
+
 ### Render props
 
-`<Async>` provides the following render props:
+`<Async>` provides the following render props to the `children` function:
 
-- `data` {any} last resolved promise value, maintained when new error arrives
-- `error` {Error} rejected promise reason, cleared when new data arrives
-- `initialValue` {any} the data or error that was provided through the `initialValue` prop
-- `isLoading` {boolean} `true` while a promise is pending
-- `startedAt` {Date} when the current/last promise was started
-- `finishedAt` {Date} when the last promise was resolved or rejected
-- `cancel` {Function} ignores the result of the currently pending promise and calls `abort()` on the AbortController
-- `run` {Function} runs the `deferFn`, passing any arguments provided
-- `reload` {Function} re-runs the promise when invoked, using the previous arguments
-- `setData` {Function} sets `data` to the passed value, unsets `error` and cancels any pending promise
-- `setError` {Function} sets `error` to the passed value and cancels any pending promise
+- `data` Last resolved promise value, maintained when new error arrives.
+- `error` Rejected promise reason, cleared when new data arrives.
+- `initialValue` The data or error that was provided through the `initialValue` prop.
+- `isLoading` Whether or not a Promise is currently pending.
+- `startedAt` When the current/last promise was started.
+- `finishedAt` When the last promise was resolved or rejected.
+- `cancel` Cancel any pending promise.
+- `run` Invokes the `deferFn`.
+- `reload` Re-runs the promise when invoked, using the any previous arguments.
+- `setData` Sets `data` to the passed value, unsets `error` and cancels any pending promise.
+- `setError` Sets `error` to the passed value and cancels any pending promise.
 
-### `useAsync` (API may change until Hooks are officially released)
+#### `data`
 
-The `useAsync` hook accepts an object with the same props as `<Async>`. Alternatively you can use the shorthand syntax:
+> `any`
+
+Last resolved promise value, maintained when new error arrives.
+
+#### `error`
+
+> `Error`
+
+Rejected promise reason, cleared when new data arrives.
+
+#### `initialValue`
+
+> `any | Error`
+
+The data or error that was originally provided through the `initialValue` prop.
+
+#### `isLoading`
+
+> `boolean`
+
+`true` while a promise is pending, `false` otherwise.
+
+#### `startedAt`
+
+> `Date`
+
+Tracks when the current/last promise was started.
+
+#### `finishedAt`
+
+> `Date`
+
+Tracks when the last promise was resolved or rejected.
+
+#### `cancel`
+
+> `function(): void`
+
+Cancels the currently pending promise by ignoring its result and calls `abort()` on the AbortController.
+
+#### `run`
+
+> `function(...args: any[]): Promise`
+
+Runs the `deferFn`, passing any arguments provided as an array.
+
+#### `reload`
+
+> `function(): void`
+
+Re-runs the promise when invoked, using the previous arguments.
+
+#### `setData`
+
+> `function(data: any, callback?: () => void): any`
+
+Function that sets `data` to the passed value, unsets `error` and cancels any pending promise. Takes an optional
+callback which is invoked after the state update is completed. Returns the data to enable chaining.
+
+#### `setError`
+
+> `function(error: Error, callback?: () => void): Error`
+
+Function that sets `error` to the passed value and cancels any pending promise. Takes an optional callback which is
+invoked after the state update is completed. Returns the error to enable chaining.
+
+## Helper components
+
+React Async provides several helper components that make your JSX more declarative and less cluttered.
+They don't have to be direct children of `<Async>` and you can use the same component several times.
+
+### `<Async.Loading>`
+
+This component renders only while the promise is loading.
+
+#### Props
+
+- `initial` `boolean` Show only on initial load (when `data` is `undefined`).
+- `children` `function(state: object): Node | Node` Render function or React Node.
+
+#### Examples
 
 ```js
-useAsync(promiseFn, initialValue)
+<Async.Loading initial>
+  <p>This text is only rendered while performing the initial load.</p>
+</Async.Loading>
 ```
 
-Note that the `useAsync` API is subject to change while Hooks are not officially released.
+```js
+<Async.Loading>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Loading>
+```
 
-## Examples
+### `<Async.Resolved>`
 
-### Basic data fetching with loading indicator, error state and retry
+This component renders only when the promise is resolved with data (`data !== undefined`).
+
+#### Props
+
+- `persist` `boolean` Show old data while loading new data. By default it hides as soon as a new promise starts.
+- `children` `function(data: any, state: object): Node | Node` Render function or React Node.
+
+#### Examples
+
+```js
+<Async.Resolved persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Resolved>
+```
+
+```js
+<Async.Resolved>{({ finishedAt }) => `Last updated ${startedAt.toISOString()}`}</Async.Resolved>
+```
+
+### `<Async.Rejected>`
+
+This component renders only when the promise is rejected.
+
+#### Props
+
+- `persist` `boolean` Show old error while loading new data. By default it hides as soon as a new promise starts.
+- `children` `function(error: Error, state: object): Node | Node` Render function or React Node.
+
+#### Examples
+
+```js
+<Async.Rejected persist>Oops.</Async.Rejected>
+```
+
+```js
+<Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
+```
+
+### `<Async.Pending>`
+
+Renders only while the deferred promise is still pending (not yet run).
+
+#### Props
+
+- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
+- `children` `function(state: object): Node | Node` Render function or React Node.
+
+#### Examples
+
+```js
+<Async deferFn={deferFn}>
+  <Async.Pending>
+    <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
+  </Async.Pending>
+</Async>
+```
+
+```js
+<Async.Pending persist>
+  {({ error, isLoading, run }) => (
+    <div>
+      <p>This text is only rendered while the promise has not resolved yet.</p>
+      <button onClick={run} disabled={!isLoading}>
+        Run
+      </button>
+      {error && <p>{error.message}</p>}
+    </div>
+  )}
+</Async.Pending>
+```
+
+## Usage examples
+
+Here's several examples to give you an idea of what's possible with React Async. For fully working examples, please
+check out the [`examples` directory](https://github.com/ghengeveld/react-async/tree/master/examples).
+
+### Data fetching
+
+This does some basic data fetching, including a loading indicator, error state and retry.
 
 ```js
 class App extends Component {
@@ -277,10 +561,12 @@ class App extends Component {
 }
 ```
 
-### Using `deferFn` to trigger an update (e.g. POST / PUT request)
+### Form submission
+
+This uses `deferFn` to trigger an update (e.g. POST / PUT request) after a form submit.
 
 ```js
-const subscribeToNewsletter = (event, props, controller) => fetch(...)
+const subscribeToNewsletter = (args, props, controller) => fetch(...)
 
 <Async deferFn={subscribeToNewsletter}>
   {({ error, isLoading, run }) => (
@@ -295,10 +581,12 @@ const subscribeToNewsletter = (event, props, controller) => fetch(...)
 </Async>
 ```
 
-### Using both `promiseFn` and `deferFn` along with `setData` to implement optimistic updates
+### Optimistic updates
+
+This uses both `promiseFn` and `deferFn` along with `setData` to implement optimistic updates.
 
 ```js
-const updateAttendance = attend => fetch(...).then(() => attend, () => !attend)
+const updateAttendance = ([attend]) => fetch(...).then(() => attend, () => !attend)
 
 <Async promiseFn={getAttendance} deferFn={updateAttendance}>
   {({ data: isAttending, isLoading, run, setData }) => (
@@ -314,7 +602,9 @@ const updateAttendance = attend => fetch(...).then(() => attend, () => !attend)
 </Async>
 ```
 
-### Server-side rendering using `initialValue` (e.g. Next.js)
+### Server-side rendering
+
+This uses `initialValue` to enable server-side rendering with Next.js.
 
 ```js
 static async getInitialProps() {
@@ -344,105 +634,8 @@ render() {
 }
 ```
 
-## Helper components
-
-React Async provides several helper components that make your JSX even more declarative.
-They don't have to be direct children of `<Async>` and you can use the same component several times.
-
-### `<Async.Loading>`
-
-Renders only while the promise is loading.
-
-#### Props
-
-- `initial` {boolean} Show only on initial load (data is undefined)
-- `children` {Function|Node} Function which receives props object or React node
-
-#### Examples
-
-```js
-<Async.Loading initial>
-  <p>This text is only rendered while performing the initial load.</p>
-</Async.Loading>
-```
-
-```js
-<Async.Loading>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Loading>
-```
-
-### `<Async.Resolved>`
-
-Renders only when the promise is resolved with data (`data !== undefined`).
-
-#### Props
-
-- `persist` {boolean} Show old data while loading new data. By default it hides as soon as a new promise starts.
-- `children` {Function|Node} Render function which receives data and props object or just a plain React node.
-
-#### Examples
-
-```js
-<Async.Resolved persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Resolved>
-```
-
-```js
-<Async.Resolved>{({ finishedAt }) => `Last updated ${startedAt.toISOString()}`}</Async.Resolved>
-```
-
-### `<Async.Rejected>`
-
-Renders only when the promise is rejected.
-
-#### Props
-
-- `persist` {boolean} Show old error while loading new data. By default it hides as soon as a new promise starts.
-- `children` {Function|Node} Render function which receives error and props object or just a plain React node.
-
-#### Examples
-
-```js
-<Async.Rejected persist>Oops.</Async.Rejected>
-```
-
-```js
-<Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
-```
-
-### `<Async.Pending>`
-
-Renders only while the deferred promise is still pending (not yet run).
-
-#### Props
-
-- `persist` {boolean} Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
-- `children` {Function|Node} Function which receives props object or React node.
-
-#### Examples
-
-```js
-<Async deferFn={deferFn}>
-  <Async.Pending>
-    <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
-  </Async.Pending>
-</Async>
-```
-
-```js
-<Async.Pending persist>
-  {({ error, isLoading, run }) => (
-    <div>
-      <p>This text is only rendered while the promise has not resolved yet.</p>
-      <button onClick={run} disabled={!isLoading}>
-        Run
-      </button>
-      {error && <p>{error.message}</p>}
-    </div>
-  )}
-</Async.Pending>
-```
-
 ## Acknowledgements
 
 Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
-kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of
-React Async is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
+kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of this
+project is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
