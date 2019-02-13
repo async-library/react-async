@@ -37,7 +37,7 @@ error states, without assumptions about the shape of your data or the type of re
 
 - Zero dependencies
 - Works with any (native) Promise and the Fetch API
-- Choose between Render Props, Context-based helper components or the `useAsync` hook
+- Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
