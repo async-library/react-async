@@ -3,7 +3,7 @@ import { useAsync } from "react-async"
 import ReactDOM from "react-dom"
 import "./index.css"
 
-const download = (event, props, controller) =>
+const download = (args, props, controller) =>
   fetch(`https://reqres.in/api/users/1?delay=3`, { signal: controller.signal })
     .then(res => (res.ok ? res : Promise.reject(res)))
     .then(res => res.json())
