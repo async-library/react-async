@@ -71,6 +71,8 @@ error states, without assumptions about the shape of your data or the type of re
     - [With helper components](#with-helper-components)
   - [As a factory](#as-a-factory)
 - [API](#api)
+  - [Options](#options)
+  - [Render props](#render-props)
 - [Helper components](#helper-components)
 - [Usage examples](#usage-examples)
   - [Data fetching](#data-fetching)
