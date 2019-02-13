@@ -100,7 +100,7 @@ const useAsync = (arg1, arg2) => {
   )
 }
 
-const parse = accept => res => {
+const parseResponse = accept => res => {
   if (!res.ok) return Promise.reject(res)
   if (accept === "application/json") return res.json()
   return res
@@ -110,9 +110,10 @@ const useAsyncFetch = (input, init, options) => {
   const method = input.method || (init && init.method)
   const headers = input.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
-  const fn = ~["POST", "PUT", "DELETE", "PATCH"].indexOf(method) ? "deferFn" : "promiseFn"
-  const doFetch = (_, { signal }) => window.fetch(input, { signal, ...init }).then(parse(accept))
-  return useAsync({ ...options, [fn]: doFetch })
+  const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept))
+  return ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
+    ? useAsync({ ...options, deferFn: (_, __, { signal }) => doFetch(input, { signal, ...init }) })
+    : useAsync({ ...options, promiseFn: (_, { signal }) => doFetch(input, { signal, ...init }) })
 }
 
 const unsupported = () => {
