@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react"
+import { useState, useEffect, useMemo, useCallback, useRef } from "react"
 
 const useAsync = (arg1, arg2) => {
   const counter = useRef(0)
@@ -111,9 +111,14 @@ const useAsyncFetch = (input, init, options) => {
   const headers = input.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept))
-  return ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
-    ? useAsync({ ...options, deferFn: (_, __, { signal }) => doFetch(input, { signal, ...init }) })
-    : useAsync({ ...options, promiseFn: (_, { signal }) => doFetch(input, { signal, ...init }) })
+  const fn = ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method) ? "deferFn" : "promiseFn"
+  return useAsync({
+    ...options,
+    [fn]: useCallback(
+      (_, props, ctrl) => doFetch(input, { signal: ctrl ? ctrl.signal : props.signal, ...init }),
+      [JSON.stringify(input), JSON.stringify(init)]
+    ),
+  })
 }
 
 const unsupported = () => {
