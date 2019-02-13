@@ -59,4 +59,15 @@ export function useAsync<T>(
   arg2?: AsyncOptions<T>
 ): AsyncState<T>
 
+interface FetchInit {
+  method?: string
+  headers?: Headers | object
+}
+
+export function useFetch<T>(
+  input: Request | string,
+  init?: FetchInit,
+  options?: AsyncOptions<T>
+): AsyncState<T>
+
 export default createInstance

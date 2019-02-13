@@ -66,9 +66,10 @@ error states, without assumptions about the shape of your data or the type of re
 - [Installation](#installation)
 - [Usage](#usage)
   - [As a hook](#as-a-hook)
+    - [With `useFetch`](#with-usefetch)
   - [As a component](#as-a-component)
     - [With helper components](#with-helper-components)
-  - [As a constructor](#as-a-constructor)
+  - [As a factory](#as-a-factory)
 - [API](#api)
 - [Helper components](#helper-components)
 - [Usage examples](#usage-examples)
@@ -122,7 +123,7 @@ yarn add react-async
 ## Usage
 
 React Async offers three primary APIs: the `useAsync` hook, the `<Async>` component and the `createInstance`
-constructor. Each has its unique benefits and downsides.
+factory function. Each has its unique benefits and downsides.
 
 ### As a hook
 
@@ -160,6 +161,24 @@ const MyComponent = () => {
   // ...
 }
 ```
+
+#### With `useFetch`
+
+Because fetch is so commonly used with `useAsync`, there's a dedicated `useFetch` hook for it:
+
+```js
+const MyComponent = () => {
+  const headers = { Accept: "application/json" }
+  const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)
+  // This will setup a promiseFn with a fetch request and JSON deserialization.
+}
+```
+
+`useFetch` takes the same arguments as [fetch] itself, as well as options to the underlying `useAsync` hook. `useFetch`
+automatically uses `promiseFn` or `deferFn` based on the request method (`deferFn` for POST / PUT / PATCH / DELETE) and
+handles JSON parsing if the `Accept` header is set to `"application/json"`.
+
+[fetch]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
 
 ### As a component
 
@@ -223,7 +242,7 @@ const MyComponent = () => (
 )
 ```
 
-### As a constructor
+### As a factory
 
 You can also create your own component instances, allowing you to preconfigure them with options such as default
 `onResolve` and `onReject` callbacks.

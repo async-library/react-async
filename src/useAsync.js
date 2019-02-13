@@ -100,6 +100,21 @@ const useAsync = (arg1, arg2) => {
   )
 }
 
+const parse = accept => res => {
+  if (!res.ok) return Promise.reject(res)
+  if (accept === "application/json") return res.json()
+  return res
+}
+
+const useAsyncFetch = (input, init, options) => {
+  const method = input.method || (init && init.method)
+  const headers = input.headers || (init && init.headers) || {}
+  const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
+  const fn = ~["POST", "PUT", "DELETE", "PATCH"].indexOf(method) ? "deferFn" : "promiseFn"
+  const doFetch = (_, { signal }) => window.fetch(input, { signal, ...init }).then(parse(accept))
+  return useAsync({ ...options, [fn]: doFetch })
+}
+
 const unsupported = () => {
   throw new Error(
     "useAsync requires React v16.8 or up. Upgrade your React version or use the <Async> component instead."
@@ -107,3 +122,4 @@ const unsupported = () => {
 }
 
 export default (useState ? useAsync : unsupported)
+export const useFetch = useState ? useAsyncFetch : unsupported
