@@ -169,6 +169,8 @@ const MyComponent = () => {
 Because fetch is so commonly used with `useAsync`, there's a dedicated `useFetch` hook for it:
 
 ```js
+import { useFetch } from "react-async"
+
 const MyComponent = () => {
   const headers = { Accept: "application/json" }
   const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)

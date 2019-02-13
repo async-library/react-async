@@ -1,5 +1,5 @@
 import React from "react"
-export { default as useAsync } from "./useAsync"
+export { default as useAsync, useFetch } from "./useAsync"
 
 const isFunction = arg => typeof arg === "function"
 
