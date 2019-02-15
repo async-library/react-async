@@ -85,6 +85,12 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => () => abortController.current.abort(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
 
+  useDebugValue(state, ({ startedAt, finishedAt, error }) => {
+    if (startedAt && (!finishedAt || finishedAt < startedAt)) return `[${counter.current}] Loading`
+    if (finishedAt) return error ? `[${counter.current}] Rejected` : `[${counter.current}] Resolved`
+    return `[${counter.current}] Pending`
+  })
+
   return useMemo(
     () => ({
       ...state,
