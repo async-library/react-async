@@ -36,7 +36,7 @@ Hooks for ultimate flexibility as well as the new Context API for ease of use. M
 error states, without assumptions about the shape of your data or the type of request.
 
 - Zero dependencies
-- Works with any (native) Promise and the Fetch API
+- Works with promises, async/await and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
 - Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
 - Provides `cancel` and `reload` actions
@@ -45,6 +45,7 @@ error states, without assumptions about the shape of your data or the type of re
 - Supports [abortable fetch] by providing an AbortController
 - Supports optimistic updates using `setData`
 - Supports server-side rendering through `initialValue`
+- Comes with type definitions for TypeScript
 - Works well in React Native too!
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
@@ -79,6 +80,7 @@ error states, without assumptions about the shape of your data or the type of re
   - [Form submission](#form-submission)
   - [Optimistic updates](#optimistic-updates)
   - [Server-side rendering](#server-side-rendering)
+- [Who's using React Async](#whos-using-react-async)
 - [Acknowledgements](#acknowledgements)
 
 ## Rationale
@@ -135,10 +137,11 @@ core functionality from within your own function components:
 ```js
 import { useAsync } from "react-async"
 
-const loadCustomer = ({ customerId }, { signal }) =>
-  fetch(`/api/customers/${customerId}`, { signal })
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
+const loadCustomer = async ({ customerId }, { signal }) => {
+  const res = await fetch(`/api/customers/${customerId}`, { signal })
+  if (!res.ok) throw new Error(res)
+  return res.json()
+}
 
 const MyComponent = () => {
   const { data, error, isLoading } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
@@ -273,7 +276,7 @@ const MyComponent = () => (
 
 ### Options
 
-These can be passes in an object to `useAsync`, or as props to `<Async>` and custom instances.
+These can be passed in an object to `useAsync()`, or as props to `<Async>` and custom instances.
 
 - `promiseFn` Function that returns a Promise, automatically invoked.
 - `deferFn` Function that returns a Promise, manually invoked with `run`.
@@ -306,11 +309,11 @@ to send data to the server following a user action, such as submitting a form. Y
 `promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
 
 > Be aware that when using both `promiseFn` and `deferFn`, the shape of their resolved value should match, because they
-> both update the `data`.
+> both update the same `data`.
 
 #### `watch`
 
-> `boolean | any`
+> `any`
 
 Watches this property through `componentDidUpdate` and re-runs the `promiseFn` when the value changes, using a simple
 reference check (`oldValue !== newValue`). If you need a more complex update check, use `watchFn` instead.
@@ -633,6 +636,12 @@ render() {
   )
 }
 ```
+
+## Who's using React Async
+
+<a href="https://xebia.com"><img src="https://user-images.githubusercontent.com/321738/52999660-a9949780-3426-11e9-9a7e-42b400f4ccbe.png" height="40" alt="Xebia" /></a> <a href="https://intergamma.nl"><img src="https://user-images.githubusercontent.com/321738/52999676-b5805980-3426-11e9-899e-6c9669176df4.png" height="40" alt="Intergamma" /></a>
+
+Your organization here? [Let us know](https://github.com/ghengeveld/react-async/issues/22) you're using React Async!
 
 ## Acknowledgements
 

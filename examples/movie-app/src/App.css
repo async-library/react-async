@@ -1,0 +1,98 @@
+.App {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.Movie {
+  position: relative;
+  margin: 20px 0;
+  background-color: #090e21;
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.Movie .content {
+  border-radius: 4px;
+  background-image: linear-gradient(rgba(9, 14, 33, 0.6), rgb(9, 14, 33));
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.Movie .content:hover {
+  background-color: rgba(9, 14, 33, 0.6);
+}
+.Movie .title {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+.Movie .info {
+  font-size: 0.9em;
+  opacity: 0.5;
+}
+.Movie .desc {
+  margin-top: 16px;
+  font-size: 0.9em;
+  line-height: 1.4em;
+  opacity: 0.7;
+}
+
+.Details .main {
+  display: flex;
+  margin: 16px 0;
+  align-items: flex-start;
+}
+.Details .info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  line-height: 1.4em;
+}
+.Details h1 {
+  margin: 10px 0 20px;
+  line-height: 1em;
+}
+.Details img {
+  margin-right: 20px;
+}
+.Details .ratings {
+  display: flex;
+  border-top: 2px solid #111629;
+  padding: 15px 0;
+}
+.Details .rating {
+  flex-grow: 1;
+}
+.Details .rating .title {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-size: smaller;
+  font-weight: bold;
+  color: #949aa4;
+}
+.Details .rating .score {
+  font-size: 2em;
+  font-weight: bolder;
+}
+.Details .reviews {
+  display: flex;
+  flex-wrap: wrap;
+}
+.Details .review {
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #090e21;
+  border: 1px solid #151828;
+  border-radius: 3px;
+}
+.Details .review p {
+  margin-top: 0;
+  line-height: 1.4em;
+  font-size: 0.9em;
+}
+.Details .review small {
+  color: #949aa4;
+}
