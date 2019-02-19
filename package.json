@@ -28,7 +28,7 @@
   "scripts": {
     "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
     "lint": "eslint src",
-    "test": "jest src/spec.js  --collectCoverageFrom=src/index.js",
+    "test": "jest src/Async.spec.js  --collectCoverageFrom=src/Async.js",
     "test:hook": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
     "test:watch": "npm run test -- --watch",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
@@ -40,6 +40,9 @@
   "dependencies": {},
   "peerDependencies": {
     "react": ">=16.3.1"
+  },
+  "optionalDependencies": {
+    "prop-types": ">=15.5.7"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
