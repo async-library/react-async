@@ -24,6 +24,7 @@ interface AsyncState<T> {
   isLoading: boolean
   startedAt?: Date
   finishedAt?: Date
+  counter: number
   cancel: () => void
   run: (...args: any[]) => Promise<T>
   reload: () => void

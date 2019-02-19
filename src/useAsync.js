@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from "react"
+import { useCallback, useDebugValue, useEffect, useMemo, useRef, useState } from "react"
 
 const useAsync = (arg1, arg2) => {
   const counter = useRef(0)
@@ -85,11 +85,18 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => () => abortController.current.abort(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
 
+  useDebugValue(state, ({ startedAt, finishedAt, error }) => {
+    if (startedAt && (!finishedAt || finishedAt < startedAt)) return `[${counter.current}] Loading`
+    if (finishedAt) return error ? `[${counter.current}] Rejected` : `[${counter.current}] Resolved`
+    return `[${counter.current}] Pending`
+  })
+
   return useMemo(
     () => ({
       ...state,
-      isLoading: state.startedAt && (!state.finishedAt || state.finishedAt < state.startedAt),
       initialValue,
+      isLoading: state.startedAt && (!state.finishedAt || state.finishedAt < state.startedAt),
+      counter: counter.current,
       run,
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
       cancel,
@@ -112,13 +119,19 @@ const useAsyncFetch = (input, init, options) => {
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept))
   const fn = ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method) ? "deferFn" : "promiseFn"
-  return useAsync({
+  const state = useAsync({
     ...options,
     [fn]: useCallback(
       (_, props, ctrl) => doFetch(input, { signal: ctrl ? ctrl.signal : props.signal, ...init }),
       [JSON.stringify(input), JSON.stringify(init)]
     ),
   })
+  useDebugValue(state, ({ startedAt, finishedAt, error, counter }) => {
+    if (startedAt && (!finishedAt || finishedAt < startedAt)) return `[${counter}] Loading`
+    if (finishedAt) return error ? `[${counter}] Rejected` : `[${counter}] Resolved`
+    return `[${counter}] Pending`
+  })
+  return state
 }
 
 const unsupported = () => {
