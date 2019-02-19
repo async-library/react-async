@@ -43,6 +43,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         isLoading: !initialValue && isFunction(promiseFn),
         startedAt: undefined,
         finishedAt: initialValue ? new Date() : undefined,
+        counter: this.counter,
         cancel: this.cancel,
         run: this.run,
         reload: () => {
@@ -81,7 +82,12 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new window.AbortController()
       }
       this.counter++
-      this.setState({ isLoading: true, startedAt: new Date(), finishedAt: undefined })
+      this.setState({
+        isLoading: true,
+        startedAt: new Date(),
+        finishedAt: undefined,
+        counter: this.counter,
+      })
     }
 
     load() {
@@ -108,7 +114,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     cancel() {
       this.counter++
       this.abortController.abort()
-      this.setState({ isLoading: false, startedAt: undefined })
+      this.setState({ isLoading: false, startedAt: undefined, counter: this.counter })
     }
 
     onResolve(counter) {
