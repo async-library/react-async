@@ -80,7 +80,7 @@ error states, without assumptions about the shape of your data or the type of re
   - [Form submission](#form-submission)
   - [Optimistic updates](#optimistic-updates)
   - [Server-side rendering](#server-side-rendering)
-- [Who's using React Async](#whos-using-react-async)
+- [Who's using React Async?](#whos-using-react-async)
 - [Acknowledgements](#acknowledgements)
 
 ## Rationale
@@ -353,6 +353,7 @@ Callback function invoked when a promise rejects, receives rejection reason (err
 - `isLoading` Whether or not a Promise is currently pending.
 - `startedAt` When the current/last promise was started.
 - `finishedAt` When the last promise was resolved or rejected.
+- `counter` The number of times a promise was started.
 - `cancel` Cancel any pending promise.
 - `run` Invokes the `deferFn`.
 - `reload` Re-runs the promise when invoked, using the any previous arguments.
@@ -394,6 +395,12 @@ Tracks when the current/last promise was started.
 > `Date`
 
 Tracks when the last promise was resolved or rejected.
+
+#### `counter`
+
+> `number`
+
+The number of times a promise was started.
 
 #### `cancel`
 
@@ -637,7 +644,7 @@ render() {
 }
 ```
 
-## Who's using React Async
+## Who's using React Async?
 
 <a href="https://xebia.com"><img src="https://user-images.githubusercontent.com/321738/52999660-a9949780-3426-11e9-9a7e-42b400f4ccbe.png" height="40" alt="Xebia" /></a> <a href="https://intergamma.nl"><img src="https://user-images.githubusercontent.com/321738/52999676-b5805980-3426-11e9-899e-6c9669176df4.png" height="40" alt="Intergamma" /></a>
 
