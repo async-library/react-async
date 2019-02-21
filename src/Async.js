@@ -161,6 +161,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
   if (PropTypes) {
     Async.propTypes = {
+      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
       promiseFn: PropTypes.func,
       deferFn: PropTypes.func,
       watch: PropTypes.any,

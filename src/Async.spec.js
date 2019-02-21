@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
