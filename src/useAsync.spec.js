@@ -103,8 +103,11 @@ describe("useAsync", () => {
 
   test("re-runs the promise when the value of 'watch' changes", () => {
     class Counter extends React.Component {
-      state = { count: 0 }
-      inc = () => this.setState(state => ({ count: state.count + 1 }))
+      constructor(props) {
+        super(props)
+        this.state = { count: 0 }
+        this.inc = () => this.setState(state => ({ count: state.count + 1 }))
+      }
       render() {
         return (
           <div>
@@ -128,8 +131,11 @@ describe("useAsync", () => {
 
   test("re-runs the promise when 'watchFn' returns truthy", () => {
     class Counter extends React.Component {
-      state = { count: 0 }
-      inc = () => this.setState(state => ({ count: state.count + 1 }))
+      constructor(props) {
+        super(props)
+        this.state = { count: 0 }
+        this.inc = () => this.setState(state => ({ count: state.count + 1 }))
+      }
       render() {
         return (
           <div>
