@@ -1,4 +1,5 @@
 {
   "presets": [["env", { "loose": true }], "react"],
+  "plugins": ["transform-object-rest-spread"],
   "ignore": ["node_modules", "stories.js"]
 }
