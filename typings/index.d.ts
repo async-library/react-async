@@ -5,7 +5,7 @@ type PromiseFn<T> = (props: object) => Promise<T>
 
 interface AsyncOptions<T> {
   promiseFn?: (props: object, controller: AbortController) => Promise<T>
-  deferFn?: (props: object, controller: AbortController, args: any[]) => Promise<T>
+  deferFn?: (args: any[], props: object, controller: AbortController) => Promise<T>
   watch?: any
   watchFn?: (props: object, prevProps: object) => any
   initialValue?: T
