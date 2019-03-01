@@ -1,0 +1,23 @@
+{
+  "name": "react-async-router",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.11.0",
+    "react": "^16.8.3",
+    "react-async": "^4.1.2",
+    "react-dom": "^16.8.3",
+    "react-router-dom": "^4.3.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4"
+  }
+}
