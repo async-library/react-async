@@ -1,25 +1,27 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter as Router } from "react-router-dom"
-import ApiRouter from "./js/ApiRouter"
-import ContributorsComponent from "./js/ContributorsComponent"
-import RepositoriesComponent from "./js/RepositoriesComponent"
-import Header from "./js/Header"
+import { BrowserRouter as Router, NavLink } from "react-router-dom"
+import AsyncRoute from "./js/AsyncRoute"
+import Contributors from "./js/Contributors"
+import Repositories from "./js/Repositories"
 
 const App = () => (
   <Router>
     <>
-      <Header/>
-      <ApiRouter 
+      <div>
+        <NavLink to="/">Contributors To react-async</NavLink>
+        <NavLink to="/repositories">Other github repositories</NavLink>
+      </div>
+      <AsyncRoute 
         exact
         path="/" 
         fetchUrl="https://api.github.com/repos/ghengeveld/react-async/contributors" 
-        component={ContributorsComponent} 
+        component={Contributors} 
       />
-      <ApiRouter
+      <AsyncRoute
         path="/repositories"
         fetchUrl="https://api.github.com/repositories"
-        component={RepositoriesComponent}
+        component={Repositories}
       />
     </>
   </Router>

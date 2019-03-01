@@ -1,6 +1,6 @@
 import React from "react"
 
-const ContributorsComponent = ({ data, error, isLoading }) => {
+const Contributors = ({ data, error, isLoading }) => {
   if (isLoading) return "Loading Contributers..."
   if (error) return "Error"
   return (
@@ -12,4 +12,4 @@ const ContributorsComponent = ({ data, error, isLoading }) => {
   )
 }
 
-export default ContributorsComponent
+export default Contributors

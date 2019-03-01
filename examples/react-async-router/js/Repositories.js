@@ -1,6 +1,6 @@
 import React from "react"
 
-const RepositoriesComponent = ({ data, error, isLoading }) => {
+const Repositories = ({ data, error, isLoading }) => {
   if (isLoading) return "Loading Repositories..."
   if (error) return "Error"
   return (
@@ -12,4 +12,4 @@ const RepositoriesComponent = ({ data, error, isLoading }) => {
   )
 }
 
-export default RepositoriesComponent
+export default Repositories
