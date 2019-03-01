@@ -278,6 +278,7 @@ const MyComponent = () => (
 
 These can be passed in an object to `useAsync()`, or as props to `<Async>` and custom instances.
 
+- `promise` An already started Promise instance.
 - `promiseFn` Function that returns a Promise, automatically invoked.
 - `deferFn` Function that returns a Promise, manually invoked with `run`.
 - `watch` Watch a value and automatically reload when it changes.
@@ -285,6 +286,16 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `initialValue` Provide initial data or error for server-side rendering.
 - `onResolve` Callback invoked when Promise resolves.
 - `onReject` Callback invoked when Promise rejects.
+
+#### `promise`
+
+> `Promise`
+
+A Promise instance which has already started. It will simply add the necessary resolve/reject callbacks and set
+`startedAt` to the time `promise` was first provided. Changing the value of `promise` will cancel any pending promise
+and listen to the new one. If `promise` is initially undefined, the React Async state will be `pending`.
+
+> Note that `reload` will not do anything when using `promise`. Use `promiseFn` instead.
 
 #### `promiseFn`
 
@@ -441,7 +452,7 @@ They don't have to be direct children of `<Async>` and you can use the same comp
 
 ### `<Async.Loading>`
 
-This component renders only while the promise is loading.
+This component renders only while the promise is loading (unsettled).
 
 #### Props
 
@@ -462,7 +473,7 @@ This component renders only while the promise is loading.
 
 ### `<Async.Resolved>`
 
-This component renders only when the promise is resolved with data (`data !== undefined`).
+This component renders only when the promise is fulfilled with data (`data !== undefined`).
 
 #### Props
 
@@ -500,7 +511,7 @@ This component renders only when the promise is rejected.
 
 ### `<Async.Pending>`
 
-Renders only while the deferred promise is still pending (not yet run).
+Renders only while the deferred promise is still pending (not yet run), or you have not provided any promise.
 
 #### Props
 

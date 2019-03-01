@@ -8,12 +8,12 @@ const useAsync = (arg1, arg2) => {
   const abortController = useRef({ abort: () => {} })
 
   const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
-  const { promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
+  const { promise, promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
   const [state, setState] = useState({
     data: initialValue instanceof Error ? undefined : initialValue,
     error: initialValue instanceof Error ? initialValue : undefined,
-    startedAt: promiseFn ? new Date() : undefined,
+    startedAt: promise || promiseFn ? new Date() : undefined,
     finishedAt: initialValue ? new Date() : undefined,
   })
 
@@ -50,6 +50,11 @@ const useAsync = (arg1, arg2) => {
   }
 
   const load = () => {
+    if (promise) {
+      start()
+      return promise.then(handleResolve(counter.current), handleReject(counter.current))
+    }
+
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
       start()
@@ -80,7 +85,12 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => {
     if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
   })
-  useEffect(() => (promiseFn ? load() && undefined : cancel()), [promiseFn, watch])
+  useEffect(
+    () => {
+      promise || promiseFn ? load() : cancel()
+    },
+    [promise, promiseFn, watch]
+  )
   useEffect(() => () => (isMounted.current = false), [])
   useEffect(() => () => abortController.current.abort(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
