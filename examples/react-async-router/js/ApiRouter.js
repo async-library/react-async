@@ -1,15 +1,15 @@
-import React from 'react';
-import { Route} from "react-router-dom";
-import Api from './Api';
+import React from "react"
+import { Route} from "react-router-dom"
+import Api from "./Api"
 
 const ApiRouter = (props) => {
-  const Child = props.component;
+  const Child = props.component
   const c = () => (
     <Api fetchUrl={props.fetchUrl}>
       <Child {...props} />
     </Api>
-  );
-  return (<Route {...props} component={c} />);
+  )
+  return (<Route {...props} component={c} />)
 }
 
-export default ApiRouter;
+export default ApiRouter

@@ -1,20 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import ApiRouter from './js/ApiRouter';
-import ContributorsComponent from './js/ContributorsComponent';
-import RepositoriesComponent from './js/RepositoriesComponent';
-import Header from './js/Header';
+import React from "react"
+import ReactDOM from "react-dom"
+import { BrowserRouter as Router } from "react-router-dom"
+import ApiRouter from "./js/ApiRouter"
+import ContributorsComponent from "./js/ContributorsComponent"
+import RepositoriesComponent from "./js/RepositoriesComponent"
+import Header from "./js/Header"
 
 const App = () => (
-    <Router>
-      <React.Fragment>
-        <Header/>
-        <ApiRouter exact path="/" fetchUrl='https://api.github.com/repos/ghengeveld/react-async/contributors' component={ContributorsComponent} />
-        <ApiRouter path="/repositories" fetchUrl='https://api.github.com/repositories' component={RepositoriesComponent} />
-      </React.Fragment>
-    </Router>)
+  <Router>
+    <>
+      <Header/>
+      <ApiRouter 
+        exact
+        path="/" 
+        fetchUrl="https://api.github.com/repos/ghengeveld/react-async/contributors" 
+        component={ContributorsComponent} 
+      />
+      <ApiRouter
+        path="/repositories"
+        fetchUrl="https://api.github.com/repositories"
+        component={RepositoriesComponent}
+      />
+    </>
+  </Router>
+)
 
-document.addEventListener('DOMContentLoaded', () => {
-  ReactDOM.render(<App />, document.getElementById('app'));
-});
+document.addEventListener("DOMContentLoaded", () => {
+  ReactDOM.render(<App />, document.getElementById("app"))
+})

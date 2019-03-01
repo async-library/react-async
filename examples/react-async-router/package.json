@@ -1,14 +1,11 @@
 {
   "name": "react-async-router",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.11.0",
