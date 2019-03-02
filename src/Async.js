@@ -41,7 +41,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         initialValue,
         data: initialData,
         error: initialError,
-        isLoading: promise || (promiseFn && !initialValue),
+        isLoading: !!promise || (promiseFn && !initialValue),
         startedAt: promise ? new Date() : undefined,
         finishedAt: initialValue ? new Date() : undefined,
         counter: this.counter,
