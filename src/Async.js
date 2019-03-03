@@ -27,6 +27,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.setData = this.setData.bind(this)
       this.setError = this.setError.bind(this)
 
+      const promise = props.promise
       const promiseFn = props.promiseFn || defaultProps.promiseFn
       const initialValue = props.initialValue || defaultProps.initialValue
       const initialError = initialValue instanceof Error ? initialValue : undefined
@@ -40,8 +41,8 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         initialValue,
         data: initialData,
         error: initialError,
-        isLoading: !initialValue && isFunction(promiseFn),
-        startedAt: undefined,
+        isLoading: !!promise || (promiseFn && !initialValue),
+        startedAt: promise ? new Date() : undefined,
         finishedAt: initialValue ? new Date() : undefined,
         counter: this.counter,
         cancel: this.cancel,
@@ -57,14 +58,20 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     componentDidMount() {
       this.mounted = true
-      this.state.initialValue || this.load()
+      if (this.props.promise || !this.state.initialValue) {
+        this.load()
+      }
     }
 
     componentDidUpdate(prevProps) {
-      const { watch, watchFn = defaultProps.watchFn, promiseFn } = this.props
+      const { watch, watchFn = defaultProps.watchFn, promise, promiseFn } = this.props
       if (watch !== prevProps.watch) this.load()
       if (watchFn && watchFn({ ...defaultProps, ...this.props }, { ...defaultProps, ...prevProps }))
         this.load()
+      if (promise !== prevProps.promise) {
+        if (promise) this.load()
+        else this.cancel()
+      }
       if (promiseFn !== prevProps.promiseFn) {
         if (promiseFn) this.load()
         else this.cancel()
@@ -91,24 +98,32 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     load() {
+      const promise = this.props.promise
+      if (promise) {
+        this.start()
+        return promise.then(this.onResolve(this.counter), this.onReject(this.counter))
+      }
+
       const promiseFn = this.props.promiseFn || defaultProps.promiseFn
-      if (!promiseFn) return
-      this.start()
-      return promiseFn(this.props, this.abortController).then(
-        this.onResolve(this.counter),
-        this.onReject(this.counter)
-      )
+      if (promiseFn) {
+        this.start()
+        return promiseFn(this.props, this.abortController).then(
+          this.onResolve(this.counter),
+          this.onReject(this.counter)
+        )
+      }
     }
 
     run(...args) {
       const deferFn = this.props.deferFn || defaultProps.deferFn
-      if (!deferFn) return
-      this.args = args
-      this.start()
-      return deferFn(args, { ...defaultProps, ...this.props }, this.abortController).then(
-        this.onResolve(this.counter),
-        this.onReject(this.counter)
-      )
+      if (deferFn) {
+        this.args = args
+        this.start()
+        return deferFn(args, { ...defaultProps, ...this.props }, this.abortController).then(
+          this.onResolve(this.counter),
+          this.onReject(this.counter)
+        )
+      }
     }
 
     cancel() {
@@ -162,6 +177,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   if (PropTypes) {
     Async.propTypes = {
       children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+      promise: PropTypes.instanceOf(Promise),
       promiseFn: PropTypes.func,
       deferFn: PropTypes.func,
       watch: PropTypes.any,
