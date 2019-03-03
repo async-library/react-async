@@ -3,7 +3,7 @@ import Async from "react-async"
 import fetch from "isomorphic-fetch"
 import Link from "next/link"
 
-const loadUser = ({ userId }) =>
+const loadUser = ({ userId = 1 }) =>
   fetch(`https://reqres.in/api/users/${userId}`)
     .then(res => (res.ok ? res : Promise.reject(res)))
     .then(res => res.json())
@@ -17,7 +17,7 @@ class Hello extends React.Component {
 
   render() {
     const { data, url } = this.props
-    const { userId } = url.query
+    const { userId = 1 } = url.query
     return (
       <Async promiseFn={loadUser} userId={userId} watch={userId} initialValue={data}>
         <Async.Loading>
