@@ -6,7 +6,8 @@
     "react",
     "async",
     "promise",
-    "fetch"
+    "fetch",
+    "hook"
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
@@ -62,9 +63,6 @@
     "react": "16.8.1",
     "react-dom": "16.8.1",
     "react-testing-library": "5.5.3"
-  },
-  "resolutions": {
-    "babel-core": "^7.0.0-bridge.0"
   },
   "jest": {
     "collectCoverage": true,
