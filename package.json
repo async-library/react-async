@@ -6,7 +6,7 @@
     "react",
     "async",
     "promise",
-    "loader"
+    "fetch"
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
@@ -18,15 +18,8 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "main": "lib/index.js",
-  "typings": "typings/index.d.ts",
-  "files": [
-    "lib",
-    "src",
-    "typings"
-  ],
   "scripts": {
-    "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
+    "build": "pack build",
     "lint": "eslint src",
     "test": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
     "test:hook": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
@@ -45,13 +38,14 @@
     "prop-types": ">=15.5.7"
   },
   "devDependencies": {
-    "@babel/cli": "7.2.3",
-    "@babel/core": "7.3.3",
     "@babel/plugin-proposal-object-rest-spread": "7.3.4",
     "@babel/plugin-transform-runtime": "7.2.0",
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
-    "babel-core": "^7.0.0-bridge.0",
+    "@pika/plugin-build-node": "0.3.12",
+    "@pika/plugin-build-types": "0.3.12",
+    "@pika/plugin-build-web": "0.3.12",
+    "@pika/plugin-standard-pkg": "0.3.12",
     "babel-eslint": "10.0.1",
     "babel-jest": "24.1.0",
     "eslint": "5.11.1",
@@ -66,14 +60,34 @@
     "prettier": "1.15.3",
     "react": "16.8.1",
     "react-dom": "16.8.1",
-    "react-testing-library": "5.5.3",
-    "rimraf": "2.6.2"
+    "react-testing-library": "5.5.3"
+  },
+  "resolutions": {
+    "babel-core": "^7.0.0-bridge.0"
   },
   "jest": {
     "collectCoverage": true,
     "coverageDirectory": "./coverage/"
   },
-  "resolutions": {
-    "babel-core": "^7.0.0-bridge.0"
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-standard-pkg",
+        {
+          "exclude": [
+            "*.spec.js"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@pika/plugin-build-types"
+      ]
+    ]
   }
 }
