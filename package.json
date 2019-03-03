@@ -1,12 +1,13 @@
 {
   "name": "react-async",
-  "version": "4.1.2",
+  "version": "4.3.0-0",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
     "async",
     "promise",
-    "loader"
+    "fetch",
+    "hook"
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
@@ -18,23 +19,17 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "main": "lib/index.js",
-  "typings": "typings/index.d.ts",
-  "files": [
-    "lib",
-    "src",
-    "typings"
-  ],
   "scripts": {
-    "build": "rimraf lib && babel src -d lib --ignore '**/*spec.js'",
     "lint": "eslint src",
-    "test": "jest src/Async.spec.js  --collectCoverageFrom=src/Async.js",
+    "test": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
     "test:hook": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
     "test:watch": "npm run test -- --watch",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
     "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 --no-save && npm test",
     "test:forwards": "npm i react@next react-dom@next --no-save && npm test && npm run test:hook",
     "test:latest": "npm i react@latest react-dom@latest --no-save && npm test && npm run test:hook",
+    "build": "pack build",
+    "publish": "pack publish",
     "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
   },
   "dependencies": {},
@@ -45,12 +40,16 @@
     "prop-types": ">=15.5.7"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
+    "@babel/plugin-proposal-object-rest-spread": "7.3.4",
+    "@babel/plugin-transform-runtime": "7.2.0",
+    "@babel/preset-env": "7.3.4",
+    "@babel/preset-react": "7.0.0",
+    "@pika/plugin-build-node": "0.3.12",
+    "@pika/plugin-build-types": "0.3.12",
+    "@pika/plugin-build-web": "0.3.12",
+    "@pika/plugin-standard-pkg": "0.3.12",
     "babel-eslint": "10.0.1",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-react": "6.24.1",
+    "babel-jest": "24.1.0",
     "eslint": "5.11.1",
     "eslint-config-prettier": "3.3.0",
     "eslint-plugin-jest": "22.1.2",
@@ -58,16 +57,36 @@
     "eslint-plugin-promise": "4.0.1",
     "eslint-plugin-react": "7.12.0",
     "eslint-plugin-react-hooks": "1.0.1",
-    "jest": "23.6.0",
-    "jest-dom": "2.1.0",
+    "jest": "24.1.0",
+    "jest-dom": "3.1.2",
     "prettier": "1.15.3",
     "react": "16.8.1",
     "react-dom": "16.8.1",
-    "react-testing-library": "5.5.3",
-    "rimraf": "2.6.2"
+    "react-testing-library": "5.5.3"
   },
   "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage/"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-standard-pkg",
+        {
+          "exclude": [
+            "*.spec.js"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@pika/plugin-build-types"
+      ]
+    ]
   }
 }
