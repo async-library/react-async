@@ -19,7 +19,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
-    "build": "pack build",
     "lint": "eslint src",
     "test": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
     "test:hook": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
@@ -28,6 +27,8 @@
     "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 --no-save && npm test",
     "test:forwards": "npm i react@next react-dom@next --no-save && npm test && npm run test:hook",
     "test:latest": "npm i react@latest react-dom@latest --no-save && npm test && npm run test:hook",
+    "build": "pack build",
+    "publish": "pack publish",
     "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
   },
   "dependencies": {},
