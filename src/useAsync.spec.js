@@ -14,11 +14,12 @@ window.fetch = jest.fn(() => Promise.resolve({ ok: true, json }))
 
 beforeEach(abortCtrl.abort.mockClear)
 beforeEach(window.fetch.mockClear)
+beforeEach(json.mockClear)
 afterEach(cleanup)
 
 const Async = ({ children = () => null, ...props }) => children(useAsync(props))
-const Fetch = ({ children = () => null, input, init, ...props }) =>
-  children(useFetch(input, init, props))
+const Fetch = ({ children = () => null, input, init, options }) =>
+  children(useFetch(input, init, options))
 
 describe("useAsync", () => {
   describe("common", common(Async, abortCtrl))
@@ -67,8 +68,53 @@ describe("useFetch", () => {
     )
   })
 
+  test("defer=true uses deferFn", () => {
+    const component = (
+      <Fetch input="/test" options={{ defer: true }}>
+        {({ run }) => <button onClick={run}>run</button>}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(window.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(window.fetch).toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ signal: abortCtrl.signal })
+    )
+  })
+
+  test("defer=false uses promiseFn", () => {
+    render(
+      <Fetch input="/test" init={{ method: "POST" }} options={{ defer: false }}>
+        {({ run }) => <button onClick={run}>run</button>}
+      </Fetch>
+    )
+    expect(window.fetch).toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal })
+    )
+  })
+
   test("automatically handles JSON parsing", async () => {
     render(<Fetch input="/test" init={{ headers: { accept: "application/json" } }} />)
+    await Promise.resolve()
+    expect(json).toHaveBeenCalled()
+  })
+
+  test("json=false disables JSON parsing", async () => {
+    render(
+      <Fetch
+        input="/test"
+        init={{ headers: { accept: "application/json" } }}
+        options={{ json: false }}
+      />
+    )
+    await Promise.resolve()
+    expect(json).not.toHaveBeenCalled()
+  })
+
+  test("json=true enables JSON parsing", async () => {
+    render(<Fetch input="/test" options={{ json: true }} />)
     await Promise.resolve()
     expect(json).toHaveBeenCalled()
   })

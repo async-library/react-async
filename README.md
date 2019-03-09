@@ -181,9 +181,11 @@ const MyComponent = () => {
 }
 ```
 
-`useFetch` takes the same arguments as [fetch] itself, as well as options to the underlying `useAsync` hook. `useFetch`
-automatically uses `promiseFn` or `deferFn` based on the request method (`deferFn` for POST / PUT / PATCH / DELETE) and
-handles JSON parsing if the `Accept` header is set to `"application/json"`.
+`useFetch` takes the same arguments as [fetch] itself, as well as `options` to the underlying `useAsync` hook. The
+`options` object takes two special boolean properties: `defer` and `json`. These can be used to switch between
+`deferFn` and `promiseFn`, and enable JSON parsing. By default `useFetch` automatically uses `promiseFn` or `deferFn`
+based on the request method (`deferFn` for POST / PUT / PATCH / DELETE) and handles JSON parsing if the `Accept` header
+is set to `"application/json"`.
 
 [fetch]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
 
@@ -287,6 +289,11 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `onResolve` Callback invoked when Promise resolves.
 - `onReject` Callback invoked when Promise rejects.
 
+`useFetch` additionally takes these options:
+
+- `defer` Force the use of `deferFn` or `promiseFn`.
+- `json` Enable JSON parsing of the response.
+
 #### `promise`
 
 > `Promise`
@@ -353,6 +360,20 @@ Callback function invoked when a promise resolves, receives data as argument.
 > `function(reason: Error): void`
 
 Callback function invoked when a promise rejects, receives rejection reason (error) as argument.
+
+#### `defer`
+
+> `boolean`
+
+Enables the use of `deferFn` if `true`, or enables the use of `promiseFn` if `false`. By default this is automatically
+chosen based on the request method (`deferFn` for POST / PUT / PATCH / DELETE, `promiseFn` otherwise).
+
+#### `json`
+
+> `boolean`
+
+Enables or disables JSON parsing of the response body. By default this is automatically enabled if the `Accept` header
+is set to `"application/json"`.
 
 ### Render props
 

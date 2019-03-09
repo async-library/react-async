@@ -117,18 +117,20 @@ const useAsync = (arg1, arg2) => {
   )
 }
 
-const parseResponse = accept => res => {
+const parseResponse = (accept, json) => res => {
   if (!res.ok) return Promise.reject(res)
-  if (accept === "application/json") return res.json()
+  if (json === false) return res
+  if (json === true || accept === "application/json") return res.json()
   return res
 }
 
-const useAsyncFetch = (input, init, options) => {
+const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
   const method = input.method || (init && init.method)
   const headers = input.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
-  const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept))
-  const fn = ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method) ? "deferFn" : "promiseFn"
+  const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept, json))
+  const isDefer = defer === true || ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
+  const fn = defer === false || !isDefer ? "promiseFn" : "deferFn"
   const state = useAsync({
     ...options,
     [fn]: useCallback(

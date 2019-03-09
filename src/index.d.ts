@@ -66,10 +66,14 @@ interface FetchInit {
   headers?: Headers | object
 }
 
+interface FetchOptions<T> extends AsyncOptions<T> {
+  defer?: boolean
+}
+
 export function useFetch<T>(
   input: Request | string,
   init?: FetchInit,
-  options?: AsyncOptions<T>
+  options?: FetchOptions<T>
 ): AsyncState<T>
 
 export default createInstance
