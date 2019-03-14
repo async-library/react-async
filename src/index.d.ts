@@ -12,6 +12,7 @@ interface AsyncOptions<T> {
   initialValue?: T
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
+  [prop: string]: any
 }
 
 interface AsyncProps<T> extends AsyncOptions<T> {
