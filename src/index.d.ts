@@ -1,12 +1,13 @@
 import * as React from "react"
 
-type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
-type PromiseFn<T> = (props: object) => Promise<T>
+export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
+export type PromiseFn<T> = (props: object, controller: AbortController) => Promise<T>
+export type DeferFn<T> = (args: any[], props: object, controller: AbortController) => Promise<T>
 
 export interface AsyncOptions<T> {
   promise?: Promise<T>
-  promiseFn?: (props: object, controller: AbortController) => Promise<T>
-  deferFn?: (args: any[], props: object, controller: AbortController) => Promise<T>
+  promiseFn?: PromiseFn<T>
+  deferFn?: DeferFn<T>
   watch?: any
   watchFn?: (props: object, prevProps: object) => any
   initialValue?: T
@@ -15,7 +16,7 @@ export interface AsyncOptions<T> {
   [prop: string]: any
 }
 
-interface AsyncProps<T> extends AsyncOptions<T> {
+export interface AsyncProps<T> extends AsyncOptions<T> {
   children?: AsyncChildren<T>
 }
 
@@ -62,18 +63,14 @@ export function useAsync<T>(
   arg2?: AsyncOptions<T>
 ): AsyncState<T>
 
-interface FetchInit {
-  method?: string
-  headers?: Headers | object
-}
-
-interface FetchOptions<T> extends AsyncOptions<T> {
+export interface FetchOptions<T> extends AsyncOptions<T> {
   defer?: boolean
+  json?: boolean
 }
 
 export function useFetch<T>(
-  input: Request | string,
-  init?: FetchInit,
+  input: RequestInfo,
+  init?: RequestInit,
   options?: FetchOptions<T>
 ): AsyncState<T>
 
