@@ -44,6 +44,7 @@
     "@babel/plugin-transform-runtime": "7.2.0",
     "@babel/preset-env": "7.3.4",
     "@babel/preset-react": "7.0.0",
+    "@pika/pack": "0.3.5",
     "@pika/plugin-build-node": "0.3.12",
     "@pika/plugin-build-types": "0.3.12",
     "@pika/plugin-build-web": "0.3.12",
