@@ -386,8 +386,8 @@ is set to `"application/json"`.
 - `finishedAt` When the last promise was resolved or rejected.
 - `status` One of: `waiting`, `pending`, `fulfilled`, `rejected`.
 - `isWaiting` true when no promise has ever started, or one started but was cancelled.
-- `isPending` true when a promise is currently awaiting settlement.
-- `isFulfilled` true when the last promise was fulfilled with a value.
+- `isPending` true when a promise is currently awaiting settlement. Alias: `isLoading`
+- `isFulfilled` true when the last promise was fulfilled with a value. Alias: `isResolved`
 - `isRejected` true when the last promise was rejected with a reason.
 - `isSettled` true when the last promise was fulfilled or rejected (not waiting or pending).
 - `counter` The number of times a promise was started.

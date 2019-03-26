@@ -30,6 +30,7 @@ interface AbstractState<T> {
   isPending: boolean
   isLoading: boolean
   isFulfilled: boolean
+  isResolved: boolean
   isRejected: boolean
   isSettled: boolean
   counter: number
@@ -57,11 +58,23 @@ declare namespace Async {
     children?: AsyncChildren<T>
     initial?: boolean
   }): React.ReactNode
+  export function Loading<T>(props: {
+    children?: AsyncChildren<T>
+    initial?: boolean
+  }): React.ReactNode
+  export function Fulfilled<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
+  }): React.ReactNode
   export function Resolved<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
   }): React.ReactNode
   export function Rejected<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
+  }): React.ReactNode
+  export function Settled<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
   }): React.ReactNode
