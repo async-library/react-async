@@ -12,7 +12,7 @@ import {
   withPromise,
   withPromiseFn,
   withDeferFn,
-} from "./common.spec"
+} from "./specs"
 
 const abortCtrl = { abort: jest.fn() }
 window.AbortController = jest.fn().mockImplementation(() => abortCtrl)

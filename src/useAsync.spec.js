@@ -4,7 +4,7 @@ import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
 import { useAsync, useFetch } from "./index"
-import { resolveTo, common, withPromise, withPromiseFn, withDeferFn } from "./common.spec"
+import { resolveTo, common, withPromise, withPromiseFn, withDeferFn } from "./specs"
 
 const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 window.AbortController = jest.fn(() => abortCtrl)
