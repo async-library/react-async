@@ -8,13 +8,13 @@
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
-    "parcel-bundler": "^1.11.0",
-    "react": "^16.8.3",
-    "react-async": "^4.1.2",
-    "react-dom": "^16.8.3",
-    "react-router-dom": "^4.3.1"
+    "parcel-bundler": "^1.12.3",
+    "react": "^16.8.5",
+    "react-async": "^5.1.2",
+    "react-dom": "^16.8.5",
+    "react-router-dom": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4"
+    "@babel/core": "^7.4.0"
   }
 }
