@@ -25,7 +25,7 @@
     "test:watch": "npm test -- --watch",
     "test:hooks": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
     "test:components": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
-    "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 --no-save && npm test:components",
+    "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 --no-save && npm run test:components",
     "test:forwards": "npm i react@next react-dom@next --no-save && npm test",
     "test:latest": "npm i react@latest react-dom@latest --no-save && npm test",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
