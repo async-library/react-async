@@ -51,13 +51,15 @@ describe("Async", () => {
   })
 })
 
-describe("Async.Resolved", () => {
+describe("Async.Fulfilled", () => {
   test("renders only after the promise is resolved", async () => {
     const promiseFn = () => resolveTo("ok")
     const deferFn = () => rejectTo("fail")
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn} deferFn={deferFn}>
-        <Async.Resolved>{(data, { run }) => <button onClick={run}>{data}</button>}</Async.Resolved>
+        <Async.Fulfilled>
+          {(data, { run }) => <button onClick={run}>{data}</button>}
+        </Async.Fulfilled>
         <Async.Rejected>{error => error}</Async.Rejected>
       </Async>
     )
@@ -76,9 +78,9 @@ describe("Async.Resolved", () => {
     const deferFn = () => rejectTo("fail")
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn} deferFn={deferFn}>
-        <Async.Resolved persist>
+        <Async.Fulfilled persist>
           {(data, { run }) => <button onClick={run}>{data}</button>}
-        </Async.Resolved>
+        </Async.Fulfilled>
         <Async.Rejected>{error => error}</Async.Rejected>
       </Async>
     )
@@ -92,19 +94,19 @@ describe("Async.Resolved", () => {
     expect(queryByText("fail")).toBeInTheDocument()
   })
 
-  test("Async.Resolved works also with nested Async", async () => {
+  test("Async.Fulfilled works also with nested Async", async () => {
     const outer = () => resolveIn(0)("outer")
     const inner = () => resolveIn(100)("inner")
     const { getByText, queryByText } = render(
       <Async promiseFn={outer}>
-        <Async.Resolved>
+        <Async.Fulfilled>
           {outer => (
             <Async promiseFn={inner}>
               <Async.Pending>{outer} pending</Async.Pending>
-              <Async.Resolved>{inner => outer + " " + inner}</Async.Resolved>
+              <Async.Fulfilled>{inner => outer + " " + inner}</Async.Fulfilled>
             </Async>
           )}
-        </Async.Resolved>
+        </Async.Fulfilled>
       </Async>
     )
     expect(queryByText("outer pending")).toBeNull()
@@ -121,7 +123,7 @@ describe("Async.Pending", () => {
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         <Async.Pending>pending</Async.Pending>
-        <Async.Resolved>done</Async.Resolved>
+        <Async.Fulfilled>done</Async.Fulfilled>
       </Async>
     )
     expect(queryByText("pending")).toBeInTheDocument()
@@ -137,7 +139,7 @@ describe("Async.Waiting", () => {
       <Async deferFn={deferFn}>
         <Async.Waiting>{({ run }) => <button onClick={run}>waiting</button>}</Async.Waiting>
         <Async.Pending>pending</Async.Pending>
-        <Async.Resolved>done</Async.Resolved>
+        <Async.Fulfilled>done</Async.Fulfilled>
       </Async>
     )
     expect(queryByText("waiting")).toBeInTheDocument()
@@ -155,6 +157,32 @@ describe("Async.Rejected", () => {
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         <Async.Rejected>{err => err}</Async.Rejected>
+      </Async>
+    )
+    expect(queryByText("err")).toBeNull()
+    await waitForElement(() => getByText("err"))
+    expect(queryByText("err")).toBeInTheDocument()
+  })
+})
+
+describe("Async.Settled", () => {
+  test("renders after the promise is fulfilled", async () => {
+    const promiseFn = () => resolveTo("value")
+    const { getByText, queryByText } = render(
+      <Async promiseFn={promiseFn}>
+        <Async.Settled>{({ data }) => data}</Async.Settled>
+      </Async>
+    )
+    expect(queryByText("value")).toBeNull()
+    await waitForElement(() => getByText("value"))
+    expect(queryByText("value")).toBeInTheDocument()
+  })
+
+  test("renders after the promise is rejected", async () => {
+    const promiseFn = () => rejectTo("err")
+    const { getByText, queryByText } = render(
+      <Async promiseFn={promiseFn}>
+        <Async.Settled>{({ error }) => error}</Async.Settled>
       </Async>
     )
     expect(queryByText("err")).toBeNull()
@@ -191,7 +219,7 @@ describe("createInstance", () => {
     const { getByText } = render(
       <CustomAsync>
         <CustomAsync.Pending>pending</CustomAsync.Pending>
-        <CustomAsync.Resolved>resolved</CustomAsync.Resolved>
+        <CustomAsync.Fulfilled>resolved</CustomAsync.Fulfilled>
       </CustomAsync>
     )
     await waitForElement(() => getByText("pending"))
