@@ -31,6 +31,7 @@ export const reducer = (state, { type, payload, meta }) => {
       return {
         ...state,
         startedAt: undefined,
+        finishedAt: undefined,
         ...getStatusProps(getIdleStatus(state.error || state.data)),
         counter: meta.counter,
       }
