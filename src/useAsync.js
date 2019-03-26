@@ -1,40 +1,40 @@
-import { useCallback, useDebugValue, useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
+import { actions, init, reducer } from "./reducer"
+
+const noop = () => {}
 
 const useAsync = (arg1, arg2) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const prevOptions = useRef(undefined)
-  const abortController = useRef({ abort: () => {} })
+  const abortController = useRef({ abort: noop })
 
   const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
   const { promise, promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
-  const [state, setState] = useState({
-    data: initialValue instanceof Error ? undefined : initialValue,
-    error: initialValue instanceof Error ? initialValue : undefined,
-    startedAt: promise || promiseFn ? new Date() : undefined,
-    finishedAt: initialValue ? new Date() : undefined,
-  })
+  const [state, dispatch] = useReducer(reducer, options, init)
 
-  const handleData = (data, callback = () => {}) => {
+  const setData = (data, callback = noop) => {
     if (isMounted.current) {
-      setState(state => ({ ...state, data, error: undefined, finishedAt: new Date() }))
-      callback(data)
+      dispatch({ type: actions.fulfill, payload: data })
+      callback()
     }
     return data
   }
 
-  const handleError = (error, callback = () => {}) => {
+  const setError = (error, callback = noop) => {
     if (isMounted.current) {
-      setState(state => ({ ...state, error, finishedAt: new Date() }))
-      callback(error)
+      dispatch({ type: actions.reject, payload: error, error: true })
+      callback()
     }
     return error
   }
 
-  const handleResolve = count => data => count === counter.current && handleData(data, onResolve)
-  const handleReject = count => error => count === counter.current && handleError(error, onReject)
+  const handleResolve = count => data =>
+    count === counter.current && setData(data, () => onResolve && onResolve(data))
+  const handleReject = count => error =>
+    count === counter.current && setError(error, () => onReject && onReject(error))
 
   const start = () => {
     if ("AbortController" in window) {
@@ -42,11 +42,7 @@ const useAsync = (arg1, arg2) => {
       abortController.current = new window.AbortController()
     }
     counter.current++
-    setState(state => ({
-      ...state,
-      startedAt: new Date(),
-      finishedAt: undefined,
-    }))
+    dispatch({ type: actions.start, meta: { counter: counter.current } })
   }
 
   const load = () => {
@@ -79,7 +75,7 @@ const useAsync = (arg1, arg2) => {
   const cancel = () => {
     counter.current++
     abortController.current.abort()
-    setState(state => ({ ...state, startedAt: undefined }))
+    dispatch({ type: actions.cancel, meta: { counter: counter.current } })
   }
 
   useEffect(() => {
@@ -104,14 +100,11 @@ const useAsync = (arg1, arg2) => {
   return useMemo(
     () => ({
       ...state,
-      initialValue,
-      isLoading: state.startedAt && (!state.finishedAt || state.finishedAt < state.startedAt),
-      counter: counter.current,
       run,
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
       cancel,
-      setData: handleData,
-      setError: handleError,
+      setData,
+      setError,
     }),
     [state]
   )
@@ -152,5 +145,5 @@ const unsupported = () => {
   )
 }
 
-export default (useState ? useAsync : unsupported)
-export const useFetch = useState ? useAsyncFetch : unsupported
+export default (useEffect ? useAsync : unsupported)
+export const useFetch = useEffect ? useAsyncFetch : unsupported

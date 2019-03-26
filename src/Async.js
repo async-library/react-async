@@ -1,4 +1,5 @@
 import React from "react"
+import { actions, init, reducer } from "./reducer"
 
 let PropTypes
 try {
@@ -30,21 +31,13 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       const promise = props.promise
       const promiseFn = props.promiseFn || defaultProps.promiseFn
       const initialValue = props.initialValue || defaultProps.initialValue
-      const initialError = initialValue instanceof Error ? initialValue : undefined
-      const initialData = initialError ? undefined : initialValue
 
       this.mounted = false
       this.counter = 0
       this.args = []
       this.abortController = { abort: () => {} }
       this.state = {
-        initialValue,
-        data: initialData,
-        error: initialError,
-        isLoading: !!promise || (promiseFn && !initialValue),
-        startedAt: promise ? new Date() : undefined,
-        finishedAt: initialValue ? new Date() : undefined,
-        counter: this.counter,
+        ...init({ initialValue, promise, promiseFn }),
         cancel: this.cancel,
         run: this.run,
         reload: () => {
@@ -54,6 +47,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         setData: this.setData,
         setError: this.setError,
       }
+      this.dispatch = (action, callback) => this.setState(state => reducer(state, action), callback)
     }
 
     componentDidMount() {
@@ -89,12 +83,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new window.AbortController()
       }
       this.counter++
-      this.setState({
-        isLoading: true,
-        startedAt: new Date(),
-        finishedAt: undefined,
-        counter: this.counter,
-      })
+      this.dispatch({ type: actions.start, meta: { counter: this.counter } })
     }
 
     load() {
@@ -129,12 +118,12 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     cancel() {
       this.counter++
       this.abortController.abort()
-      this.setState({ isLoading: false, startedAt: undefined, counter: this.counter })
+      this.dispatch({ type: actions.cancel, meta: { counter: this.counter } })
     }
 
     onResolve(counter) {
       return data => {
-        if (this.mounted && this.counter === counter) {
+        if (this.counter === counter) {
           const onResolve = this.props.onResolve || defaultProps.onResolve
           this.setData(data, () => onResolve && onResolve(data))
         }
@@ -144,7 +133,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     onReject(counter) {
       return error => {
-        if (this.mounted && this.counter === counter) {
+        if (this.counter === counter) {
           const onReject = this.props.onReject || defaultProps.onReject
           this.setError(error, () => onReject && onReject(error))
         }
@@ -153,12 +142,12 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     setData(data, callback) {
-      this.setState({ data, error: undefined, isLoading: false, finishedAt: new Date() }, callback)
+      this.mounted && this.dispatch({ type: actions.fulfill, payload: data }, callback)
       return data
     }
 
     setError(error, callback) {
-      this.setState({ error, isLoading: false, finishedAt: new Date() }, callback)
+      this.mounted && this.dispatch({ type: actions.reject, payload: error, error: true }, callback)
       return error
     }
 
