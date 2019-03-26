@@ -1,4 +1,4 @@
-export const actions = {
+export const actionTypes = {
   start: "start",
   cancel: "cancel",
   fulfill: "fulfill",
@@ -17,7 +17,7 @@ export const init = ({ initialValue, promise, promiseFn }) => ({
 
 export const reducer = (state, { type, payload, meta }) => {
   switch (type) {
-    case actions.start:
+    case actionTypes.start:
       return {
         ...state,
         isLoading: true,
@@ -25,14 +25,14 @@ export const reducer = (state, { type, payload, meta }) => {
         finishedAt: undefined,
         counter: meta.counter,
       }
-    case actions.cancel:
+    case actionTypes.cancel:
       return {
         ...state,
         isLoading: false,
         startedAt: undefined,
         counter: meta.counter,
       }
-    case actions.fulfill:
+    case actionTypes.fulfill:
       return {
         ...state,
         data: payload,
@@ -40,7 +40,7 @@ export const reducer = (state, { type, payload, meta }) => {
         isLoading: false,
         finishedAt: new Date(),
       }
-    case actions.reject:
+    case actionTypes.reject:
       return {
         ...state,
         error: payload,

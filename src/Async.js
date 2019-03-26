@@ -1,5 +1,5 @@
 import React from "react"
-import { actions, init, reducer } from "./reducer"
+import { actionTypes, init, reducer } from "./reducer"
 
 let PropTypes
 try {
@@ -83,7 +83,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new window.AbortController()
       }
       this.counter++
-      this.dispatch({ type: actions.start, meta: { counter: this.counter } })
+      this.dispatch({ type: actionTypes.start, meta: { counter: this.counter } })
     }
 
     load() {
@@ -118,7 +118,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     cancel() {
       this.counter++
       this.abortController.abort()
-      this.dispatch({ type: actions.cancel, meta: { counter: this.counter } })
+      this.dispatch({ type: actionTypes.cancel, meta: { counter: this.counter } })
     }
 
     onResolve(counter) {
@@ -142,12 +142,13 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     setData(data, callback) {
-      this.mounted && this.dispatch({ type: actions.fulfill, payload: data }, callback)
+      this.mounted && this.dispatch({ type: actionTypes.fulfill, payload: data }, callback)
       return data
     }
 
     setError(error, callback) {
-      this.mounted && this.dispatch({ type: actions.reject, payload: error, error: true }, callback)
+      this.mounted &&
+        this.dispatch({ type: actionTypes.reject, payload: error, error: true }, callback)
       return error
     }
 

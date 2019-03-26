@@ -1,5 +1,5 @@
 import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
-import { actions, init, reducer } from "./reducer"
+import { actionTypes, init, reducer } from "./reducer"
 
 const noop = () => {}
 
@@ -17,7 +17,7 @@ const useAsync = (arg1, arg2) => {
 
   const setData = (data, callback = noop) => {
     if (isMounted.current) {
-      dispatch({ type: actions.fulfill, payload: data })
+      dispatch({ type: actionTypes.fulfill, payload: data })
       callback()
     }
     return data
@@ -25,7 +25,7 @@ const useAsync = (arg1, arg2) => {
 
   const setError = (error, callback = noop) => {
     if (isMounted.current) {
-      dispatch({ type: actions.reject, payload: error, error: true })
+      dispatch({ type: actionTypes.reject, payload: error, error: true })
       callback()
     }
     return error
@@ -42,7 +42,7 @@ const useAsync = (arg1, arg2) => {
       abortController.current = new window.AbortController()
     }
     counter.current++
-    dispatch({ type: actions.start, meta: { counter: counter.current } })
+    dispatch({ type: actionTypes.start, meta: { counter: counter.current } })
   }
 
   const load = () => {
@@ -75,7 +75,7 @@ const useAsync = (arg1, arg2) => {
   const cancel = () => {
     counter.current++
     abortController.current.abort()
-    dispatch({ type: actions.cancel, meta: { counter: counter.current } })
+    dispatch({ type: actionTypes.cancel, meta: { counter: counter.current } })
   }
 
   useEffect(() => {
