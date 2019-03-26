@@ -83,7 +83,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new window.AbortController()
       }
       this.counter++
-      this.dispatch({ type: actionTypes.start, meta: { counter: this.counter } })
+      this.mounted && this.dispatch({ type: actionTypes.start, meta: { counter: this.counter } })
     }
 
     load() {
@@ -118,7 +118,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     cancel() {
       this.counter++
       this.abortController.abort()
-      this.dispatch({ type: actionTypes.cancel, meta: { counter: this.counter } })
+      this.mounted && this.dispatch({ type: actionTypes.cancel, meta: { counter: this.counter } })
     }
 
     onResolve(counter) {

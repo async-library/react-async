@@ -20,13 +20,16 @@ export interface AsyncProps<T> extends AsyncOptions<T> {
   children?: AsyncChildren<T>
 }
 
-export interface AsyncState<T> {
+interface AbstractState<T> {
   data?: T
   error?: Error
   initialValue?: T
-  isLoading: boolean
   startedAt?: Date
   finishedAt?: Date
+  isPending: boolean
+  isLoading: boolean
+  isFulfilled: boolean
+  isRejected: boolean
   counter: number
   cancel: () => void
   run: (...args: any[]) => Promise<T>
@@ -34,6 +37,12 @@ export interface AsyncState<T> {
   setData: (data: T, callback?: () => void) => T
   setError: (error: Error, callback?: () => void) => Error
 }
+
+export type AsyncPending<T> = AbstractState<T> & { status: "pending" }
+export type AsyncLoading<T> = AbstractState<T> & { status: "loading" }
+export type AsyncFulfilled<T> = AbstractState<T> & { status: "fulfilled"; data: T }
+export type AsyncRejected<T> = AbstractState<T> & { status: "rejected"; error: Error }
+export type AsyncState<T> = AsyncPending<T> | AsyncLoading<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
 declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 

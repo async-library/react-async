@@ -42,7 +42,7 @@ const useAsync = (arg1, arg2) => {
       abortController.current = new window.AbortController()
     }
     counter.current++
-    dispatch({ type: actionTypes.start, meta: { counter: counter.current } })
+    isMounted.current && dispatch({ type: actionTypes.start, meta: { counter: counter.current } })
   }
 
   const load = () => {
@@ -75,7 +75,7 @@ const useAsync = (arg1, arg2) => {
   const cancel = () => {
     counter.current++
     abortController.current.abort()
-    dispatch({ type: actionTypes.cancel, meta: { counter: counter.current } })
+    isMounted.current && dispatch({ type: actionTypes.cancel, meta: { counter: counter.current } })
   }
 
   useEffect(() => {
@@ -91,18 +91,14 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => () => abortController.current.abort(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
 
-  useDebugValue(state, ({ startedAt, finishedAt, error }) => {
-    if (startedAt && (!finishedAt || finishedAt < startedAt)) return `[${counter.current}] Loading`
-    if (finishedAt) return error ? `[${counter.current}] Rejected` : `[${counter.current}] Resolved`
-    return `[${counter.current}] Pending`
-  })
+  useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)
 
   return useMemo(
     () => ({
       ...state,
+      cancel,
       run,
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
-      cancel,
       setData,
       setError,
     }),
@@ -131,11 +127,7 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
       [JSON.stringify(input), JSON.stringify(init)]
     ),
   })
-  useDebugValue(state, ({ startedAt, finishedAt, error, counter }) => {
-    if (startedAt && (!finishedAt || finishedAt < startedAt)) return `[${counter}] Loading`
-    if (finishedAt) return error ? `[${counter}] Rejected` : `[${counter}] Resolved`
-    return `[${counter}] Pending`
-  })
+  useDebugValue(state, ({ counter, status }) => `[${counter}] ${status}`)
   return state
 }
 

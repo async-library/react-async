@@ -382,7 +382,10 @@ is set to `"application/json"`.
 - `data` Last resolved promise value, maintained when new error arrives.
 - `error` Rejected promise reason, cleared when new data arrives.
 - `initialValue` The data or error that was provided through the `initialValue` prop.
-- `isLoading` Whether or not a Promise is currently pending.
+- `isPending` true when no promise has ever started, or one started but was cancelled.
+- `isLoading` true when a promise is currently awaiting settlement.
+- `isResolved` true when the last promise was fulfilled with a value.
+- `isRejected` true when the last promise was rejected with a reason.
 - `startedAt` When the current/last promise was started.
 - `finishedAt` When the last promise was resolved or rejected.
 - `counter` The number of times a promise was started.
