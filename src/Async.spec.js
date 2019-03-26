@@ -31,20 +31,20 @@ describe("Async", () => {
     let two
     const { rerender } = render(
       <Async>
-        <Async.Pending>
+        <Async.Waiting>
           {value => {
             one = value
           }}
-        </Async.Pending>
+        </Async.Waiting>
       </Async>
     )
     rerender(
       <Async someProp>
-        <Async.Pending>
+        <Async.Waiting>
           {value => {
             two = value
           }}
-        </Async.Pending>
+        </Async.Waiting>
       </Async>
     )
     expect(one).toBe(two)
@@ -100,52 +100,52 @@ describe("Async.Resolved", () => {
         <Async.Resolved>
           {outer => (
             <Async promiseFn={inner}>
-              <Async.Loading>{outer} loading</Async.Loading>
+              <Async.Pending>{outer} pending</Async.Pending>
               <Async.Resolved>{inner => outer + " " + inner}</Async.Resolved>
             </Async>
           )}
         </Async.Resolved>
       </Async>
     )
-    expect(queryByText("outer loading")).toBeNull()
-    await waitForElement(() => getByText("outer loading"))
+    expect(queryByText("outer pending")).toBeNull()
+    await waitForElement(() => getByText("outer pending"))
     expect(queryByText("outer inner")).toBeNull()
     await waitForElement(() => getByText("outer inner"))
     expect(queryByText("outer inner")).toBeInTheDocument()
   })
 })
 
-describe("Async.Loading", () => {
-  test("renders only while the promise is loading", async () => {
+describe("Async.Pending", () => {
+  test("renders only while the promise is pending", async () => {
     const promiseFn = () => resolveTo("ok")
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
-        <Async.Loading>loading</Async.Loading>
-        <Async.Resolved>done</Async.Resolved>
-      </Async>
-    )
-    expect(queryByText("loading")).toBeInTheDocument()
-    await waitForElement(() => getByText("done"))
-    expect(queryByText("loading")).toBeNull()
-  })
-})
-
-describe("Async.Pending", () => {
-  test("renders only while the deferred promise is pending", async () => {
-    const deferFn = () => resolveTo("ok")
-    const { getByText, queryByText } = render(
-      <Async deferFn={deferFn}>
-        <Async.Pending>{({ run }) => <button onClick={run}>pending</button>}</Async.Pending>
-        <Async.Loading>loading</Async.Loading>
+        <Async.Pending>pending</Async.Pending>
         <Async.Resolved>done</Async.Resolved>
       </Async>
     )
     expect(queryByText("pending")).toBeInTheDocument()
-    fireEvent.click(getByText("pending"))
-    expect(queryByText("pending")).toBeNull()
-    expect(queryByText("loading")).toBeInTheDocument()
     await waitForElement(() => getByText("done"))
-    expect(queryByText("loading")).toBeNull()
+    expect(queryByText("pending")).toBeNull()
+  })
+})
+
+describe("Async.Waiting", () => {
+  test("renders only while the deferred promise is waiting", async () => {
+    const deferFn = () => resolveTo("ok")
+    const { getByText, queryByText } = render(
+      <Async deferFn={deferFn}>
+        <Async.Waiting>{({ run }) => <button onClick={run}>waiting</button>}</Async.Waiting>
+        <Async.Pending>pending</Async.Pending>
+        <Async.Resolved>done</Async.Resolved>
+      </Async>
+    )
+    expect(queryByText("waiting")).toBeInTheDocument()
+    fireEvent.click(getByText("waiting"))
+    expect(queryByText("waiting")).toBeNull()
+    expect(queryByText("pending")).toBeInTheDocument()
+    await waitForElement(() => getByText("done"))
+    expect(queryByText("pending")).toBeNull()
   })
 })
 
@@ -190,11 +190,11 @@ describe("createInstance", () => {
     const CustomAsync = createInstance({ promiseFn })
     const { getByText } = render(
       <CustomAsync>
-        <CustomAsync.Loading>loading</CustomAsync.Loading>
+        <CustomAsync.Pending>pending</CustomAsync.Pending>
         <CustomAsync.Resolved>resolved</CustomAsync.Resolved>
       </CustomAsync>
     )
-    await waitForElement(() => getByText("loading"))
+    await waitForElement(() => getByText("pending"))
     await waitForElement(() => getByText("resolved"))
   })
 

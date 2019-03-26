@@ -5,11 +5,11 @@ import "jest-dom/extend-expect"
 import { getInitialStatus, getIdleStatus, statusTypes } from "./status"
 
 describe("getInitialStatus", () => {
-  test("returns 'pending' when given an undefined value", () => {
-    expect(getInitialStatus(undefined)).toEqual(statusTypes.pending)
+  test("returns 'waiting' when given an undefined value", () => {
+    expect(getInitialStatus(undefined)).toEqual(statusTypes.waiting)
   })
-  test("returns 'loading' when given only a promise", () => {
-    expect(getInitialStatus(undefined, Promise.resolve("foo"))).toEqual(statusTypes.loading)
+  test("returns 'pending' when given only a promise", () => {
+    expect(getInitialStatus(undefined, Promise.resolve("foo"))).toEqual(statusTypes.pending)
   })
   test("returns 'rejected' when given an Error value", () => {
     expect(getInitialStatus(new Error("oops"))).toEqual(statusTypes.rejected)
@@ -20,8 +20,8 @@ describe("getInitialStatus", () => {
 })
 
 describe("getIdleStatus", () => {
-  test("returns 'pending' when given an undefined value", () => {
-    expect(getIdleStatus(undefined)).toEqual(statusTypes.pending)
+  test("returns 'waiting' when given an undefined value", () => {
+    expect(getIdleStatus(undefined)).toEqual(statusTypes.waiting)
   })
   test("returns 'rejected' when given an Error value", () => {
     expect(getIdleStatus(new Error("oops"))).toEqual(statusTypes.rejected)

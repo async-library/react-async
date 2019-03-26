@@ -26,10 +26,12 @@ interface AbstractState<T> {
   initialValue?: T
   startedAt?: Date
   finishedAt?: Date
+  isWaiting: boolean
   isPending: boolean
   isLoading: boolean
   isFulfilled: boolean
   isRejected: boolean
+  isSettled: boolean
   counter: number
   cancel: () => void
   run: (...args: any[]) => Promise<T>
@@ -38,20 +40,20 @@ interface AbstractState<T> {
   setError: (error: Error, callback?: () => void) => Error
 }
 
+export type AsyncWaiting<T> = AbstractState<T> & { status: "waiting" }
 export type AsyncPending<T> = AbstractState<T> & { status: "pending" }
-export type AsyncLoading<T> = AbstractState<T> & { status: "loading" }
 export type AsyncFulfilled<T> = AbstractState<T> & { status: "fulfilled"; data: T }
 export type AsyncRejected<T> = AbstractState<T> & { status: "rejected"; error: Error }
-export type AsyncState<T> = AsyncPending<T> | AsyncLoading<T> | AsyncFulfilled<T> | AsyncRejected<T>
+export type AsyncState<T> = AsyncWaiting<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
 declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 
 declare namespace Async {
-  export function Pending<T>(props: {
+  export function Waiting<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
   }): React.ReactNode
-  export function Loading<T>(props: {
+  export function Pending<T>(props: {
     children?: AsyncChildren<T>
     initial?: boolean
   }): React.ReactNode

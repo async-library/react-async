@@ -24,7 +24,7 @@ export const reducer = (state, { type, payload, meta }) => {
         ...state,
         startedAt: new Date(),
         finishedAt: undefined,
-        ...getStatusProps(statusTypes.loading),
+        ...getStatusProps(statusTypes.pending),
         counter: meta.counter,
       }
     case actionTypes.cancel:
