@@ -45,8 +45,8 @@ export type AsyncWaiting<T> = AbstractState<T> & {
   isSettled: false
 }
 export type AsyncPending<T> = AbstractState<T> & {
-  data?: T
-  error?: Error
+  data: T | undefined
+  error: Error | undefined
   startedAt: Date
   finishedAt: undefined
   status: "pending"
@@ -73,7 +73,7 @@ export type AsyncFulfilled<T> = AbstractState<T> & {
   isSettled: true
 }
 export type AsyncRejected<T> = AbstractState<T> & {
-  data?: T
+  data: T | undefined
   error: Error
   startedAt: Date
   finishedAt: Date
