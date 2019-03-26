@@ -22,13 +22,6 @@ export interface AsyncProps<T> extends AsyncOptions<T> {
 
 interface AbstractState<T> {
   initialValue?: T
-  isWaiting: boolean
-  isPending: boolean
-  isLoading: boolean
-  isFulfilled: boolean
-  isResolved: boolean
-  isRejected: boolean
-  isSettled: boolean
   counter: number
   cancel: () => void
   run: (...args: any[]) => Promise<T>
@@ -38,32 +31,60 @@ interface AbstractState<T> {
 }
 
 export type AsyncWaiting<T> = AbstractState<T> & {
-  status: "waiting"
   data: undefined
   error: undefined
   startedAt: undefined
   finishedAt: undefined
+  status: "waiting"
+  isWaiting: false
+  isPending: false
+  isLoading: false
+  isFulfilled: false
+  isResolved: false
+  isRejected: false
+  isSettled: false
 }
 export type AsyncPending<T> = AbstractState<T> & {
-  status: "pending"
   data?: T
   error?: Error
   startedAt: Date
   finishedAt: undefined
+  status: "pending"
+  isWaiting: false
+  isPending: true
+  isLoading: true
+  isFulfilled: false
+  isResolved: false
+  isRejected: false
+  isSettled: false
 }
 export type AsyncFulfilled<T> = AbstractState<T> & {
-  status: "fulfilled"
   data: T
   error: undefined
   startedAt: Date
   finishedAt: Date
+  status: "fulfilled"
+  isWaiting: false
+  isPending: false
+  isLoading: false
+  isFulfilled: true
+  isResolved: true
+  isRejected: false
+  isSettled: true
 }
 export type AsyncRejected<T> = AbstractState<T> & {
-  status: "rejected"
   data?: T
   error: Error
   startedAt: Date
   finishedAt: Date
+  status: "rejected"
+  isWaiting: false
+  isPending: false
+  isLoading: false
+  isFulfilled: false
+  isResolved: false
+  isRejected: true
+  isSettled: true
 }
 export type AsyncState<T> = AsyncWaiting<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
