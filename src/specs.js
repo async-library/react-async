@@ -17,9 +17,14 @@ export const common = Async => () => {
           expect(renderProps).toHaveProperty("data")
           expect(renderProps).toHaveProperty("error")
           expect(renderProps).toHaveProperty("initialValue")
-          expect(renderProps).toHaveProperty("isLoading")
           expect(renderProps).toHaveProperty("startedAt")
           expect(renderProps).toHaveProperty("finishedAt")
+          expect(renderProps).toHaveProperty("isInitial")
+          expect(renderProps).toHaveProperty("isPending")
+          expect(renderProps).toHaveProperty("isLoading")
+          expect(renderProps).toHaveProperty("isFulfilled")
+          expect(renderProps).toHaveProperty("isRejected")
+          expect(renderProps).toHaveProperty("isSettled")
           expect(renderProps).toHaveProperty("counter")
           expect(renderProps).toHaveProperty("cancel")
           expect(renderProps).toHaveProperty("run")
@@ -310,8 +315,8 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     const states = []
     const { getByText } = render(
       <Async promiseFn={promiseFn} initialValue="done">
-        {({ data, isLoading }) => {
-          states.push(isLoading)
+        {({ data, isPending }) => {
+          states.push(isPending)
           return data || null
         }}
       </Async>

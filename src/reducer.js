@@ -1,3 +1,5 @@
+import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
+
 export const actionTypes = {
   start: "start",
   cancel: "cancel",
@@ -9,9 +11,9 @@ export const init = ({ initialValue, promise, promiseFn }) => ({
   initialValue,
   data: initialValue instanceof Error ? undefined : initialValue,
   error: initialValue instanceof Error ? initialValue : undefined,
-  isLoading: !!promise || (promiseFn && !initialValue),
   startedAt: promise || promiseFn ? new Date() : undefined,
   finishedAt: initialValue ? new Date() : undefined,
+  ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
   counter: 0,
 })
 
@@ -20,16 +22,17 @@ export const reducer = (state, { type, payload, meta }) => {
     case actionTypes.start:
       return {
         ...state,
-        isLoading: true,
         startedAt: new Date(),
         finishedAt: undefined,
+        ...getStatusProps(statusTypes.pending),
         counter: meta.counter,
       }
     case actionTypes.cancel:
       return {
         ...state,
-        isLoading: false,
         startedAt: undefined,
+        finishedAt: undefined,
+        ...getStatusProps(getIdleStatus(state.error || state.data)),
         counter: meta.counter,
       }
     case actionTypes.fulfill:
@@ -37,15 +40,15 @@ export const reducer = (state, { type, payload, meta }) => {
         ...state,
         data: payload,
         error: undefined,
-        isLoading: false,
         finishedAt: new Date(),
+        ...getStatusProps(statusTypes.fulfilled),
       }
     case actionTypes.reject:
       return {
         ...state,
         error: payload,
-        isLoading: false,
         finishedAt: new Date(),
+        ...getStatusProps(statusTypes.rejected),
       }
   }
 }

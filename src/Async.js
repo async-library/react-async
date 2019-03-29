@@ -83,7 +83,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new window.AbortController()
       }
       this.counter++
-      this.dispatch({ type: actionTypes.start, meta: { counter: this.counter } })
+      this.mounted && this.dispatch({ type: actionTypes.start, meta: { counter: this.counter } })
     }
 
     load() {
@@ -118,7 +118,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     cancel() {
       this.counter++
       this.abortController.abort()
-      this.dispatch({ type: actionTypes.cancel, meta: { counter: this.counter } })
+      this.mounted && this.dispatch({ type: actionTypes.cancel, meta: { counter: this.counter } })
     }
 
     onResolve(counter) {
@@ -179,16 +179,16 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   }
 
   /**
-   * Renders only when deferred promise is pending (not yet run).
+   * Renders only when no promise has started or completed yet.
    *
    * @prop {Function|Node} children Function (passing state) or React node
-   * @prop {boolean} persist Show until we have data, even while loading or when an error occurred
+   * @prop {boolean} persist Show until we have data, even while pending (loading) or when an error occurred
    */
-  const Pending = ({ children, persist }) => (
+  const Initial = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.data !== undefined) return null
-        if (!persist && state.isLoading) return null
+        if (!persist && state.isPending) return null
         if (!persist && state.error !== undefined) return null
         return isFunction(children) ? children(state) : children || null
       }}
@@ -196,22 +196,22 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   )
 
   if (PropTypes) {
-    Pending.propTypes = {
+    Initial.propTypes = {
       children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
       persist: PropTypes.bool,
     }
   }
 
   /**
-   * Renders only while loading.
+   * Renders only while pending (promise is loading).
    *
    * @prop {Function|Node} children Function (passing state) or React node
    * @prop {boolean} initial Show only on initial load (data is undefined)
    */
-  const Loading = ({ children, initial }) => (
+  const Pending = ({ children, initial }) => (
     <Consumer>
       {state => {
-        if (!state.isLoading) return null
+        if (!state.isPending) return null
         if (initial && state.data !== undefined) return null
         return isFunction(children) ? children(state) : children || null
       }}
@@ -219,7 +219,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   )
 
   if (PropTypes) {
-    Loading.propTypes = {
+    Pending.propTypes = {
       children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
       initial: PropTypes.bool,
     }
@@ -229,13 +229,13 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    * Renders only when promise is resolved.
    *
    * @prop {Function|Node} children Function (passing data and state) or React node
-   * @prop {boolean} persist Show old data while loading
+   * @prop {boolean} persist Show old data while pending (promise is loading)
    */
-  const Resolved = ({ children, persist }) => (
+  const Fulfilled = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.data === undefined) return null
-        if (!persist && state.isLoading) return null
+        if (!persist && state.isPending) return null
         if (!persist && state.error !== undefined) return null
         return isFunction(children) ? children(state.data, state) : children || null
       }}
@@ -243,7 +243,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   )
 
   if (PropTypes) {
-    Resolved.propTypes = {
+    Fulfilled.propTypes = {
       children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
       persist: PropTypes.bool,
     }
@@ -253,13 +253,13 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    * Renders only when promise is rejected.
    *
    * @prop {Function|Node} children Function (passing error and state) or React node
-   * @prop {boolean} persist Show old error while loading
+   * @prop {boolean} persist Show old error while pending (promise is loading)
    */
   const Rejected = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.error === undefined) return null
-        if (state.isLoading && !persist) return null
+        if (state.isPending && !persist) return null
         return isFunction(children) ? children(state.error, state) : children || null
       }}
     </Consumer>
@@ -272,16 +272,43 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
   }
 
-  Async.Pending = Pending
-  Async.Loading = Loading
-  Async.Resolved = Resolved
-  Async.Rejected = Rejected
+  /**
+   * Renders only when promise is fulfilled or rejected.
+   *
+   * @prop {Function|Node} children Function (passing state) or React node
+   * @prop {boolean} persist Show old data or error while pending (promise is loading)
+   */
+  const Settled = ({ children, persist }) => (
+    <Consumer>
+      {state => {
+        if (state.isInitial) return null
+        if (state.isPending && !persist) return null
+        return isFunction(children) ? children(state) : children || null
+      }}
+    </Consumer>
+  )
+
+  if (PropTypes) {
+    Settled.propTypes = {
+      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
+      persist: PropTypes.bool,
+    }
+  }
+
+  Initial.displayName = `${displayName}.Initial`
+  Pending.displayName = `${displayName}.Pending`
+  Fulfilled.displayName = `${displayName}.Fulfilled`
+  Rejected.displayName = `${displayName}.Rejected`
+  Settled.displayName = `${displayName}.Settled`
 
   Async.displayName = displayName
-  Async.Pending.displayName = `${displayName}.Pending`
-  Async.Loading.displayName = `${displayName}.Loading`
-  Async.Resolved.displayName = `${displayName}.Resolved`
-  Async.Rejected.displayName = `${displayName}.Rejected`
+  Async.Initial = Initial
+  Async.Pending = Pending
+  Async.Loading = Pending // alias
+  Async.Fulfilled = Fulfilled
+  Async.Resolved = Fulfilled // alias
+  Async.Rejected = Rejected
+  Async.Settled = Settled
 
   return Async
 }

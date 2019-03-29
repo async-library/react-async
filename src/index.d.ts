@@ -20,13 +20,8 @@ export interface AsyncProps<T> extends AsyncOptions<T> {
   children?: AsyncChildren<T>
 }
 
-export interface AsyncState<T> {
-  data?: T
-  error?: Error
+interface AbstractState<T> {
   initialValue?: T
-  isLoading: boolean
-  startedAt?: Date
-  finishedAt?: Date
   counter: number
   cancel: () => void
   run: (...args: any[]) => Promise<T>
@@ -35,22 +30,92 @@ export interface AsyncState<T> {
   setError: (error: Error, callback?: () => void) => Error
 }
 
+export type AsyncInitial<T> = AbstractState<T> & {
+  data: undefined
+  error: undefined
+  startedAt: undefined
+  finishedAt: undefined
+  status: "initial"
+  isInitial: false
+  isPending: false
+  isLoading: false
+  isFulfilled: false
+  isResolved: false
+  isRejected: false
+  isSettled: false
+}
+export type AsyncPending<T> = AbstractState<T> & {
+  data: T | undefined
+  error: Error | undefined
+  startedAt: Date
+  finishedAt: undefined
+  status: "pending"
+  isInitial: false
+  isPending: true
+  isLoading: true
+  isFulfilled: false
+  isResolved: false
+  isRejected: false
+  isSettled: false
+}
+export type AsyncFulfilled<T> = AbstractState<T> & {
+  data: T
+  error: undefined
+  startedAt: Date
+  finishedAt: Date
+  status: "fulfilled"
+  isInitial: false
+  isPending: false
+  isLoading: false
+  isFulfilled: true
+  isResolved: true
+  isRejected: false
+  isSettled: true
+}
+export type AsyncRejected<T> = AbstractState<T> & {
+  data: T | undefined
+  error: Error
+  startedAt: Date
+  finishedAt: Date
+  status: "rejected"
+  isInitial: false
+  isPending: false
+  isLoading: false
+  isFulfilled: false
+  isResolved: false
+  isRejected: true
+  isSettled: true
+}
+export type AsyncState<T> = AsyncInitial<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
+
 declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 
 declare namespace Async {
-  export function Pending<T>(props: {
+  export function Initial<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
+  }): React.ReactNode
+  export function Pending<T>(props: {
+    children?: AsyncChildren<T>
+    initial?: boolean
   }): React.ReactNode
   export function Loading<T>(props: {
     children?: AsyncChildren<T>
     initial?: boolean
+  }): React.ReactNode
+  export function Fulfilled<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
   }): React.ReactNode
   export function Resolved<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
   }): React.ReactNode
   export function Rejected<T>(props: {
+    children?: AsyncChildren<T>
+    persist?: boolean
+  }): React.ReactNode
+  export function Settled<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
   }): React.ReactNode

@@ -62,14 +62,14 @@ const TopMovies = ({ handleSelect }) => (
       </span>
     </h1>
     <Async promiseFn={fetchMovies}>
-      <Async.Loading>
+      <Async.Pending>
         <p>Loading...</p>
-      </Async.Loading>
-      <Async.Resolved>
+      </Async.Pending>
+      <Async.Fulfilled>
         {movies =>
           movies.map(movie => <Movie {...movie} key={movie.id} onSelect={handleSelect(movie)} />)
         }
-      </Async.Resolved>
+      </Async.Fulfilled>
     </Async>
   </Fragment>
 )
@@ -99,10 +99,10 @@ const Details = ({ onBack, id }) => (
       </span>
     </button>
     <Async promiseFn={fetchMovieDetails} id={id} onResolve={console.log}>
-      <Async.Loading>
+      <Async.Pending>
         <p>Loading...</p>
-      </Async.Loading>
-      <Async.Resolved>
+      </Async.Pending>
+      <Async.Fulfilled>
         {movie => (
           <Fragment>
             <div className="main">
@@ -126,15 +126,15 @@ const Details = ({ onBack, id }) => (
             </div>
             <div className="reviews">
               <Async promiseFn={fetchMovieReviews} id={id} onResolve={console.log}>
-                <Async.Loading>
+                <Async.Pending>
                   <p>Loading...</p>
-                </Async.Loading>
-                <Async.Resolved>{reviews => reviews.map(Review)}</Async.Resolved>
+                </Async.Pending>
+                <Async.Fulfilled>{reviews => reviews.map(Review)}</Async.Fulfilled>
               </Async>
             </div>
           </Fragment>
         )}
-      </Async.Resolved>
+      </Async.Fulfilled>
     </Async>
   </div>
 )

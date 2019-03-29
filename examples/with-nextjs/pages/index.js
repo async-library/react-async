@@ -20,10 +20,10 @@ class Hello extends React.Component {
     const { userId = 1 } = url.query
     return (
       <Async promiseFn={loadUser} userId={userId} watch={userId} initialValue={data}>
-        <Async.Loading>
+        <Async.Pending>
           <p>Loading...</p>
-        </Async.Loading>
-        <Async.Resolved>
+        </Async.Pending>
+        <Async.Fulfilled>
           {data => (
             <>
               <p>
@@ -43,7 +43,7 @@ class Hello extends React.Component {
               </p>
             </>
           )}
-        </Async.Resolved>
+        </Async.Fulfilled>
         <i>
           This data is initially loaded server-side, then client-side when navigating prev/next.
         </i>

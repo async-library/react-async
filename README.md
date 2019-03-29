@@ -382,9 +382,14 @@ is set to `"application/json"`.
 - `data` Last resolved promise value, maintained when new error arrives.
 - `error` Rejected promise reason, cleared when new data arrives.
 - `initialValue` The data or error that was provided through the `initialValue` prop.
-- `isLoading` Whether or not a Promise is currently pending.
 - `startedAt` When the current/last promise was started.
 - `finishedAt` When the last promise was resolved or rejected.
+- `status` One of: `initial`, `pending`, `fulfilled`, `rejected`.
+- `isInitial` true when no promise has ever started, or one started but was cancelled.
+- `isPending` true when a promise is currently awaiting settlement. Alias: `isLoading`
+- `isFulfilled` true when the last promise was fulfilled with a value. Alias: `isResolved`
+- `isRejected` true when the last promise was rejected with a reason.
+- `isSettled` true when the last promise was fulfilled or rejected (not initial or pending).
 - `counter` The number of times a promise was started.
 - `cancel` Cancel any pending promise.
 - `run` Invokes the `deferFn`.
@@ -410,12 +415,6 @@ Rejected promise reason, cleared when new data arrives.
 
 The data or error that was originally provided through the `initialValue` prop.
 
-#### `isLoading`
-
-> `boolean`
-
-`true` while a promise is pending, `false` otherwise.
-
 #### `startedAt`
 
 > `Date`
@@ -427,6 +426,47 @@ Tracks when the current/last promise was started.
 > `Date`
 
 Tracks when the last promise was resolved or rejected.
+
+#### `status`
+
+> `string`
+
+One of: `initial`, `pending`, `fulfilled`, `rejected`.
+These are available for import as `statusTypes`.
+
+#### `isInitial`
+
+> `boolean`
+
+`true` while no promise has started yet, or one was started but cancelled.
+
+#### `isPending`
+
+> `boolean`
+
+`true` while a promise is pending (loading), `false` otherwise.
+
+Alias: `isLoading`
+
+#### `isFulfilled`
+
+> `boolean`
+
+`true` when the last promise was fulfilled (resolved) with a value.
+
+Alias: `isResolved`
+
+#### `isRejected`
+
+> `boolean`
+
+`true` when the last promise was rejected with an error.
+
+#### `isSettled`
+
+> `boolean`
+
+`true` when the last promise was either fulfilled or rejected (i.e. not initial or pending)
 
 #### `counter`
 
@@ -471,9 +511,44 @@ invoked after the state update is completed. Returns the error to enable chainin
 React Async provides several helper components that make your JSX more declarative and less cluttered.
 They don't have to be direct children of `<Async>` and you can use the same component several times.
 
-### `<Async.Loading>`
+### `<Async.Initial>`
+
+Renders only while the deferred promise is still waiting to be run, or you have not provided any promise.
+
+#### Props
+
+- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
+- `children` `function(state: object): Node | Node` Render function or React Node.
+
+#### Examples
+
+```js
+<Async deferFn={deferFn}>
+  <Async.Initial>
+    <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
+  </Async.Initial>
+</Async>
+```
+
+```js
+<Async.Initial persist>
+  {({ error, isLoading, run }) => (
+    <div>
+      <p>This text is only rendered while the promise has not resolved yet.</p>
+      <button onClick={run} disabled={!isLoading}>
+        Run
+      </button>
+      {error && <p>{error.message}</p>}
+    </div>
+  )}
+</Async.Initial>
+```
+
+### `<Async.Pending>`
 
 This component renders only while the promise is loading (unsettled).
+
+Alias: `<Async.Loading>`
 
 #### Props
 
@@ -483,18 +558,20 @@ This component renders only while the promise is loading (unsettled).
 #### Examples
 
 ```js
-<Async.Loading initial>
+<Async.Pending initial>
   <p>This text is only rendered while performing the initial load.</p>
-</Async.Loading>
+</Async.Pending>
 ```
 
 ```js
-<Async.Loading>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Loading>
+<Async.Pending>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Pending>
 ```
 
-### `<Async.Resolved>`
+### `<Async.Fulfilled>`
 
 This component renders only when the promise is fulfilled with data (`data !== undefined`).
+
+Alias: `<Async.Resolved>`
 
 #### Props
 
@@ -504,11 +581,11 @@ This component renders only when the promise is fulfilled with data (`data !== u
 #### Examples
 
 ```js
-<Async.Resolved persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Resolved>
+<Async.Fulfilled persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Fulfilled>
 ```
 
 ```js
-<Async.Resolved>{({ finishedAt }) => `Last updated ${startedAt.toISOString()}`}</Async.Resolved>
+<Async.Fulfilled>{({ finishedAt }) => `Last updated ${startedAt.toISOString()}`}</Async.Fulfilled>
 ```
 
 ### `<Async.Rejected>`
@@ -530,38 +607,14 @@ This component renders only when the promise is rejected.
 <Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
 ```
 
-### `<Async.Pending>`
+### `<Async.Settled>`
 
-Renders only while the deferred promise is still pending (not yet run), or you have not provided any promise.
+This component renders only when the promise is fulfilled or rejected.
 
 #### Props
 
-- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
+- `persist` `boolean` Show old data or error while loading new data. By default it hides as soon as a new promise starts.
 - `children` `function(state: object): Node | Node` Render function or React Node.
-
-#### Examples
-
-```js
-<Async deferFn={deferFn}>
-  <Async.Pending>
-    <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
-  </Async.Pending>
-</Async>
-```
-
-```js
-<Async.Pending persist>
-  {({ error, isLoading, run }) => (
-    <div>
-      <p>This text is only rendered while the promise has not resolved yet.</p>
-      <button onClick={run} disabled={!isLoading}>
-        Run
-      </button>
-      {error && <p>{error.message}</p>}
-    </div>
-  )}
-</Async.Pending>
-```
 
 ## Usage examples
 
