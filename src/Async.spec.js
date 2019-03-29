@@ -189,6 +189,22 @@ describe("Async.Settled", () => {
     await waitForElement(() => getByText("err"))
     expect(queryByText("err")).toBeInTheDocument()
   })
+
+  test("renders while loading new data and persist=true", async () => {
+    const promiseFn = () => resolveTo("value")
+    const { getByText, queryByText } = render(
+      <Async initialValue="init" promiseFn={promiseFn}>
+        <Async.Pending>
+          <Async.Settled persist>loading</Async.Settled>
+        </Async.Pending>
+        <Async.Settled>{({ reload }) => <button onClick={reload}>reload</button>}</Async.Settled>
+      </Async>
+    )
+    expect(queryByText("loading")).toBeNull()
+    fireEvent.click(getByText("reload"))
+    await waitForElement(() => getByText("loading"))
+    expect(queryByText("loading")).toBeInTheDocument()
+  })
 })
 
 describe("createInstance", () => {

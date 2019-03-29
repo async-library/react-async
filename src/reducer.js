@@ -11,6 +11,7 @@ export const init = ({ initialValue, promise, promiseFn }) => ({
   initialValue,
   data: initialValue instanceof Error ? undefined : initialValue,
   error: initialValue instanceof Error ? initialValue : undefined,
+  value: initialValue,
   startedAt: promise || promiseFn ? new Date() : undefined,
   finishedAt: initialValue ? new Date() : undefined,
   ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
@@ -39,6 +40,7 @@ export const reducer = (state, { type, payload, meta }) => {
       return {
         ...state,
         data: payload,
+        value: payload,
         error: undefined,
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.fulfilled),
@@ -47,6 +49,7 @@ export const reducer = (state, { type, payload, meta }) => {
       return {
         ...state,
         error: payload,
+        value: payload,
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.rejected),
       }

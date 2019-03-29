@@ -7,6 +7,8 @@ try {
 } catch (e) {}
 
 const isFunction = arg => typeof arg === "function"
+const renderFn = (children, ...args) =>
+  isFunction(children) ? children(...args) : children === undefined ? null : children
 
 /**
  * createInstance allows you to create instances of Async that are bound to a specific promise.
@@ -186,12 +188,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    */
   const Initial = ({ children, persist }) => (
     <Consumer>
-      {state => {
-        if (state.data !== undefined) return null
-        if (!persist && state.isPending) return null
-        if (!persist && state.error !== undefined) return null
-        return isFunction(children) ? children(state) : children || null
-      }}
+      {state => (state.isInitial || (persist && !state.data) ? renderFn(children, state) : null)}
     </Consumer>
   )
 
@@ -206,15 +203,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    * Renders only while pending (promise is loading).
    *
    * @prop {Function|Node} children Function (passing state) or React node
-   * @prop {boolean} initial Show only on initial load (data is undefined)
+   * @prop {boolean} initial Show only on initial load (data/error is undefined)
    */
   const Pending = ({ children, initial }) => (
     <Consumer>
-      {state => {
-        if (!state.isPending) return null
-        if (initial && state.data !== undefined) return null
-        return isFunction(children) ? children(state) : children || null
-      }}
+      {state => (state.isPending && (!initial || !state.value) ? renderFn(children, state) : null)}
     </Consumer>
   )
 
@@ -233,12 +226,9 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    */
   const Fulfilled = ({ children, persist }) => (
     <Consumer>
-      {state => {
-        if (state.data === undefined) return null
-        if (!persist && state.isPending) return null
-        if (!persist && state.error !== undefined) return null
-        return isFunction(children) ? children(state.data, state) : children || null
-      }}
+      {state =>
+        state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null
+      }
     </Consumer>
   )
 
@@ -257,11 +247,9 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    */
   const Rejected = ({ children, persist }) => (
     <Consumer>
-      {state => {
-        if (state.error === undefined) return null
-        if (state.isPending && !persist) return null
-        return isFunction(children) ? children(state.error, state) : children || null
-      }}
+      {state =>
+        state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null
+      }
     </Consumer>
   )
 
@@ -276,15 +264,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
    * Renders only when promise is fulfilled or rejected.
    *
    * @prop {Function|Node} children Function (passing state) or React node
-   * @prop {boolean} persist Show old data or error while pending (promise is loading)
+   * @prop {boolean} persist Continue rendering while loading new data
    */
   const Settled = ({ children, persist }) => (
     <Consumer>
-      {state => {
-        if (state.isInitial) return null
-        if (state.isPending && !persist) return null
-        return isFunction(children) ? children(state) : children || null
-      }}
+      {state => (state.isSettled || (persist && state.value) ? renderFn(children, state) : null)}
     </Consumer>
   )
 

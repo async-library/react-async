@@ -391,6 +391,7 @@ is set to `"application/json"`.
 
 - `data` Last resolved promise value, maintained when new error arrives.
 - `error` Rejected promise reason, cleared when new data arrives.
+- `value` The value of `data` or `error`, whichever was last updated.
 - `initialValue` The data or error that was provided through the `initialValue` prop.
 - `startedAt` When the current/last promise was started.
 - `finishedAt` When the last promise was fulfilled or rejected.
@@ -418,6 +419,12 @@ Last resolved promise value, maintained when new error arrives.
 > `Error`
 
 Rejected promise reason, cleared when new data arrives.
+
+#### `value`
+
+> `any | Error`
+
+The data or error that was last provided (either through `initialValue` or by settling a promise).
 
 #### `initialValue`
 

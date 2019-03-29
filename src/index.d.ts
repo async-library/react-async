@@ -34,6 +34,7 @@ export type AsyncInitial<T> = AbstractState<T> & {
   initialValue?: undefined
   data: undefined
   error: undefined
+  value: undefined
   startedAt: undefined
   finishedAt: undefined
   status: "initial"
@@ -48,6 +49,7 @@ export type AsyncInitial<T> = AbstractState<T> & {
 export type AsyncPending<T> = AbstractState<T> & {
   data: T | undefined
   error: Error | undefined
+  value: T | Error | undefined
   startedAt: Date
   finishedAt: undefined
   status: "pending"
@@ -62,6 +64,7 @@ export type AsyncPending<T> = AbstractState<T> & {
 export type AsyncFulfilled<T> = AbstractState<T> & {
   data: T
   error: undefined
+  value: T
   startedAt: Date
   finishedAt: Date
   status: "fulfilled"
@@ -76,6 +79,7 @@ export type AsyncFulfilled<T> = AbstractState<T> & {
 export type AsyncRejected<T> = AbstractState<T> & {
   data: T | undefined
   error: Error
+  value: Error
   startedAt: Date
   finishedAt: Date
   status: "rejected"
