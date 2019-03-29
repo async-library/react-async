@@ -81,12 +81,9 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => {
     if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
   })
-  useEffect(
-    () => {
-      promise || promiseFn ? load() : cancel()
-    },
-    [promise, promiseFn, watch]
-  )
+  useEffect(() => {
+    promise || promiseFn ? load() : cancel()
+  }, [promise, promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
   useEffect(() => () => abortController.current.abort(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
