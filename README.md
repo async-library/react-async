@@ -38,7 +38,7 @@ error states, without assumptions about the shape of your data or the type of re
 - Zero dependencies
 - Works with promises, async/await and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
-- Provides convenient `isLoading`, `startedAt` and `finishedAt` metadata
+- Provides convenient `isLoading`, `startedAt`, `finishedAt`, et al metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
 - Accepts `onResolve` and `onReject` callbacks
@@ -201,7 +201,7 @@ is set to `"application/json"`.
 
 ### As a component
 
-The classic interface to React Async. Simply use <Async> directly in your JSX component tree, leveraging the render
+The classic interface to React Async. Simply use `<Async>` directly in your JSX component tree, leveraging the render
 props pattern:
 
 ```js
@@ -248,14 +248,14 @@ const loadCustomer = ({ customerId }, { signal }) =>
 const MyComponent = () => (
   <Async promiseFn={loadCustomer} customerId={1}>
     <Async.Loading>Loading...</Async.Loading>
-    <Async.Resolved>
+    <Async.Fulfilled>
       {data => (
         <div>
           <strong>Loaded some data:</strong>
           <pre>{JSON.stringify(data, null, 2)}</pre>
         </div>
       )}
-    </Async.Resolved>
+    </Async.Fulfilled>
     <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
   </Async>
 )
@@ -279,7 +279,7 @@ const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer
 
 const MyComponent = () => (
   <AsyncCustomer customerId={1}>
-    <AsyncCustomer.Resolved>{customer => `Hello ${customer.name}`}</AsyncCustomer.Resolved>
+    <AsyncCustomer.Fulfilled>{customer => `Hello ${customer.name}`}</AsyncCustomer.Fulfilled>
   </AsyncCustomer>
 )
 ```
@@ -316,7 +316,7 @@ and listen to the new one. If `promise` is initially undefined, the React Async 
 
 #### `promiseFn`
 
-> `function(props: object, controller: AbortController): Promise`
+> `function(props: Object, controller: AbortController): Promise`
 
 A function that returns a promise. It is automatically invoked in `componentDidMount` and `componentDidUpdate`.
 The function receives all component props (or options) and an AbortController instance as arguments.
@@ -329,14 +329,14 @@ The function receives all component props (or options) and an AbortController in
 
 #### `deferFn`
 
-> `function(args: any[], props: object, controller: AbortController): Promise`
+> `function(args: any[], props: Object, controller: AbortController): Promise`
 
 A function that returns a promise. This is invoked only by manually calling `run(...args)`. Receives the same arguments
 as `promiseFn`, as well as any arguments to `run` which are passed through as an array. The `deferFn` is commonly used
 to send data to the server following a user action, such as submitting a form. You can use this in conjunction with
 `promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
 
-> Be aware that when using both `promiseFn` and `deferFn`, the shape of their resolved value should match, because they
+> Be aware that when using both `promiseFn` and `deferFn`, the shape of their fulfilled value should match, because they
 > both update the same `data`.
 
 #### `watch`
@@ -348,7 +348,7 @@ reference check (`oldValue !== newValue`). If you need a more complex update che
 
 #### `watchFn`
 
-> `function(props: object, prevProps: object): boolean | any`
+> `function(props: Object, prevProps: Object): boolean | any`
 
 Re-runs the `promiseFn` when this callback returns truthy (called on every update). Any default props specified by
 `createInstance` are available too.
@@ -393,7 +393,7 @@ is set to `"application/json"`.
 - `error` Rejected promise reason, cleared when new data arrives.
 - `initialValue` The data or error that was provided through the `initialValue` prop.
 - `startedAt` When the current/last promise was started.
-- `finishedAt` When the last promise was resolved or rejected.
+- `finishedAt` When the last promise was fulfilled or rejected.
 - `status` One of: `initial`, `pending`, `fulfilled`, `rejected`.
 - `isInitial` true when no promise has ever started, or one started but was cancelled.
 - `isPending` true when a promise is currently awaiting settlement. Alias: `isLoading`
@@ -403,7 +403,7 @@ is set to `"application/json"`.
 - `counter` The number of times a promise was started.
 - `cancel` Cancel any pending promise.
 - `run` Invokes the `deferFn`.
-- `reload` Re-runs the promise when invoked, using the any previous arguments.
+- `reload` Re-runs the promise when invoked, using any previous arguments.
 - `setData` Sets `data` to the passed value, unsets `error` and cancels any pending promise.
 - `setError` Sets `error` to the passed value and cancels any pending promise.
 
@@ -454,7 +454,7 @@ These are available for import as `statusTypes`.
 
 > `boolean`
 
-`true` while a promise is pending (loading), `false` otherwise.
+`true` while a promise is pending (aka loading), `false` otherwise.
 
 Alias: `isLoading`
 
@@ -462,7 +462,7 @@ Alias: `isLoading`
 
 > `boolean`
 
-`true` when the last promise was fulfilled (resolved) with a value.
+`true` when the last promise was fulfilled (aka resolved) with a value.
 
 Alias: `isResolved`
 
@@ -528,7 +528,7 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 #### Props
 
 - `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
-- `children` `function(state: object): Node | Node` Render function or React Node.
+- `children` `function(state: Object): Node | Node` Render function or React Node.
 
 #### Examples
 
@@ -542,10 +542,10 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 
 ```js
 <Async.Initial persist>
-  {({ error, isLoading, run }) => (
+  {({ error, isPending, run }) => (
     <div>
-      <p>This text is only rendered while the promise has not resolved yet.</p>
-      <button onClick={run} disabled={!isLoading}>
+      <p>This text is only rendered while the promise has not fulfilled yet.</p>
+      <button onClick={run} disabled={!isPending}>
         Run
       </button>
       {error && <p>{error.message}</p>}
@@ -556,14 +556,14 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 
 ### `<Async.Pending>`
 
-This component renders only while the promise is loading (unsettled).
+This component renders only while the promise is pending (aka loading) (unsettled).
 
 Alias: `<Async.Loading>`
 
 #### Props
 
 - `initial` `boolean` Show only on initial load (when `data` is `undefined`).
-- `children` `function(state: object): Node | Node` Render function or React Node.
+- `children` `function(state: Object): Node | Node` Render function or React Node.
 
 #### Examples
 
@@ -586,7 +586,7 @@ Alias: `<Async.Resolved>`
 #### Props
 
 - `persist` `boolean` Show old data while loading new data. By default it hides as soon as a new promise starts.
-- `children` `function(data: any, state: object): Node | Node` Render function or React Node.
+- `children` `function(data: any, state: Object): Node | Node` Render function or React Node.
 
 #### Examples
 
@@ -595,7 +595,7 @@ Alias: `<Async.Resolved>`
 ```
 
 ```js
-<Async.Fulfilled>{({ finishedAt }) => `Last updated ${startedAt.toISOString()}`}</Async.Fulfilled>
+<Async.Fulfilled>{(data, { finishedAt }) => `Last updated ${finishedAt.toISOString()}`}</Async.Fulfilled>
 ```
 
 ### `<Async.Rejected>`
@@ -605,7 +605,7 @@ This component renders only when the promise is rejected.
 #### Props
 
 - `persist` `boolean` Show old error while loading new data. By default it hides as soon as a new promise starts.
-- `children` `function(error: Error, state: object): Node | Node` Render function or React Node.
+- `children` `function(error: Error, state: Object): Node | Node` Render function or React Node.
 
 #### Examples
 
@@ -624,7 +624,7 @@ This component renders only when the promise is fulfilled or rejected.
 #### Props
 
 - `persist` `boolean` Show old data or error while loading new data. By default it hides as soon as a new promise starts.
-- `children` `function(state: object): Node | Node` Render function or React Node.
+- `children` `function(state: Object): Node | Node` Render function or React Node.
 
 ## Usage examples
 
