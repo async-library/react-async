@@ -9,11 +9,11 @@ const download = (args, props, controller) =>
     .then(res => res.json())
 
 const App = () => {
-  const { run, cancel, isLoading } = useAsync({ deferFn: download })
+  const { run, cancel, isPending } = useAsync({ deferFn: download })
   return (
     <>
-      {isLoading ? <button onClick={cancel}>cancel</button> : <button onClick={run}>start</button>}
-      {isLoading ? (
+      {isPending ? <button onClick={cancel}>cancel</button> : <button onClick={run}>start</button>}
+      {isPending ? (
         <p>Loading...</p>
       ) : (
         <p>Inspect network traffic to see requests being canceled.</p>

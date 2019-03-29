@@ -29,8 +29,8 @@ const UserDetails = ({ data }) => (
 const App = () => (
   <>
     <AsyncUser userId={1}>
-      {({ data, error, isLoading }) => {
-        if (isLoading) return <UserPlaceholder />
+      {({ data, error, isPending }) => {
+        if (isPending) return <UserPlaceholder />
         if (error) return <p>{error.message}</p>
         if (data) return <UserDetails data={data} />
         return null
@@ -38,10 +38,10 @@ const App = () => (
     </AsyncUser>
 
     <AsyncUser userId={2}>
-      <AsyncUser.Loading>
+      <AsyncUser.Pending>
         <UserPlaceholder />
-      </AsyncUser.Loading>
-      <AsyncUser.Resolved>{data => <UserDetails data={data} />}</AsyncUser.Resolved>
+      </AsyncUser.Pending>
+      <AsyncUser.Fulfilled>{data => <UserDetails data={data} />}</AsyncUser.Fulfilled>
       <AsyncUser.Rejected>{error => <p>{error.message}</p>}</AsyncUser.Rejected>
     </AsyncUser>
   </>

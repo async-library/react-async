@@ -26,8 +26,8 @@ const UserDetails = ({ data }) => (
 )
 
 const User = ({ userId }) => {
-  const { data, error, isLoading } = useAsync({ promiseFn: loadUser, userId })
-  if (isLoading) return <UserPlaceholder />
+  const { data, error, isPending } = useAsync({ promiseFn: loadUser, userId })
+  if (isPending) return <UserPlaceholder />
   if (error) return <p>{error.message}</p>
   if (data) return <UserDetails data={data} />
   return null
