@@ -30,13 +30,13 @@ interface AbstractState<T> {
   setError: (error: Error, callback?: () => void) => Error
 }
 
-export type AsyncWaiting<T> = AbstractState<T> & {
+export type AsyncInitial<T> = AbstractState<T> & {
   data: undefined
   error: undefined
   startedAt: undefined
   finishedAt: undefined
-  status: "waiting"
-  isWaiting: false
+  status: "initial"
+  isInitial: false
   isPending: false
   isLoading: false
   isFulfilled: false
@@ -50,7 +50,7 @@ export type AsyncPending<T> = AbstractState<T> & {
   startedAt: Date
   finishedAt: undefined
   status: "pending"
-  isWaiting: false
+  isInitial: false
   isPending: true
   isLoading: true
   isFulfilled: false
@@ -64,7 +64,7 @@ export type AsyncFulfilled<T> = AbstractState<T> & {
   startedAt: Date
   finishedAt: Date
   status: "fulfilled"
-  isWaiting: false
+  isInitial: false
   isPending: false
   isLoading: false
   isFulfilled: true
@@ -78,7 +78,7 @@ export type AsyncRejected<T> = AbstractState<T> & {
   startedAt: Date
   finishedAt: Date
   status: "rejected"
-  isWaiting: false
+  isInitial: false
   isPending: false
   isLoading: false
   isFulfilled: false
@@ -86,12 +86,12 @@ export type AsyncRejected<T> = AbstractState<T> & {
   isRejected: true
   isSettled: true
 }
-export type AsyncState<T> = AsyncWaiting<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
+export type AsyncState<T> = AsyncInitial<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
 declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 
 declare namespace Async {
-  export function Waiting<T>(props: {
+  export function Initial<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
   }): React.ReactNode

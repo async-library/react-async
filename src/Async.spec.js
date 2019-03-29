@@ -31,20 +31,20 @@ describe("Async", () => {
     let two
     const { rerender } = render(
       <Async>
-        <Async.Waiting>
+        <Async.Initial>
           {value => {
             one = value
           }}
-        </Async.Waiting>
+        </Async.Initial>
       </Async>
     )
     rerender(
       <Async someProp>
-        <Async.Waiting>
+        <Async.Initial>
           {value => {
             two = value
           }}
-        </Async.Waiting>
+        </Async.Initial>
       </Async>
     )
     expect(one).toBe(two)
@@ -132,19 +132,19 @@ describe("Async.Pending", () => {
   })
 })
 
-describe("Async.Waiting", () => {
-  test("renders only while the deferred promise is waiting", async () => {
+describe("Async.Initial", () => {
+  test("renders only while the deferred promise has not started yet", async () => {
     const deferFn = () => resolveTo("ok")
     const { getByText, queryByText } = render(
       <Async deferFn={deferFn}>
-        <Async.Waiting>{({ run }) => <button onClick={run}>waiting</button>}</Async.Waiting>
+        <Async.Initial>{({ run }) => <button onClick={run}>initial</button>}</Async.Initial>
         <Async.Pending>pending</Async.Pending>
         <Async.Fulfilled>done</Async.Fulfilled>
       </Async>
     )
-    expect(queryByText("waiting")).toBeInTheDocument()
-    fireEvent.click(getByText("waiting"))
-    expect(queryByText("waiting")).toBeNull()
+    expect(queryByText("initial")).toBeInTheDocument()
+    fireEvent.click(getByText("initial"))
+    expect(queryByText("initial")).toBeNull()
     expect(queryByText("pending")).toBeInTheDocument()
     await waitForElement(() => getByText("done"))
     expect(queryByText("pending")).toBeNull()

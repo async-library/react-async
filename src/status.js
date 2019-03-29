@@ -1,5 +1,5 @@
 export const statusTypes = {
-  waiting: "waiting",
+  initial: "initial",
   pending: "pending",
   fulfilled: "fulfilled",
   rejected: "rejected",
@@ -9,18 +9,18 @@ export const getInitialStatus = (value, promise) => {
   if (value instanceof Error) return statusTypes.rejected
   if (value !== undefined) return statusTypes.fulfilled
   if (promise) return statusTypes.pending
-  return statusTypes.waiting
+  return statusTypes.initial
 }
 
 export const getIdleStatus = value => {
   if (value instanceof Error) return statusTypes.rejected
   if (value !== undefined) return statusTypes.fulfilled
-  return statusTypes.waiting
+  return statusTypes.initial
 }
 
 export const getStatusProps = status => ({
   status,
-  isWaiting: status === statusTypes.waiting,
+  isInitial: status === statusTypes.initial,
   isPending: status === statusTypes.pending,
   isLoading: status === statusTypes.pending, // alias
   isFulfilled: status === statusTypes.fulfilled,

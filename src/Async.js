@@ -179,12 +179,12 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   }
 
   /**
-   * Renders only when deferred promise is waiting (promise has not yet run).
+   * Renders only when no promise has started or completed yet.
    *
    * @prop {Function|Node} children Function (passing state) or React node
    * @prop {boolean} persist Show until we have data, even while pending (loading) or when an error occurred
    */
-  const Waiting = ({ children, persist }) => (
+  const Initial = ({ children, persist }) => (
     <Consumer>
       {state => {
         if (state.data !== undefined) return null
@@ -196,7 +196,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   )
 
   if (PropTypes) {
-    Waiting.propTypes = {
+    Initial.propTypes = {
       children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
       persist: PropTypes.bool,
     }
@@ -281,7 +281,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
   const Settled = ({ children, persist }) => (
     <Consumer>
       {state => {
-        if (state.isWaiting) return null
+        if (state.isInitial) return null
         if (state.isPending && !persist) return null
         return isFunction(children) ? children(state) : children || null
       }}
@@ -295,14 +295,14 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
   }
 
-  Waiting.displayName = `${displayName}.Waiting`
+  Initial.displayName = `${displayName}.Initial`
   Pending.displayName = `${displayName}.Pending`
   Fulfilled.displayName = `${displayName}.Fulfilled`
   Rejected.displayName = `${displayName}.Rejected`
   Settled.displayName = `${displayName}.Settled`
 
   Async.displayName = displayName
-  Async.Waiting = Waiting
+  Async.Initial = Initial
   Async.Pending = Pending
   Async.Loading = Pending // alias
   Async.Fulfilled = Fulfilled

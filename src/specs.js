@@ -19,7 +19,7 @@ export const common = Async => () => {
           expect(renderProps).toHaveProperty("initialValue")
           expect(renderProps).toHaveProperty("startedAt")
           expect(renderProps).toHaveProperty("finishedAt")
-          expect(renderProps).toHaveProperty("isWaiting")
+          expect(renderProps).toHaveProperty("isInitial")
           expect(renderProps).toHaveProperty("isPending")
           expect(renderProps).toHaveProperty("isLoading")
           expect(renderProps).toHaveProperty("isFulfilled")

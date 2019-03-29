@@ -384,12 +384,12 @@ is set to `"application/json"`.
 - `initialValue` The data or error that was provided through the `initialValue` prop.
 - `startedAt` When the current/last promise was started.
 - `finishedAt` When the last promise was resolved or rejected.
-- `status` One of: `waiting`, `pending`, `fulfilled`, `rejected`.
-- `isWaiting` true when no promise has ever started, or one started but was cancelled.
+- `status` One of: `initial`, `pending`, `fulfilled`, `rejected`.
+- `isInitial` true when no promise has ever started, or one started but was cancelled.
 - `isPending` true when a promise is currently awaiting settlement. Alias: `isLoading`
 - `isFulfilled` true when the last promise was fulfilled with a value. Alias: `isResolved`
 - `isRejected` true when the last promise was rejected with a reason.
-- `isSettled` true when the last promise was fulfilled or rejected (not waiting or pending).
+- `isSettled` true when the last promise was fulfilled or rejected (not initial or pending).
 - `counter` The number of times a promise was started.
 - `cancel` Cancel any pending promise.
 - `run` Invokes the `deferFn`.
@@ -431,10 +431,10 @@ Tracks when the last promise was resolved or rejected.
 
 > `string`
 
-One of: `waiting`, `pending`, `fulfilled`, `rejected`.
+One of: `initial`, `pending`, `fulfilled`, `rejected`.
 These are available for import as `statusTypes`.
 
-#### `isWaiting`
+#### `isInitial`
 
 > `boolean`
 
@@ -466,7 +466,7 @@ Alias: `isResolved`
 
 > `boolean`
 
-`true` when the last promise was either fulfilled or rejected (i.e. not waiting or pending)
+`true` when the last promise was either fulfilled or rejected (i.e. not initial or pending)
 
 #### `counter`
 
@@ -511,7 +511,7 @@ invoked after the state update is completed. Returns the error to enable chainin
 React Async provides several helper components that make your JSX more declarative and less cluttered.
 They don't have to be direct children of `<Async>` and you can use the same component several times.
 
-### `<Async.Waiting>`
+### `<Async.Initial>`
 
 Renders only while the deferred promise is still waiting to be run, or you have not provided any promise.
 
@@ -524,14 +524,14 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 
 ```js
 <Async deferFn={deferFn}>
-  <Async.Waiting>
+  <Async.Initial>
     <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
-  </Async.Waiting>
+  </Async.Initial>
 </Async>
 ```
 
 ```js
-<Async.Waiting persist>
+<Async.Initial persist>
   {({ error, isLoading, run }) => (
     <div>
       <p>This text is only rendered while the promise has not resolved yet.</p>
@@ -541,7 +541,7 @@ Renders only while the deferred promise is still waiting to be run, or you have 
       {error && <p>{error.message}</p>}
     </div>
   )}
-</Async.Waiting>
+</Async.Initial>
 ```
 
 ### `<Async.Pending>`
