@@ -21,7 +21,7 @@ export interface AsyncProps<T> extends AsyncOptions<T> {
 }
 
 interface AbstractState<T> {
-  initialValue?: T
+  initialValue?: T | Error
   counter: number
   cancel: () => void
   run: (...args: any[]) => Promise<T>
@@ -31,6 +31,7 @@ interface AbstractState<T> {
 }
 
 export type AsyncInitial<T> = AbstractState<T> & {
+  initialValue?: undefined
   data: undefined
   error: undefined
   startedAt: undefined
