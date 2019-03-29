@@ -50,21 +50,16 @@ error states, without assumptions about the shape of your data or the type of re
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
 
-> ## Upgrading to v4
+> ## Upgrading to v6
 >
-> When upgrading to React Async v4, please note the following breaking API changes:
->
-> - `deferFn` now receives an `args` array as the first argument, instead of arguments to `run` being spread at the front
->   of the arguments list. This enables better interop with TypeScript. You can use destructuring to keep using your
->   existing variables.
-> - The shorthand version of `useAsync` now takes the `options` object as optional second argument. This used to be
->   `initialValue`, but was undocumented and inflexible.
+> Version 6 comes with a breaking change. See [Upgrading](#upgrading) for details.
 
 # Table of Contents
 
 - [Rationale](#rationale)
   - [Concurrent React and Suspense](#concurrent-react-and-suspense)
 - [Installation](#installation)
+  - [Upgrading](#upgrading)
 - [Usage](#usage)
   - [As a hook](#as-a-hook)
     - [With `useFetch`](#with-usefetch)
@@ -123,6 +118,21 @@ yarn add react-async
 
 > This package requires `react` as a peer dependency. Please make sure to install that as well.
 > If you want to use the `useAsync` hook, you'll need `react@16.8.0` or later.
+
+### Upgrading
+
+#### Upgrade to v6
+
+- `<Async.Pending>` was renamed to `<Async.Initial>`.
+- Don't forget to deal with any custom instances of `<Async>` when upgrading.
+
+#### Upgrade to v4
+
+- `deferFn` now receives an `args` array as the first argument, instead of arguments to `run` being spread at the front
+  of the arguments list. This enables better interop with TypeScript. You can use destructuring to keep using your
+  existing variables.
+- The shorthand version of `useAsync` now takes the `options` object as optional second argument. This used to be
+  `initialValue`, but was undocumented and inflexible.
 
 ## Usage
 
