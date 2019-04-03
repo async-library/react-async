@@ -6,7 +6,8 @@ import { render, fireEvent, waitForElement } from "react-testing-library"
 
 export const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
 export const resolveTo = resolveIn(0)
-export const rejectIn = ms => err => new Promise((resolve, reject) => setTimeout(reject, ms, err))
+export const rejectIn = ms => err =>
+  new Promise((resolve, reject) => setTimeout(reject, ms, new Error(err)))
 export const rejectTo = rejectIn(0)
 
 export const common = Async => () => {
@@ -65,7 +66,9 @@ export const withPromise = Async => () => {
 
   test("passes rejection error to children as render prop", async () => {
     const promise = rejectTo("oops")
-    const { getByText } = render(<Async promise={promise}>{({ error }) => error || null}</Async>)
+    const { getByText } = render(
+      <Async promise={promise}>{({ error }) => (error ? error.message : null)}</Async>
+    )
     await waitForElement(() => getByText("oops"))
   })
 
@@ -104,7 +107,7 @@ export const withPromise = Async => () => {
     const onReject = jest.fn()
     render(<Async promise={rejectTo("err")} onReject={onReject} />)
     await resolveTo()
-    expect(onReject).toHaveBeenCalledWith("err")
+    expect(onReject).toHaveBeenCalledWith(new Error("err"))
   })
 
   test("cancels a pending promise when unmounted", async () => {
@@ -196,7 +199,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     const onReject = jest.fn()
     render(<Async promiseFn={() => rejectTo("err")} onReject={onReject} />)
     await resolveTo()
-    expect(onReject).toHaveBeenCalledWith("err")
+    expect(onReject).toHaveBeenCalledWith(new Error("err"))
   })
 
   test("provides `reload` function that re-runs the promise", () => {

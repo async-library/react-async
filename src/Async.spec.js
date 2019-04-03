@@ -60,7 +60,7 @@ describe("Async.Fulfilled", () => {
         <Async.Fulfilled>
           {(data, { run }) => <button onClick={run}>{data}</button>}
         </Async.Fulfilled>
-        <Async.Rejected>{error => error}</Async.Rejected>
+        <Async.Rejected>{error => error.message}</Async.Rejected>
       </Async>
     )
     expect(queryByText("ok")).toBeNull()
@@ -81,7 +81,7 @@ describe("Async.Fulfilled", () => {
         <Async.Fulfilled persist>
           {(data, { run }) => <button onClick={run}>{data}</button>}
         </Async.Fulfilled>
-        <Async.Rejected>{error => error}</Async.Rejected>
+        <Async.Rejected>{error => error.message}</Async.Rejected>
       </Async>
     )
     expect(queryByText("ok")).toBeNull()
@@ -156,7 +156,7 @@ describe("Async.Rejected", () => {
     const promiseFn = () => rejectTo("err")
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
-        <Async.Rejected>{err => err}</Async.Rejected>
+        <Async.Rejected>{error => error.message}</Async.Rejected>
       </Async>
     )
     expect(queryByText("err")).toBeNull()
@@ -182,7 +182,7 @@ describe("Async.Settled", () => {
     const promiseFn = () => rejectTo("err")
     const { getByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
-        <Async.Settled>{({ error }) => error}</Async.Settled>
+        <Async.Settled>{({ error }) => error.message}</Async.Settled>
       </Async>
     )
     expect(queryByText("err")).toBeNull()
