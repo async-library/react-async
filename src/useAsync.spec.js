@@ -41,6 +41,37 @@ describe("useAsync", () => {
     await waitForElement(() => getByText("done"))
     expect(onResolve).toHaveBeenCalledWith("done")
   })
+
+  test("calling run() will always use the latest onResolve/onReject callbacks", async () => {
+    const promiseFn = jest.fn(() => resolveTo())
+    const deferFn = () => resolveTo()
+    function App() {
+      const [count, setCount] = React.useState(0)
+      const { reload } = useAsync({
+        promiseFn,
+        count,
+        watch: count,
+      })
+      const { run } = useAsync({
+        deferFn,
+        onResolve: reload,
+      })
+      return (
+        <div>
+          <button onClick={() => setCount(n => n + 1)}>inc</button>
+          <button onClick={() => run()}>run</button>
+        </div>
+      )
+    }
+    const { getByText } = render(<App />)
+    expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 0 }), abortCtrl)
+    fireEvent.click(getByText("inc"))
+    await resolveTo() // resolve promiseFn
+    expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
+    fireEvent.click(getByText("run"))
+    await resolveTo() // resolve deferFn
+    expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
+  })
 })
 
 describe("useFetch", () => {

@@ -99,7 +99,7 @@ const useAsync = (arg1, arg2) => {
       setData,
       setError,
     }),
-    [state]
+    [state, deferFn, onResolve, onReject]
   )
 }
 
