@@ -144,7 +144,7 @@ factory function. Each has its unique benefits and downsides.
 The `useAsync` hook (available [from React v16.8.0](https://reactjs.org/hooks)) offers direct access to React Async's
 core functionality from within your own function components:
 
-```js
+```jsx
 import { useAsync } from "react-async"
 
 const loadCustomer = async ({ customerId }, { signal }) => {
@@ -173,7 +173,7 @@ const MyComponent = () => {
 
 Or using the shorthand version:
 
-```js
+```jsx
 const MyComponent = () => {
   const { data, error, isLoading } = useAsync(loadCustomer, options)
   // ...
@@ -184,7 +184,7 @@ const MyComponent = () => {
 
 Because fetch is so commonly used with `useAsync`, there's a dedicated `useFetch` hook for it:
 
-```js
+```jsx
 import { useFetch } from "react-async"
 
 const MyComponent = () => {
@@ -207,7 +207,7 @@ is set to `"application/json"`.
 The classic interface to React Async. Simply use `<Async>` directly in your JSX component tree, leveraging the render
 props pattern:
 
-```js
+```jsx
 import Async from "react-async"
 
 // Your promiseFn receives all props from Async and an AbortController instance
@@ -242,7 +242,7 @@ const MyComponent = () => (
 You can also create your own component instances, allowing you to preconfigure them with options such as default
 `onResolve` and `onReject` callbacks.
 
-```js
+```jsx
 import { createInstance } from "react-async"
 
 const loadCustomer = ({ customerId }, { signal }) =>
@@ -266,7 +266,7 @@ Several [helper components](#helper-components) are available to improve legibil
 by passing in the state, or with `<Async>` by using Context. Each of these components simply enables or disables
 rendering of its children based on the current state.
 
-```js
+```jsx
 import { useAsync, Pending, Fulfilled, Rejected } from "react-async"
 
 const loadCustomer = async ({ customerId }, { signal }) => {
@@ -297,7 +297,7 @@ const MyComponent = () => {
 Each of the helper components are also available as static properties of `<Async>`. In this case you won't have to pass
 the state object, instead it will be automatically provided through Context.
 
-```js
+```jsx
 import Async from "react-async"
 
 const loadCustomer = ({ customerId }, { signal }) =>
@@ -577,7 +577,7 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 
 #### Examples
 
-```js
+```jsx
 const state = useAsync(...)
 return (
   <Initial state={state}>
@@ -586,7 +586,7 @@ return (
 )
 ```
 
-```js
+```jsx
 <Async deferFn={deferFn}>
   <Async.Initial>
     <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
@@ -594,7 +594,7 @@ return (
 </Async>
 ```
 
-```js
+```jsx
 <Async.Initial persist>
   {({ error, isPending, run }) => (
     <div>
@@ -622,7 +622,7 @@ Alias: `<Async.Loading>`
 
 #### Examples
 
-```js
+```jsx
 const state = useAsync(...)
 return (
   <Pending state={state}>
@@ -631,13 +631,13 @@ return (
 )
 ```
 
-```js
+```jsx
 <Async.Pending initial>
   <p>This text is only rendered while performing the initial load.</p>
 </Async.Pending>
 ```
 
-```js
+```jsx
 <Async.Pending>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Pending>
 ```
 
@@ -655,7 +655,7 @@ Alias: `<Async.Resolved>`
 
 #### Examples
 
-```js
+```jsx
 const state = useAsync(...)
 return (
   <Fulfilled state={state}>
@@ -664,11 +664,11 @@ return (
 )
 ```
 
-```js
+```jsx
 <Async.Fulfilled persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Fulfilled>
 ```
 
-```js
+```jsx
 <Async.Fulfilled>
   {(data, { finishedAt }) => `Last updated ${finishedAt.toISOString()}`}
 </Async.Fulfilled>
@@ -686,16 +686,16 @@ This component renders only when the promise is rejected.
 
 #### Examples
 
-```js
+```jsx
 const state = useAsync(...)
 return <Rejected state={state}>Oops.</Rejected>
 ```
 
-```js
+```jsx
 <Async.Rejected persist>Oops.</Async.Rejected>
 ```
 
-```js
+```jsx
 <Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
 ```
 
@@ -711,7 +711,7 @@ This component renders only when the promise is fulfilled or rejected.
 
 #### Examples
 
-```js
+```jsx
 const state = useAsync(...)
 return <Settled state={state}>{state => `Finished at ${state.finishedAt.toISOString()}`</Settled>
 ```
@@ -725,7 +725,7 @@ check out the [`examples` directory](https://github.com/ghengeveld/react-async/t
 
 This does some basic data fetching, including a loading indicator, error state and retry.
 
-```js
+```jsx
 class App extends Component {
   getSession = ({ sessionId }) => fetch(...)
 
@@ -760,7 +760,7 @@ class App extends Component {
 
 This uses `deferFn` to trigger an update (e.g. POST / PUT request) after a form submit.
 
-```js
+```jsx
 const subscribeToNewsletter = (args, props, controller) => fetch(...)
 
 <Async deferFn={subscribeToNewsletter}>
@@ -780,7 +780,7 @@ const subscribeToNewsletter = (args, props, controller) => fetch(...)
 
 This uses both `promiseFn` and `deferFn` along with `setData` to implement optimistic updates.
 
-```js
+```jsx
 const updateAttendance = ([attend]) => fetch(...).then(() => attend, () => !attend)
 
 <Async promiseFn={getAttendance} deferFn={updateAttendance}>
@@ -801,7 +801,7 @@ const updateAttendance = ([attend]) => fetch(...).then(() => attend, () => !atte
 
 This uses `initialValue` to enable server-side rendering with Next.js.
 
-```js
+```jsx
 static async getInitialProps() {
   // Resolve the promise server-side
   const customers = await loadCustomers()
