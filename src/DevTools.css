@@ -1,0 +1,45 @@
+.devTools {
+  width: 20em;
+  box-sizing: border-box;
+  border: 1px solid #0366d6;
+  border-radius: 1em;
+  box-shadow: 0 2px 1em #00000022;
+  background: white;
+  padding: 1em;
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell,
+    "Helvetica Neue", sans-serif;
+}
+
+.devTools input {
+  font-size: inherit;
+}
+
+.devTools input[type="range"] {
+  display: block;
+  width: 100%;
+  margin: 1em 0;
+}
+
+.devTools input[type="checkbox"] {
+  vertical-align: bottom;
+}
+
+.devTools label {
+  display: block;
+  margin-bottom: 1.5em;
+}
+
+.devTools small {
+  display: block;
+  margin-top: 0.5em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.devTools ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 2em;
+}
