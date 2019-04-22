@@ -29,6 +29,8 @@
     "test:forwards": "npm i react@next react-dom@next --no-save && npm test",
     "test:latest": "npm i react@latest react-dom@latest --no-save && npm test",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook",
     "build": "pack build",
     "publish": "pack publish",
     "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
@@ -64,7 +66,13 @@
     "prettier": "1.17.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
-    "react-testing-library": "6.1.2"
+    "react-testing-library": "6.1.2",
+    "@storybook/react": "^5.0.10",
+    "@storybook/addon-actions": "^5.0.10",
+    "@storybook/addon-links": "^5.0.10",
+    "@storybook/addons": "^5.0.10",
+    "@babel/core": "^7.4.3",
+    "babel-loader": "^8.0.5"
   },
   "jest": {
     "collectCoverage": true,
