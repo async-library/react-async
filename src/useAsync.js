@@ -1,5 +1,5 @@
 import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
-import { actionTypes, init, reducer } from "./reducer"
+import { actionTypes, init, reducer as asyncReducer } from "./reducer"
 
 const noop = () => {}
 
@@ -12,7 +12,13 @@ const useAsync = (arg1, arg2) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
-  const [state, dispatch] = useReducer(reducer, options, init)
+  const { reducer, dispatcher } = options
+  const [state, _dispatch] = useReducer(
+    reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
+    options,
+    init
+  )
+  const dispatch = dispatcher ? action => dispatcher(action, _dispatch, options) : _dispatch
 
   const setData = (data, callback = noop) => {
     if (isMounted.current) {
@@ -101,7 +107,7 @@ const useAsync = (arg1, arg2) => {
       setData,
       setError,
     }),
-    [state, deferFn, onResolve, onReject]
+    [state, deferFn, onResolve, onReject, dispatcher, reducer]
   )
 }
 

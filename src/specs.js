@@ -415,3 +415,81 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     await waitForElement(() => getByText("done"))
   })
 }
+
+export const withReducer = Async => () => {
+  test.only("receives state, action and the original reducer", async () => {
+    const promise = resolveTo("done")
+    const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
+    const { getByText } = render(
+      <Async promise={promise} reducer={reducer}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("done"))
+    expect(reducer).toHaveBeenCalledWith(
+      expect.objectContaining({ status: expect.any(String) }),
+      expect.objectContaining({ type: expect.any(String) }),
+      expect.any(Function)
+    )
+  })
+
+  test.only("allows overriding state updates", async () => {
+    const promise = resolveTo("done")
+    const reducer = (state, action, asyncReducer) => {
+      if (action.type === "fulfill") action.payload = "cool"
+      return asyncReducer(state, action)
+    }
+    const { getByText } = render(
+      <Async promise={promise} reducer={reducer}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("cool"))
+  })
+}
+
+export const withDispatcher = Async => () => {
+  test.only("receives action, the original dispatch method and options", async () => {
+    const promise = resolveTo("done")
+    const dispatcher = jest.fn((action, dispatch) => dispatch(action))
+    const props = { promise, dispatcher }
+    const { getByText } = render(<Async {...props}>{({ data }) => data || null}</Async>)
+    await waitForElement(() => getByText("done"))
+    expect(dispatcher).toHaveBeenCalledWith(
+      expect.objectContaining({ type: expect.any(String) }),
+      expect.any(Function),
+      expect.objectContaining(props)
+    )
+  })
+
+  test.only("allows overriding actions before dispatch", async () => {
+    const promise = resolveTo("done")
+    const dispatcher = (action, dispatch) => {
+      if (action.type === "fulfill") action.payload = "cool"
+      dispatch(action)
+    }
+    const { getByText } = render(
+      <Async promise={promise} dispatcher={dispatcher}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("cool"))
+  })
+
+  test.only("allows dispatching additional actions", async () => {
+    const promise = resolveTo("done")
+    const customAction = { type: "custom" }
+    const dispatcher = (action, dispatch) => {
+      dispatch(action)
+      dispatch(customAction)
+    }
+    const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
+    const { getByText } = render(
+      <Async promise={promise} dispatcher={dispatcher} reducer={reducer}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("done"))
+    expect(reducer).toHaveBeenCalledWith(expect.anything(), customAction, expect.anything())
+  })
+}
