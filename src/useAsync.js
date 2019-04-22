@@ -4,14 +4,13 @@ import { actionTypes, init, reducer } from "./reducer"
 const noop = () => {}
 
 const useAsync = (arg1, arg2) => {
+  const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
+
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
-
-  const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
-  const { promise, promiseFn, deferFn, initialValue, onResolve, onReject, watch, watchFn } = options
 
   const [state, dispatch] = useReducer(reducer, options, init)
 
@@ -31,11 +30,6 @@ const useAsync = (arg1, arg2) => {
     return error
   }
 
-  const handleResolve = count => data =>
-    count === counter.current && setData(data, () => onResolve && onResolve(data))
-  const handleReject = count => error =>
-    count === counter.current && setError(error, () => onReject && onReject(error))
-
   const start = () => {
     if ("AbortController" in window) {
       abortController.current.abort()
@@ -45,12 +39,18 @@ const useAsync = (arg1, arg2) => {
     isMounted.current && dispatch({ type: actionTypes.start, meta: { counter: counter.current } })
   }
 
+  const { onResolve, onReject } = options
+  const handleResolve = count => data =>
+    count === counter.current && setData(data, () => onResolve && onResolve(data))
+  const handleReject = count => error =>
+    count === counter.current && setError(error, () => onReject && onReject(error))
+
+  const { promise, promiseFn, initialValue } = options
   const load = () => {
     if (promise) {
       start()
       return promise.then(handleResolve(counter.current), handleReject(counter.current))
     }
-
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
       start()
@@ -61,6 +61,7 @@ const useAsync = (arg1, arg2) => {
     }
   }
 
+  const { deferFn } = options
   const run = (...args) => {
     if (deferFn) {
       lastArgs.current = args
@@ -78,6 +79,7 @@ const useAsync = (arg1, arg2) => {
     isMounted.current && dispatch({ type: actionTypes.cancel, meta: { counter: counter.current } })
   }
 
+  const { watch, watchFn } = options
   useEffect(() => {
     if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
   })
