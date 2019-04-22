@@ -417,7 +417,7 @@ export const withDeferFn = (Async, abortCtrl) => () => {
 }
 
 export const withReducer = Async => () => {
-  test.only("receives state, action and the original reducer", async () => {
+  test("receives state, action and the original reducer", async () => {
     const promise = resolveTo("done")
     const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
     const { getByText } = render(
@@ -433,7 +433,7 @@ export const withReducer = Async => () => {
     )
   })
 
-  test.only("allows overriding state updates", async () => {
+  test("allows overriding state updates", async () => {
     const promise = resolveTo("done")
     const reducer = (state, action, asyncReducer) => {
       if (action.type === "fulfill") action.payload = "cool"
@@ -449,7 +449,7 @@ export const withReducer = Async => () => {
 }
 
 export const withDispatcher = Async => () => {
-  test.only("receives action, the original dispatch method and options", async () => {
+  test("receives action, the original dispatch method and options", async () => {
     const promise = resolveTo("done")
     const dispatcher = jest.fn((action, dispatch) => dispatch(action))
     const props = { promise, dispatcher }
@@ -462,7 +462,7 @@ export const withDispatcher = Async => () => {
     )
   })
 
-  test.only("allows overriding actions before dispatch", async () => {
+  test("allows overriding actions before dispatch", async () => {
     const promise = resolveTo("done")
     const dispatcher = (action, dispatch) => {
       if (action.type === "fulfill") action.payload = "cool"
@@ -476,7 +476,7 @@ export const withDispatcher = Async => () => {
     await waitForElement(() => getByText("cool"))
   })
 
-  test.only("allows dispatching additional actions", async () => {
+  test("allows dispatching additional actions", async () => {
     const promise = resolveTo("done")
     const customAction = { type: "custom" }
     const dispatcher = (action, dispatch) => {
