@@ -4,7 +4,15 @@ import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
 import { useAsync, useFetch } from "./index"
-import { resolveTo, common, withPromise, withPromiseFn, withDeferFn } from "./specs"
+import {
+  resolveTo,
+  common,
+  withPromise,
+  withPromiseFn,
+  withDeferFn,
+  withReducer,
+  withDispatcher,
+} from "./specs"
 
 const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 window.AbortController = jest.fn(() => abortCtrl)
@@ -26,6 +34,8 @@ describe("useAsync", () => {
   describe("with `promise`", withPromise(Async, abortCtrl))
   describe("with `promiseFn`", withPromiseFn(Async, abortCtrl))
   describe("with `deferFn`", withDeferFn(Async, abortCtrl))
+  describe("with `reducer`", withReducer(Async, abortCtrl))
+  describe("with `dispatcher`", withDispatcher(Async, abortCtrl))
 
   test("accepts [promiseFn, options] shorthand, with the former taking precedence", async () => {
     const promiseFn1 = () => resolveTo("done")

@@ -1,5 +1,5 @@
 import React from "react"
-import { actionTypes, init, reducer } from "./reducer"
+import { actionTypes, init, reducer as asyncReducer } from "./reducer"
 
 let PropTypes
 try {
@@ -49,7 +49,15 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         setData: this.setData,
         setError: this.setError,
       }
-      this.dispatch = (action, callback) => this.setState(state => reducer(state, action), callback)
+
+      const _reducer = props.reducer || defaultProps.reducer
+      const _dispatcher = props.dispatcher || defaultProps.dispatcher
+      const reducer = _reducer
+        ? (state, action) => _reducer(state, action, asyncReducer)
+        : asyncReducer
+      const dispatch = (action, callback) =>
+        this.setState(state => reducer(state, action), callback)
+      this.dispatch = _dispatcher ? action => _dispatcher(action, dispatch, props) : dispatch
     }
 
     componentDidMount() {
@@ -177,6 +185,8 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       initialValue: PropTypes.any,
       onResolve: PropTypes.func,
       onReject: PropTypes.func,
+      reducer: PropTypes.func,
+      dispatcher: PropTypes.func,
     }
   }
 

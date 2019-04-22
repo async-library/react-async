@@ -53,5 +53,7 @@ export const reducer = (state, { type, payload, meta }) => {
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.rejected),
       }
+    default:
+      return state
   }
 }

@@ -12,6 +12,8 @@ import {
   withPromise,
   withPromiseFn,
   withDeferFn,
+  withReducer,
+  withDispatcher,
 } from "./specs"
 
 const abortCtrl = { abort: jest.fn() }
@@ -25,6 +27,8 @@ describe("Async", () => {
   describe("with `promise`", withPromise(Async, abortCtrl))
   describe("with `promiseFn`", withPromiseFn(Async, abortCtrl))
   describe("with `deferFn`", withDeferFn(Async, abortCtrl))
+  describe("with `reducer`", withReducer(Async, abortCtrl))
+  describe("with `dispatcher`", withDispatcher(Async, abortCtrl))
 
   test("an unrelated change in props does not update the Context", async () => {
     let one
