@@ -57,3 +57,10 @@ export const reducer = (state, { type, payload, meta }) => {
       return state
   }
 }
+
+export const dispatchMiddleware = dispatch => (action, ...args) => {
+  dispatch(action, ...args)
+  if (action.type === actionTypes.start && typeof action.payload === "function") {
+    action.payload()
+  }
+}

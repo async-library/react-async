@@ -5,6 +5,7 @@ import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
 import { useAsync, useFetch } from "./index"
 import {
+  sleep,
   resolveTo,
   common,
   withPromise,
@@ -76,10 +77,10 @@ describe("useAsync", () => {
     const { getByText } = render(<App />)
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 0 }), abortCtrl)
     fireEvent.click(getByText("inc"))
-    await resolveTo() // resolve promiseFn
+    await sleep(10) // resolve promiseFn
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
     fireEvent.click(getByText("run"))
-    await resolveTo() // resolve deferFn
+    await sleep(10) // resolve deferFn
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
   })
 })
