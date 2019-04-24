@@ -1,5 +1,5 @@
 import React from "react"
-import { actionTypes, init, reducer as asyncReducer } from "./reducer"
+import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
 let PropTypes
 try {
@@ -49,14 +49,16 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         setData: this.setData,
         setError: this.setError,
       }
+      this.debugLabel = props.debugLabel || defaultProps.debugLabel
 
       const _reducer = props.reducer || defaultProps.reducer
       const _dispatcher = props.dispatcher || defaultProps.dispatcher
       const reducer = _reducer
         ? (state, action) => _reducer(state, action, asyncReducer)
         : asyncReducer
-      const dispatch = (action, callback) =>
+      const dispatch = dispatchMiddleware((action, callback) => {
         this.setState(state => reducer(state, action), callback)
+      })
       this.dispatch = _dispatcher ? action => _dispatcher(action, dispatch, props) : dispatch
     }
 
@@ -87,26 +89,39 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.mounted = false
     }
 
-    start() {
+    getMeta(meta) {
+      return {
+        counter: this.counter,
+        debugLabel: this.debugLabel,
+        ...meta,
+      }
+    }
+
+    start(promiseFn) {
       if ("AbortController" in window) {
         this.abortController.abort()
         this.abortController = new window.AbortController()
       }
       this.counter++
-      this.mounted && this.dispatch({ type: actionTypes.start, meta: { counter: this.counter } })
+      return new Promise((resolve, reject) => {
+        if (!this.mounted) return
+        const executor = () => promiseFn().then(resolve, reject)
+        this.dispatch({ type: actionTypes.start, payload: executor, meta: this.getMeta() })
+      })
     }
 
     load() {
       const promise = this.props.promise
       if (promise) {
-        this.start()
-        return promise.then(this.onResolve(this.counter), this.onReject(this.counter))
+        return this.start(() => promise).then(
+          this.onResolve(this.counter),
+          this.onReject(this.counter)
+        )
       }
-
       const promiseFn = this.props.promiseFn || defaultProps.promiseFn
       if (promiseFn) {
-        this.start()
-        return promiseFn(this.props, this.abortController).then(
+        const props = { ...defaultProps, ...this.props }
+        return this.start(() => promiseFn(props, this.abortController)).then(
           this.onResolve(this.counter),
           this.onReject(this.counter)
         )
@@ -117,8 +132,8 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       const deferFn = this.props.deferFn || defaultProps.deferFn
       if (deferFn) {
         this.args = args
-        this.start()
-        return deferFn(args, { ...defaultProps, ...this.props }, this.abortController).then(
+        const props = { ...defaultProps, ...this.props }
+        return this.start(() => deferFn(args, props, this.abortController)).then(
           this.onResolve(this.counter),
           this.onReject(this.counter)
         )
@@ -128,7 +143,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     cancel() {
       this.counter++
       this.abortController.abort()
-      this.mounted && this.dispatch({ type: actionTypes.cancel, meta: { counter: this.counter } })
+      this.mounted && this.dispatch({ type: actionTypes.cancel, meta: this.getMeta() })
     }
 
     onResolve(counter) {
@@ -152,13 +167,17 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     setData(data, callback) {
-      this.mounted && this.dispatch({ type: actionTypes.fulfill, payload: data }, callback)
+      this.mounted &&
+        this.dispatch({ type: actionTypes.fulfill, payload: data, meta: this.getMeta() }, callback)
       return data
     }
 
     setError(error, callback) {
       this.mounted &&
-        this.dispatch({ type: actionTypes.reject, payload: error, error: true }, callback)
+        this.dispatch(
+          { type: actionTypes.reject, payload: error, error: true, meta: this.getMeta() },
+          callback
+        )
       return error
     }
 
@@ -187,6 +206,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       onReject: PropTypes.func,
       reducer: PropTypes.func,
       dispatcher: PropTypes.func,
+      debugLabel: PropTypes.string,
     }
   }
 
