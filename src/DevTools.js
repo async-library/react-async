@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 import { actionTypes, reducer } from "./reducer"
 import "./DevTools.css"
 
@@ -108,6 +109,10 @@ const DevTools = ({ children }) => {
       </div>
     </>
   )
+}
+
+DevTools.propTypes = {
+  children: PropTypes.node,
 }
 
 export default DevTools
