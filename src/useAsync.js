@@ -12,7 +12,7 @@ const useAsync = (arg1, arg2) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
-  const { reducer, dispatcher } = options
+  const { reducer, dispatcher = window.REACT_ASYNC_DEVTOOLS } = options
   const [state, _dispatch] = useReducer(
     reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
     options,

@@ -52,7 +52,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.debugLabel = props.debugLabel || defaultProps.debugLabel
 
       const _reducer = props.reducer || defaultProps.reducer
-      const _dispatcher = props.dispatcher || defaultProps.dispatcher
+      const _dispatcher = props.dispatcher || defaultProps.dispatcher || window.REACT_ASYNC_DEVTOOLS
       const reducer = _reducer
         ? (state, action) => _reducer(state, action, asyncReducer)
         : asyncReducer

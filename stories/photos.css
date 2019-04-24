@@ -1,0 +1,19 @@
+.photo {
+  display: inline-block;
+  width: 200px;
+  margin: 20px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.img {
+  display: inline-block;
+  background: #eee;
+  border-radius: 75px;
+  width: 150px;
+  height: 150px;
+}
+
+.title {
+  margin-top: 10px;
+}

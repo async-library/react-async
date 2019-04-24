@@ -1,4 +1,7 @@
 .devTools {
+  position: absolute;
+  top: 1em;
+  right: 1em;
   width: 20em;
   box-sizing: border-box;
   border: 1px solid #0366d6;
