@@ -2,21 +2,42 @@ import React from "react"
 import { actionTypes, reducer } from "./reducer"
 import "./DevTools.css"
 
-window.__REACT_ASYNC__ = { ...window.__REACT_ASYNC__ }
-
-const settings = {
+const state = {
   intercept: window.sessionStorage.getItem("intercept") === "true",
   latency: window.sessionStorage.getItem("latency") || "0",
+  update: () => {},
+}
+
+window.__REACT_ASYNC__ = window.__REACT_ASYNC__ || {}
+window.__REACT_ASYNC__.devToolsDispatcher = (action, dispatch) => {
+  const run = () => {
+    dispatch(action)
+    state.update(action)
+  }
+  switch (action.type) {
+    case actionTypes.start:
+      if (state.intercept) {
+        dispatch({ ...action, payload: undefined })
+        state.update(action, run)
+      } else run()
+      break
+    case actionTypes.fulfill:
+    case actionTypes.reject:
+      setTimeout(run, state.latency * 1000)
+      break
+    default:
+      run()
+  }
 }
 
 const DevTools = () => {
   const [instances, setInstances] = React.useState({})
-  const [interceptState, setIntercept] = React.useState(settings.intercept)
+  const [interceptState, setIntercept] = React.useState(state.intercept)
   const intercept = React.useRef(interceptState)
-  const [latencyState, setLatency] = React.useState(settings.latency)
+  const [latencyState, setLatency] = React.useState(state.latency)
   const delay = React.useRef(latencyState * 1000)
 
-  const updateState = (action, run) => {
+  state.update = (action, run) => {
     const label = action.meta.debugLabel
     setInstances(instances => ({
       ...instances,
@@ -26,34 +47,15 @@ const DevTools = () => {
   const updateLatency = event => {
     window.sessionStorage.setItem("latency", event.target.value)
     delay.current = event.target.value * 1000
+    state.latency = event.target.value
     setLatency(event.target.value)
   }
   const updateIntercept = event => {
     window.sessionStorage.setItem("intercept", event.target.checked ? "true" : "false")
+    state.intercept = event.target.checked
     intercept.current = event.target.checked
     setIntercept(event.target.checked)
   }
-
-  window.__REACT_ASYNC__.devToolsDispatcher = React.useCallback((action, dispatch) => {
-    const run = () => {
-      dispatch(action)
-      updateState(action)
-    }
-    switch (action.type) {
-      case actionTypes.start:
-        if (intercept.current) {
-          dispatch({ ...action, payload: undefined })
-          updateState(action, run)
-        } else run()
-        break
-      case actionTypes.fulfill:
-      case actionTypes.reject:
-        setTimeout(run, delay.current)
-        break
-      default:
-        run()
-    }
-  }, [])
 
   const states = Object.keys(instances).map(label => instances[label])
   const pending = states.filter(({ state }) => state.status === "pending")

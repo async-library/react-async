@@ -1,8 +1,6 @@
 import React from "react"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
-const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
-
 let PropTypes
 try {
   PropTypes = require("prop-types")
@@ -53,6 +51,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       }
       this.debugLabel = props.debugLabel || defaultProps.debugLabel
 
+      const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
       const _reducer = props.reducer || defaultProps.reducer
       const _dispatcher = props.dispatcher || defaultProps.dispatcher || devToolsDispatcher
       const reducer = _reducer

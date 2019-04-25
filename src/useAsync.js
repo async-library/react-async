@@ -1,7 +1,6 @@
 import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
-const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
 const noop = () => {}
 
 const useAsync = (arg1, arg2) => {
@@ -13,6 +12,7 @@ const useAsync = (arg1, arg2) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
+  const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
   const { reducer, dispatcher = devToolsDispatcher } = options
   const [state, _dispatch] = useReducer(
     reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
