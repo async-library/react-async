@@ -3,6 +3,8 @@ import PropTypes from "prop-types"
 import { actionTypes, reducer } from "./reducer"
 import "./DevTools.css"
 
+window.__REACT_ASYNC__ = { ...window.__REACT_ASYNC__ }
+
 const settings = {
   intercept: window.sessionStorage.getItem("intercept") === "true",
   latency: window.sessionStorage.getItem("latency") || "0",
@@ -33,7 +35,7 @@ const DevTools = ({ children }) => {
     setIntercept(event.target.checked)
   }
 
-  window.REACT_ASYNC_DEVTOOLS = React.useCallback((action, dispatch) => {
+  window.__REACT_ASYNC__.devToolsDispatcher = React.useCallback((action, dispatch) => {
     const run = () => {
       dispatch(action)
       updateState(action)
