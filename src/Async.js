@@ -1,7 +1,7 @@
 import React from "react"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
-const { devToolsDispatcher } = window.__REACT_ASYNC__
+const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
 
 let PropTypes
 try {
