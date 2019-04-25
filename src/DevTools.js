@@ -1,5 +1,4 @@
 import React from "react"
-import PropTypes from "prop-types"
 import { actionTypes, reducer } from "./reducer"
 import "./DevTools.css"
 
@@ -10,7 +9,7 @@ const settings = {
   latency: window.sessionStorage.getItem("latency") || "0",
 }
 
-const DevTools = ({ children }) => {
+const DevTools = () => {
   const [instances, setInstances] = React.useState({})
   const [interceptState, setIntercept] = React.useState(settings.intercept)
   const intercept = React.useRef(interceptState)
@@ -62,59 +61,52 @@ const DevTools = ({ children }) => {
   const rejected = states.filter(({ state }) => state.status === "rejected")
 
   return (
-    <>
-      {children}
-      <div className="devTools">
-        <div>
-          Latency:{" "}
-          <b>
-            {latencyState} {latencyState === "1" ? "second" : "seconds"}
-          </b>
-        </div>
-        <input type="range" max="5" value={latencyState} onChange={updateLatency} />
-        <label>
-          <input type="checkbox" checked={interceptState} onChange={updateIntercept} />
-          Pause new requests
-        </label>
-        {pending.length > 0 && (
-          <section>
-            <small>Pending</small>
-            <ol>
-              {pending.map(({ label, run }, index) => (
-                <li key={index}>
-                  {label} {run && <button onClick={run}>run</button>}
-                </li>
-              ))}
-            </ol>
-          </section>
-        )}
-        {fulfilled.length > 0 && (
-          <section>
-            <small>Fulfilled</small>
-            <ol>
-              {fulfilled.map((promise, index) => (
-                <li key={index}>{promise.label}</li>
-              ))}
-            </ol>
-          </section>
-        )}
-        {rejected.length > 0 && (
-          <section>
-            <small>Rejected</small>
-            <ol>
-              {rejected.map((promise, index) => (
-                <li key={index}>{promise.label}</li>
-              ))}
-            </ol>
-          </section>
-        )}
+    <div className="devTools">
+      <div>
+        Latency:{" "}
+        <b>
+          {latencyState} {latencyState === "1" ? "second" : "seconds"}
+        </b>
       </div>
-    </>
+      <input type="range" max="5" value={latencyState} onChange={updateLatency} />
+      <label>
+        <input type="checkbox" checked={interceptState} onChange={updateIntercept} />
+        Pause new requests
+      </label>
+      {pending.length > 0 && (
+        <section>
+          <small>Pending</small>
+          <ol>
+            {pending.map(({ label, run }, index) => (
+              <li key={index}>
+                {label} {run && <button onClick={run}>run</button>}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {fulfilled.length > 0 && (
+        <section>
+          <small>Fulfilled</small>
+          <ol>
+            {fulfilled.map((promise, index) => (
+              <li key={index}>{promise.label}</li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {rejected.length > 0 && (
+        <section>
+          <small>Rejected</small>
+          <ol>
+            {rejected.map((promise, index) => (
+              <li key={index}>{promise.label}</li>
+            ))}
+          </ol>
+        </section>
+      )}
+    </div>
   )
-}
-
-DevTools.propTypes = {
-  children: PropTypes.node,
 }
 
 export default DevTools

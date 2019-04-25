@@ -41,11 +41,12 @@ const Photo = ({ photoId, ...props }) => {
 
 const App = () => {
   return (
-    <DevTools>
+    <>
+      <DevTools />
       <Photo photoId={1} />
       <Photo photoId={2} />
       <Photo photoId={3} />
-    </DevTools>
+    </>
   )
 }
 
