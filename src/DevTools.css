@@ -2,7 +2,7 @@
   position: absolute;
   top: 1em;
   right: 1em;
-  width: 20em;
+  width: 15em;
   box-sizing: border-box;
   border: 1px solid #0366d6;
   border-radius: 1em;
@@ -25,6 +25,7 @@
 }
 
 .devTools input[type="checkbox"] {
+  margin-right: 0.5em;
   vertical-align: bottom;
 }
 
@@ -45,4 +46,18 @@
   padding: 0;
   list-style: none;
   line-height: 2em;
+}
+
+.devTools li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.devTools li button {
+  height: 1.6rem;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 0.5em;
+  background: #0366d6;
+  color: #fff;
 }
