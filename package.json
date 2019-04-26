@@ -12,10 +12,7 @@
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
   "homepage": "https://react-async.dev",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ghengeveld/react-async.git"
-  },
+  "repository": "git+https://github.com/ghengeveld/react-async.git",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -43,6 +40,7 @@
     "prop-types": ">=15.5.7"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.3",
     "@babel/plugin-proposal-object-rest-spread": "7.4.3",
     "@babel/plugin-transform-runtime": "7.4.3",
     "@babel/preset-env": "7.4.3",
@@ -52,8 +50,13 @@
     "@pika/plugin-build-types": "0.3.16",
     "@pika/plugin-build-web": "0.3.15",
     "@pika/plugin-standard-pkg": "0.3.15",
+    "@storybook/addon-actions": "^5.0.10",
+    "@storybook/addon-links": "^5.0.10",
+    "@storybook/addons": "^5.0.10",
+    "@storybook/react": "^5.0.10",
     "babel-eslint": "10.0.1",
     "babel-jest": "24.7.1",
+    "babel-loader": "^8.0.5",
     "eslint": "5.16.0",
     "eslint-config-prettier": "4.1.0",
     "eslint-plugin-jest": "22.4.1",
@@ -66,13 +69,7 @@
     "prettier": "1.17.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
-    "react-testing-library": "6.1.2",
-    "@storybook/react": "^5.0.10",
-    "@storybook/addon-actions": "^5.0.10",
-    "@storybook/addon-links": "^5.0.10",
-    "@storybook/addons": "^5.0.10",
-    "@babel/core": "^7.4.3",
-    "babel-loader": "^8.0.5"
+    "react-testing-library": "6.1.2"
   },
   "jest": {
     "collectCoverage": true,
