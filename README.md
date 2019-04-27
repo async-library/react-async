@@ -377,8 +377,14 @@ Callback function invoked when a promise rejects, receives rejection reason (err
 
 > `function(state: any, action: Object, internalReducer: function(state: any, action: Object))`
 
-State reducer to take full control over state updates by wrapping the internal reducer. It receives the current state,
-the dispatched action and the internal reducer. You probably want to invoke the internal reducer at some point.
+State reducer to take full control over state updates by wrapping the [internal reducer]. It receives the current
+state, the dispatched action and the internal reducer. You probably want to invoke the internal reducer at some point.
+
+> This is a power feature which loosely follows the [state reducer pattern]. It allows you to control state changes by
+> intercepting actions before they are handled, or by overriding or enhancing the reducer itself.
+
+[internal reducer]: https://github.com/ghengeveld/react-async/blob/master/src/reducer.js
+[state reducer pattern]: https://kentcdodds.com/blog/the-state-reducer-pattern
 
 #### `dispatcher`
 
@@ -387,6 +393,9 @@ the dispatched action and the internal reducer. You probably want to invoke the 
 Action dispatcher to take full control over action dispatching by wrapping the internal dispatcher. It receives the
 original action, the internal dispatcher and all component props (or options). You probably want to invoke the internal
 dispatcher at some point.
+
+> This is a power feature similar to the [state reducer pattern]. It allows you to control state changes by
+> intercepting actions before they are dispatched, to dispatch additional actions, possibly later in time.
 
 #### `defer`
 
