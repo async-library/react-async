@@ -1,5 +1,5 @@
 import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
-import { actionTypes, init, reducer } from "./reducer"
+import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
 const noop = () => {}
 
@@ -12,11 +12,21 @@ const useAsync = (arg1, arg2) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
-  const [state, dispatch] = useReducer(reducer, options, init)
+  const { reducer, dispatcher } = options
+  const [state, _dispatch] = useReducer(
+    reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
+    options,
+    init
+  )
+  const dispatch = dispatcher
+    ? action => dispatcher(action, dispatchMiddleware(_dispatch), options)
+    : dispatchMiddleware(_dispatch)
+
+  const getMeta = meta => ({ counter: counter.current, ...meta })
 
   const setData = (data, callback = noop) => {
     if (isMounted.current) {
-      dispatch({ type: actionTypes.fulfill, payload: data })
+      dispatch({ type: actionTypes.fulfill, payload: data, meta: getMeta() })
       callback()
     }
     return data
@@ -24,19 +34,10 @@ const useAsync = (arg1, arg2) => {
 
   const setError = (error, callback = noop) => {
     if (isMounted.current) {
-      dispatch({ type: actionTypes.reject, payload: error, error: true })
+      dispatch({ type: actionTypes.reject, payload: error, error: true, meta: getMeta() })
       callback()
     }
     return error
-  }
-
-  const start = () => {
-    if ("AbortController" in window) {
-      abortController.current.abort()
-      abortController.current = new window.AbortController()
-    }
-    counter.current++
-    isMounted.current && dispatch({ type: actionTypes.start, meta: { counter: counter.current } })
   }
 
   const { onResolve, onReject } = options
@@ -45,16 +46,30 @@ const useAsync = (arg1, arg2) => {
   const handleReject = count => error =>
     count === counter.current && setError(error, () => onReject && onReject(error))
 
+  const start = promiseFn => {
+    if ("AbortController" in window) {
+      abortController.current.abort()
+      abortController.current = new window.AbortController()
+    }
+    counter.current++
+    return new Promise((resolve, reject) => {
+      if (!isMounted.current) return
+      const executor = () => promiseFn().then(resolve, reject)
+      dispatch({ type: actionTypes.start, payload: executor, meta: getMeta() })
+    })
+  }
+
   const { promise, promiseFn, initialValue } = options
   const load = () => {
     if (promise) {
-      start()
-      return promise.then(handleResolve(counter.current), handleReject(counter.current))
+      return start(() => promise).then(
+        handleResolve(counter.current),
+        handleReject(counter.current)
+      )
     }
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
-      start()
-      return promiseFn(options, abortController.current).then(
+      return start(() => promiseFn(options, abortController.current)).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
@@ -65,8 +80,7 @@ const useAsync = (arg1, arg2) => {
   const run = (...args) => {
     if (deferFn) {
       lastArgs.current = args
-      start()
-      return deferFn(args, options, abortController.current).then(
+      return start(() => deferFn(args, options, abortController.current)).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
@@ -76,7 +90,7 @@ const useAsync = (arg1, arg2) => {
   const cancel = () => {
     counter.current++
     abortController.current.abort()
-    isMounted.current && dispatch({ type: actionTypes.cancel, meta: { counter: counter.current } })
+    isMounted.current && dispatch({ type: actionTypes.cancel, meta: getMeta() })
   }
 
   const { watch, watchFn } = options
@@ -101,7 +115,7 @@ const useAsync = (arg1, arg2) => {
       setData,
       setError,
     }),
-    [state, deferFn, onResolve, onReject]
+    [state, deferFn, onResolve, onReject, dispatcher, reducer]
   )
 }
 

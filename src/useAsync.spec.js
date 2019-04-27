@@ -4,7 +4,16 @@ import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
 import { useAsync, useFetch } from "./index"
-import { resolveTo, common, withPromise, withPromiseFn, withDeferFn } from "./specs"
+import {
+  sleep,
+  resolveTo,
+  common,
+  withPromise,
+  withPromiseFn,
+  withDeferFn,
+  withReducer,
+  withDispatcher,
+} from "./specs"
 
 const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 window.AbortController = jest.fn(() => abortCtrl)
@@ -26,6 +35,8 @@ describe("useAsync", () => {
   describe("with `promise`", withPromise(Async, abortCtrl))
   describe("with `promiseFn`", withPromiseFn(Async, abortCtrl))
   describe("with `deferFn`", withDeferFn(Async, abortCtrl))
+  describe("with `reducer`", withReducer(Async, abortCtrl))
+  describe("with `dispatcher`", withDispatcher(Async, abortCtrl))
 
   test("accepts [promiseFn, options] shorthand, with the former taking precedence", async () => {
     const promiseFn1 = () => resolveTo("done")
@@ -66,10 +77,10 @@ describe("useAsync", () => {
     const { getByText } = render(<App />)
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 0 }), abortCtrl)
     fireEvent.click(getByText("inc"))
-    await resolveTo() // resolve promiseFn
+    await sleep(10) // resolve promiseFn
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
     fireEvent.click(getByText("run"))
-    await resolveTo() // resolve deferFn
+    await sleep(10) // resolve deferFn
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
   })
 })
