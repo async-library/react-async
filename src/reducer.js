@@ -53,5 +53,14 @@ export const reducer = (state, { type, payload, meta }) => {
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.rejected),
       }
+    default:
+      return state
+  }
+}
+
+export const dispatchMiddleware = dispatch => (action, ...args) => {
+  dispatch(action, ...args)
+  if (action.type === actionTypes.start && typeof action.payload === "function") {
+    action.payload()
   }
 }

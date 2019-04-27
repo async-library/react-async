@@ -9,6 +9,7 @@ export const resolveTo = resolveIn(0)
 export const rejectIn = ms => err =>
   new Promise((resolve, reject) => setTimeout(reject, ms, new Error(err)))
 export const rejectTo = rejectIn(0)
+export const sleep = ms => resolveIn(ms)()
 
 export const common = Async => () => {
   test("passes `data`, `error`, metadata and methods as render props", async () => {
@@ -99,14 +100,14 @@ export const withPromise = Async => () => {
   test("invokes `onResolve` callback when the promise resolves", async () => {
     const onResolve = jest.fn()
     render(<Async promise={resolveTo("ok")} onResolve={onResolve} />)
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).toHaveBeenCalledWith("ok")
   })
 
   test("invokes `onReject` callback when the promise rejects", async () => {
     const onReject = jest.fn()
     render(<Async promise={rejectTo("err")} onReject={onReject} />)
-    await resolveTo()
+    await sleep(10)
     expect(onReject).toHaveBeenCalledWith(new Error("err"))
   })
 
@@ -114,7 +115,7 @@ export const withPromise = Async => () => {
     const onResolve = jest.fn()
     const { unmount } = render(<Async promise={resolveTo("ok")} onResolve={onResolve} />)
     unmount()
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).not.toHaveBeenCalled()
   })
 
@@ -124,7 +125,7 @@ export const withPromise = Async => () => {
     const onResolve = jest.fn()
     const { rerender } = render(<Async promise={promise1} onResolve={onResolve} />)
     rerender(<Async promise={promise2} onResolve={onResolve} />)
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).not.toHaveBeenCalledWith("one")
     expect(onResolve).toHaveBeenCalledWith("two")
   })
@@ -133,7 +134,7 @@ export const withPromise = Async => () => {
     const onResolve = jest.fn()
     const { rerender } = render(<Async promise={resolveTo()} onResolve={onResolve} />)
     rerender(<Async onResolve={onResolve} />)
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).not.toHaveBeenCalled()
   })
 
@@ -191,14 +192,14 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
   test("invokes `onResolve` callback when the promise resolves", async () => {
     const onResolve = jest.fn()
     render(<Async promiseFn={() => resolveTo("ok")} onResolve={onResolve} />)
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).toHaveBeenCalledWith("ok")
   })
 
   test("invokes `onReject` callback when the promise rejects", async () => {
     const onReject = jest.fn()
     render(<Async promiseFn={() => rejectTo("err")} onReject={onReject} />)
-    await resolveTo()
+    await sleep(10)
     expect(onReject).toHaveBeenCalledWith(new Error("err"))
   })
 
@@ -280,7 +281,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     const onResolve = jest.fn()
     const { unmount } = render(<Async promiseFn={() => resolveTo("ok")} onResolve={onResolve} />)
     unmount()
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).not.toHaveBeenCalled()
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
@@ -291,7 +292,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     const onResolve = jest.fn()
     const { rerender } = render(<Async promiseFn={promiseFn1} onResolve={onResolve} />)
     rerender(<Async promiseFn={promiseFn2} onResolve={onResolve} />)
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).not.toHaveBeenCalledWith("one")
     expect(onResolve).toHaveBeenCalledWith("two")
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
@@ -301,7 +302,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     const onResolve = jest.fn()
     const { rerender } = render(<Async promiseFn={() => resolveTo()} onResolve={onResolve} />)
     rerender(<Async onResolve={onResolve} />)
-    await resolveTo()
+    await sleep(10)
     expect(onResolve).not.toHaveBeenCalled()
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
@@ -309,7 +310,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
   test("does not run `promiseFn` on mount when `initialValue` is provided", async () => {
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
     render(<Async promiseFn={promiseFn} initialValue={{}} />)
-    await resolveTo()
+    await sleep(10)
     expect(promiseFn).not.toHaveBeenCalled()
   })
 
@@ -413,5 +414,83 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     i++
     fireEvent.click(getByText("run"))
     await waitForElement(() => getByText("done"))
+  })
+}
+
+export const withReducer = Async => () => {
+  test("receives state, action and the original reducer", async () => {
+    const promise = resolveTo("done")
+    const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
+    const { getByText } = render(
+      <Async promise={promise} reducer={reducer}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("done"))
+    expect(reducer).toHaveBeenCalledWith(
+      expect.objectContaining({ status: expect.any(String) }),
+      expect.objectContaining({ type: expect.any(String) }),
+      expect.any(Function)
+    )
+  })
+
+  test("allows overriding state updates", async () => {
+    const promise = resolveTo("done")
+    const reducer = (state, action, asyncReducer) => {
+      if (action.type === "fulfill") action.payload = "cool"
+      return asyncReducer(state, action)
+    }
+    const { getByText } = render(
+      <Async promise={promise} reducer={reducer}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("cool"))
+  })
+}
+
+export const withDispatcher = Async => () => {
+  test("receives action, the original dispatch method and options", async () => {
+    const promise = resolveTo("done")
+    const dispatcher = jest.fn((action, dispatch) => dispatch(action))
+    const props = { promise, dispatcher }
+    const { getByText } = render(<Async {...props}>{({ data }) => data || null}</Async>)
+    await waitForElement(() => getByText("done"))
+    expect(dispatcher).toHaveBeenCalledWith(
+      expect.objectContaining({ type: expect.any(String) }),
+      expect.any(Function),
+      expect.objectContaining(props)
+    )
+  })
+
+  test("allows overriding actions before dispatch", async () => {
+    const promise = resolveTo("done")
+    const dispatcher = (action, dispatch) => {
+      if (action.type === "fulfill") action.payload = "cool"
+      dispatch(action)
+    }
+    const { getByText } = render(
+      <Async promise={promise} dispatcher={dispatcher}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("cool"))
+  })
+
+  test("allows dispatching additional actions", async () => {
+    const promise = resolveTo("done")
+    const customAction = { type: "custom" }
+    const dispatcher = (action, dispatch) => {
+      dispatch(action)
+      dispatch(customAction)
+    }
+    const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
+    const { getByText } = render(
+      <Async promise={promise} dispatcher={dispatcher} reducer={reducer}>
+        {({ data }) => data || null}
+      </Async>
+    )
+    await waitForElement(() => getByText("done"))
+    expect(reducer).toHaveBeenCalledWith(expect.anything(), customAction, expect.anything())
   })
 }

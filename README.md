@@ -335,6 +335,8 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `initialValue` Provide initial data or error for server-side rendering.
 - `onResolve` Callback invoked when Promise resolves.
 - `onReject` Callback invoked when Promise rejects.
+- `reducer` State reducer to control internal state updates.
+- `dispatcher` Action dispatcher to control internal action dispatching.
 
 `useFetch` additionally takes these options:
 
@@ -407,6 +409,30 @@ Callback function invoked when a promise resolves, receives data as argument.
 > `function(reason: Error): void`
 
 Callback function invoked when a promise rejects, receives rejection reason (error) as argument.
+
+#### `reducer`
+
+> `function(state: any, action: Object, internalReducer: function(state: any, action: Object))`
+
+State reducer to take full control over state updates by wrapping the [internal reducer]. It receives the current
+state, the dispatched action and the internal reducer. You probably want to invoke the internal reducer at some point.
+
+> This is a power feature which loosely follows the [state reducer pattern]. It allows you to control state changes by
+> intercepting actions before they are handled, or by overriding or enhancing the reducer itself.
+
+[internal reducer]: https://github.com/ghengeveld/react-async/blob/master/src/reducer.js
+[state reducer pattern]: https://kentcdodds.com/blog/the-state-reducer-pattern
+
+#### `dispatcher`
+
+> `function(action: Object, internalDispatch: function(action: Object), props: Object)`
+
+Action dispatcher to take full control over action dispatching by wrapping the internal dispatcher. It receives the
+original action, the internal dispatcher and all component props (or options). You probably want to invoke the internal
+dispatcher at some point.
+
+> This is a power feature similar to the [state reducer pattern]. It allows you to control state changes by
+> intercepting actions before they are dispatched, to dispatch additional actions, possibly later in time.
 
 #### `defer`
 

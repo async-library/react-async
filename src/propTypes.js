@@ -40,6 +40,8 @@ export default PropTypes && {
     initialValue: PropTypes.any,
     onResolve: PropTypes.func,
     onReject: PropTypes.func,
+    reducer: PropTypes.func,
+    dispatcher: PropTypes.func,
   },
   Initial: {
     children: childrenFn.isRequired,
