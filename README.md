@@ -64,8 +64,8 @@ error states, without assumptions about the shape of your data or the type of re
   - [As a hook](#as-a-hook)
     - [With `useFetch`](#with-usefetch)
   - [As a component](#as-a-component)
-    - [With helper components](#with-helper-components)
   - [As a factory](#as-a-factory)
+  - [With helper components](#with-helper-components)
 - [API](#api)
   - [Options](#options)
   - [Render props](#render-props)
@@ -168,6 +168,9 @@ const MyComponent = () => {
 }
 ```
 
+> Using [helper components](#with-helper-components) can greatly improve readability of your render functions by not
+> having to write all those conditional returns.
+
 Or using the shorthand version:
 
 ```jsx
@@ -231,11 +234,68 @@ const MyComponent = () => (
 )
 ```
 
-#### With helper components
+> Using [helper components](#with-helper-components) can greatly improve readability of your render functions by not
+> having to write all those conditional returns.
 
-Several [helper components](#helper-components) are available for better legibility. These don't have to be direct
-children of `<Async>`, because they use Context, offering full flexibility. You can even use render props and helper
-components together.
+### As a factory
+
+You can also create your own component instances, allowing you to preconfigure them with options such as default
+`onResolve` and `onReject` callbacks.
+
+```jsx
+import { createInstance } from "react-async"
+
+const loadCustomer = ({ customerId }, { signal }) =>
+  fetch(`/api/customers/${customerId}`, { signal })
+    .then(res => (res.ok ? res : Promise.reject(res)))
+    .then(res => res.json())
+
+// createInstance takes a defaultProps object and a displayName (both optional)
+const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer")
+
+const MyComponent = () => (
+  <AsyncCustomer customerId={1}>
+    <AsyncCustomer.Fulfilled>{customer => `Hello ${customer.name}`}</AsyncCustomer.Fulfilled>
+  </AsyncCustomer>
+)
+```
+
+### With helper components
+
+Several [helper components](#helper-components) are available to improve legibility. They can be used with `useAsync`
+by passing in the state, or with `<Async>` by using Context. Each of these components simply enables or disables
+rendering of its children based on the current state.
+
+```jsx
+import { useAsync, Pending, Fulfilled, Rejected } from "react-async"
+
+const loadCustomer = async ({ customerId }, { signal }) => {
+  // ...
+}
+
+const MyComponent = () => {
+  const state = useAsync({ promiseFn: loadCustomer, customerId: 1 })
+  return (
+    <>
+      <Pending state={state}>Loading...</Pending>
+      <Rejected state={state}>{error => `Something went wrong: ${error.message}`}</Rejected>
+      <Fulfilled state={state}>
+        {data => (
+          <div>
+            <strong>Loaded some data:</strong>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+        )}
+      </Fulfilled>
+    </>
+  )
+}
+```
+
+#### As compounds to <Async>
+
+Each of the helper components are also available as static properties of `<Async>`. In this case you won't have to pass
+the state object, instead it will be automatically provided through Context.
 
 ```jsx
 import Async from "react-async"
@@ -258,29 +318,6 @@ const MyComponent = () => (
     </Async.Fulfilled>
     <Async.Rejected>{error => `Something went wrong: ${error.message}`}</Async.Rejected>
   </Async>
-)
-```
-
-### As a factory
-
-You can also create your own component instances, allowing you to preconfigure them with options such as default
-`onResolve` and `onReject` callbacks.
-
-```jsx
-import { createInstance } from "react-async"
-
-const loadCustomer = ({ customerId }, { signal }) =>
-  fetch(`/api/customers/${customerId}`, { signal })
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
-
-// createInstance takes a defaultProps object and a displayName (both optional)
-const AsyncCustomer = createInstance({ promiseFn: loadCustomer }, "AsyncCustomer")
-
-const MyComponent = () => (
-  <AsyncCustomer customerId={1}>
-    <AsyncCustomer.Fulfilled>{customer => `Hello ${customer.name}`}</AsyncCustomer.Fulfilled>
-  </AsyncCustomer>
 )
 ```
 
@@ -554,16 +591,26 @@ invoked after the state update is completed. Returns the error to enable chainin
 React Async provides several helper components that make your JSX more declarative and less cluttered.
 They don't have to be direct children of `<Async>` and you can use the same component several times.
 
-### `<Async.Initial>`
+### `<Initial>` / `<Async.Initial>`
 
 Renders only while the deferred promise is still waiting to be run, or you have not provided any promise.
 
 #### Props
 
-- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
 - `children` `function(state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object (return value of `useAsync()`).
+- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
 
 #### Examples
+
+```jsx
+const state = useAsync(...)
+return (
+  <Initial state={state}>
+    <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
+  </Initial>
+)
+```
 
 ```jsx
 <Async deferFn={deferFn}>
@@ -587,7 +634,7 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 </Async.Initial>
 ```
 
-### `<Async.Pending>`
+### `<Pending>` / `<Async.Pending>`
 
 This component renders only while the promise is pending (aka loading) (unsettled).
 
@@ -595,10 +642,20 @@ Alias: `<Async.Loading>`
 
 #### Props
 
-- `initial` `boolean` Show only on initial load (when `data` is `undefined`).
 - `children` `function(state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object (return value of `useAsync()`).
+- `initial` `boolean` Show only on initial load (when `data` is `undefined`).
 
 #### Examples
+
+```jsx
+const state = useAsync(...)
+return (
+  <Pending state={state}>
+    <p>This text is only rendered while performing the initial load.</p>
+  </Pending>
+)
+```
 
 ```jsx
 <Async.Pending initial>
@@ -610,7 +667,7 @@ Alias: `<Async.Loading>`
 <Async.Pending>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Pending>
 ```
 
-### `<Async.Fulfilled>`
+### `<Fulfilled>` / `<Async.Fulfilled>`
 
 This component renders only when the promise is fulfilled with data (`data !== undefined`).
 
@@ -618,10 +675,20 @@ Alias: `<Async.Resolved>`
 
 #### Props
 
-- `persist` `boolean` Show old data while loading new data. By default it hides as soon as a new promise starts.
 - `children` `function(data: any, state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object (return value of `useAsync()`).
+- `persist` `boolean` Show old data while loading new data. By default it hides as soon as a new promise starts.
 
 #### Examples
+
+```jsx
+const state = useAsync(...)
+return (
+  <Fulfilled state={state}>
+    {data => <pre>{JSON.stringify(data)}</pre>}
+  </Fulfilled>
+)
+```
 
 ```jsx
 <Async.Fulfilled persist>{data => <pre>{JSON.stringify(data)}</pre>}</Async.Fulfilled>
@@ -633,16 +700,22 @@ Alias: `<Async.Resolved>`
 </Async.Fulfilled>
 ```
 
-### `<Async.Rejected>`
+### `<Rejected>` / `<Async.Rejected>`
 
 This component renders only when the promise is rejected.
 
 #### Props
 
-- `persist` `boolean` Show old error while loading new data. By default it hides as soon as a new promise starts.
 - `children` `function(error: Error, state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object (return value of `useAsync()`).
+- `persist` `boolean` Show old error while loading new data. By default it hides as soon as a new promise starts.
 
 #### Examples
+
+```jsx
+const state = useAsync(...)
+return <Rejected state={state}>Oops.</Rejected>
+```
 
 ```jsx
 <Async.Rejected persist>Oops.</Async.Rejected>
@@ -652,14 +725,22 @@ This component renders only when the promise is rejected.
 <Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
 ```
 
-### `<Async.Settled>`
+### `<Settled>` / `<Async.Settled>`
 
 This component renders only when the promise is fulfilled or rejected.
 
 #### Props
 
-- `persist` `boolean` Show old data or error while loading new data. By default it hides as soon as a new promise starts.
 - `children` `function(state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object (return value of `useAsync()`).
+- `persist` `boolean` Show old data or error while loading new data. By default it hides as soon as a new promise starts.
+
+#### Examples
+
+```jsx
+const state = useAsync(...)
+return <Settled state={state}>{state => `Finished at ${state.finishedAt.toISOString()}`</Settled>
+```
 
 ## Usage examples
 
