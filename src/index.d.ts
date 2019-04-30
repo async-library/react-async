@@ -4,6 +4,16 @@ export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | Rea
 export type PromiseFn<T> = (props: object, controller: AbortController) => Promise<T>
 export type DeferFn<T> = (args: any[], props: object, controller: AbortController) => Promise<T>
 
+interface AbstractAction {
+  type: string
+  meta: { counter: number; [meta: string]: any }
+}
+export type Start = AbstractAction & { type: "start"; payload: () => Promise<void> }
+export type Cancel = AbstractAction & { type: "cancel" }
+export type Fulfill<T> = AbstractAction & { type: "fulfill"; payload: T }
+export type Reject = AbstractAction & { type: "reject"; payload: Error; error: true }
+export type AsyncAction<T> = Start | Cancel | Fulfill<T> | Reject
+
 export interface AsyncOptions<T> {
   promise?: Promise<T>
   promiseFn?: PromiseFn<T>
@@ -13,6 +23,16 @@ export interface AsyncOptions<T> {
   initialValue?: T
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
+  reducer?: (
+    state: AsyncState<T>,
+    action: AsyncAction<T>,
+    internalReducer: (state: AsyncState<T>, action: AsyncAction<T>) => AsyncState<T>
+  ) => AsyncState<T>
+  dispatcher?: (
+    action: AsyncAction<T>,
+    internalDispatch: (action: AsyncAction<T>) => void,
+    props: object
+  ) => void
   [prop: string]: any
 }
 
