@@ -1,14 +1,7 @@
 import React from "react"
+import { Initial, Pending, Fulfilled, Rejected, Settled } from "./helpers"
+import propTypes from "./propTypes"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
-
-let PropTypes
-try {
-  PropTypes = require("prop-types")
-} catch (e) {}
-
-const isFunction = arg => typeof arg === "function"
-const renderFn = (children, ...args) =>
-  isFunction(children) ? children(...args) : children === undefined ? null : children
 
 /**
  * createInstance allows you to create instances of Async that are bound to a specific promise.
@@ -184,7 +177,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     render() {
       const { children } = this.props
-      if (isFunction(children)) {
+      if (typeof children === "function") {
         return <Provider value={this.state}>{children(this.state)}</Provider>
       }
       if (children !== undefined && children !== null) {
@@ -194,136 +187,28 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
   }
 
-  if (PropTypes) {
-    Async.propTypes = {
-      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-      promise: PropTypes.instanceOf(Promise),
-      promiseFn: PropTypes.func,
-      deferFn: PropTypes.func,
-      watch: PropTypes.any,
-      watchFn: PropTypes.func,
-      initialValue: PropTypes.any,
-      onResolve: PropTypes.func,
-      onReject: PropTypes.func,
-      reducer: PropTypes.func,
-      dispatcher: PropTypes.func,
-      debugLabel: PropTypes.string,
-    }
-  }
+  if (propTypes) Async.propTypes = propTypes.Async
 
-  /**
-   * Renders only when no promise has started or completed yet.
-   *
-   * @prop {Function|Node} children Function (passing state) or React node
-   * @prop {boolean} persist Show until we have data, even while pending (loading) or when an error occurred
-   */
-  const Initial = ({ children, persist }) => (
-    <Consumer>
-      {state => (state.isInitial || (persist && !state.data) ? renderFn(children, state) : null)}
-    </Consumer>
-  )
+  const AsyncInitial = props => <Consumer>{st => <Initial {...props} state={st} />}</Consumer>
+  const AsyncPending = props => <Consumer>{st => <Pending {...props} state={st} />}</Consumer>
+  const AsyncFulfilled = props => <Consumer>{st => <Fulfilled {...props} state={st} />}</Consumer>
+  const AsyncRejected = props => <Consumer>{st => <Rejected {...props} state={st} />}</Consumer>
+  const AsyncSettled = props => <Consumer>{st => <Settled {...props} state={st} />}</Consumer>
 
-  if (PropTypes) {
-    Initial.propTypes = {
-      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-      persist: PropTypes.bool,
-    }
-  }
-
-  /**
-   * Renders only while pending (promise is loading).
-   *
-   * @prop {Function|Node} children Function (passing state) or React node
-   * @prop {boolean} initial Show only on initial load (data/error is undefined)
-   */
-  const Pending = ({ children, initial }) => (
-    <Consumer>
-      {state => (state.isPending && (!initial || !state.value) ? renderFn(children, state) : null)}
-    </Consumer>
-  )
-
-  if (PropTypes) {
-    Pending.propTypes = {
-      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-      initial: PropTypes.bool,
-    }
-  }
-
-  /**
-   * Renders only when promise is resolved.
-   *
-   * @prop {Function|Node} children Function (passing data and state) or React node
-   * @prop {boolean} persist Show old data while pending (promise is loading)
-   */
-  const Fulfilled = ({ children, persist }) => (
-    <Consumer>
-      {state =>
-        state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null
-      }
-    </Consumer>
-  )
-
-  if (PropTypes) {
-    Fulfilled.propTypes = {
-      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-      persist: PropTypes.bool,
-    }
-  }
-
-  /**
-   * Renders only when promise is rejected.
-   *
-   * @prop {Function|Node} children Function (passing error and state) or React node
-   * @prop {boolean} persist Show old error while pending (promise is loading)
-   */
-  const Rejected = ({ children, persist }) => (
-    <Consumer>
-      {state =>
-        state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null
-      }
-    </Consumer>
-  )
-
-  if (PropTypes) {
-    Rejected.propTypes = {
-      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-      persist: PropTypes.bool,
-    }
-  }
-
-  /**
-   * Renders only when promise is fulfilled or rejected.
-   *
-   * @prop {Function|Node} children Function (passing state) or React node
-   * @prop {boolean} persist Continue rendering while loading new data
-   */
-  const Settled = ({ children, persist }) => (
-    <Consumer>
-      {state => (state.isSettled || (persist && state.value) ? renderFn(children, state) : null)}
-    </Consumer>
-  )
-
-  if (PropTypes) {
-    Settled.propTypes = {
-      children: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired,
-      persist: PropTypes.bool,
-    }
-  }
-
-  Initial.displayName = `${displayName}.Initial`
-  Pending.displayName = `${displayName}.Pending`
-  Fulfilled.displayName = `${displayName}.Fulfilled`
-  Rejected.displayName = `${displayName}.Rejected`
-  Settled.displayName = `${displayName}.Settled`
+  AsyncInitial.displayName = `${displayName}.Initial`
+  AsyncPending.displayName = `${displayName}.Pending`
+  AsyncFulfilled.displayName = `${displayName}.Fulfilled`
+  AsyncRejected.displayName = `${displayName}.Rejected`
+  AsyncSettled.displayName = `${displayName}.Settled`
 
   Async.displayName = displayName
-  Async.Initial = Initial
-  Async.Pending = Pending
-  Async.Loading = Pending // alias
-  Async.Fulfilled = Fulfilled
-  Async.Resolved = Fulfilled // alias
-  Async.Rejected = Rejected
-  Async.Settled = Settled
+  Async.Initial = AsyncInitial
+  Async.Pending = AsyncPending
+  Async.Loading = AsyncPending // alias
+  Async.Fulfilled = AsyncFulfilled
+  Async.Resolved = AsyncFulfilled // alias
+  Async.Rejected = AsyncRejected
+  Async.Settled = AsyncSettled
 
   return Async
 }

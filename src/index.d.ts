@@ -13,6 +13,7 @@ export interface AsyncOptions<T> {
   initialValue?: T
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
+  debugLabel?: string
   [prop: string]: any
 }
 
