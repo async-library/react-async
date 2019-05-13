@@ -1,5 +1,6 @@
 import React from "react"
-import { actionTypes, reducer } from "./reducer"
+import { actionTypes, reducer } from "react-async"
+
 import "./DevTools.css"
 
 const state = {

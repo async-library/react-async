@@ -1,19 +1,41 @@
 {
-  "name": "root",
+  "name": "react-async",
   "version": "6.2.0",
-  "private": true,
+  "description": "React component for declarative promise resolution and data fetching",
+  "keywords": [
+    "react",
+    "async",
+    "promise",
+    "fetch",
+    "hook"
+  ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
   "homepage": "https://react-async.dev",
-  "repository": "git+https://github.com/ghengeveld/react-async.git",
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghengeveld/react-async.git",
+    "directory": "packages/react-async"
   },
-  "dependencies": {},
+  "main": "src",
+  "scripts": {
+    "lint": "eslint src",
+    "test": "jest src/*.spec.js",
+    "test:watch": "yarn test -- --watch",
+    "test:hooks": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
+    "test:components": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
+    "test:backwards": "yarn add react@16.3.1 react-dom@16.3.1 && yarn test:components",
+    "test:forwards": "yarn add react@next react-dom@next && yarn test",
+    "test:latest": "yarn add react@latest react-dom@latest && yarn test",
+    "test:ci": "yarn test:backwards && yarn test:forwards && yarn test:latest",
+    "build": "pack build",
+    "publish": "pack publish",
+    "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
+  },
+  "dependencies": {
+    "react": "16.8.6",
+    "react-dom": "16.8.6"
+  },
   "peerDependencies": {
     "react": ">=16.3.1"
   },
