@@ -7,7 +7,7 @@ import { resolveIn, resolveTo, rejectTo } from "./specs"
 afterEach(cleanup)
 
 describe("Fulfilled", () => {
-  test("renders only after the promise is resolved", async () => {
+  test.skip("renders only after the promise is resolved", async () => {
     const promiseFn = () => resolveTo("ok")
     const deferFn = () => rejectTo("fail")
     const { getByText, queryByText } = render(
@@ -32,7 +32,7 @@ describe("Fulfilled", () => {
     expect(queryByText("fail")).toBeInTheDocument()
   })
 
-  test("with persist renders old data on error", async () => {
+  test.skip("with persist renders old data on error", async () => {
     const promiseFn = () => resolveTo("ok")
     const deferFn = () => rejectTo("fail")
     const { getByText, queryByText } = render(
