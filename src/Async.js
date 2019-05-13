@@ -126,7 +126,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         const props = { ...defaultProps, ...this.props }
         return this.start(() => deferFn(args, props, this.abortController)).then(
           this.onResolve(this.counter),
-          this.onReject(this.counter)
+          error => this.onReject(this.counter) && Promise.reject(error)
         )
       }
     }

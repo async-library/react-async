@@ -44,7 +44,7 @@ const useAsync = (arg1, arg2) => {
   const handleResolve = count => data =>
     count === counter.current && setData(data, () => onResolve && onResolve(data))
   const handleReject = count => error =>
-    count === counter.current && Promise.reject(setError(error, () => onReject && onReject(error)))
+    count === counter.current && setError(error, () => onReject && onReject(error))
 
   const start = promiseFn => {
     if ("AbortController" in window) {
@@ -82,7 +82,7 @@ const useAsync = (arg1, arg2) => {
       lastArgs.current = args
       return start(() => deferFn(args, options, abortController.current)).then(
         handleResolve(counter.current),
-        handleReject(counter.current)
+        error => handleReject(counter.current) && Promise.reject(error)
       )
     }
   }
