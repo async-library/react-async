@@ -82,7 +82,7 @@ const useAsync = (arg1, arg2) => {
       lastArgs.current = args
       return start(() => deferFn(args, options, abortController.current)).then(
         handleResolve(counter.current),
-        error => handleReject(counter.current) && Promise.reject(error)
+        error => handleReject(counter.current)(error) && Promise.reject(error)
       )
     }
   }
