@@ -865,7 +865,7 @@ render() {
 
 ## Who's using React Async?
 
-<a href="https://xebia.com"><img src="https://user-images.githubusercontent.com/321738/52999660-a9949780-3426-11e9-9a7e-42b400f4ccbe.png" height="40" alt="Xebia" /></a> <a href="https://intergamma.nl"><img src="https://user-images.githubusercontent.com/321738/52999676-b5805980-3426-11e9-899e-6c9669176df4.png" height="40" alt="Intergamma" /></a>
+<a href="https://xebia.com"><img src="https://user-images.githubusercontent.com/321738/52999660-a9949780-3426-11e9-9a7e-42b400f4ccbe.png" height="40" alt="Xebia" /></a> <a href="https://intergamma.nl"><img src="https://user-images.githubusercontent.com/321738/52999676-b5805980-3426-11e9-899e-6c9669176df4.png" height="40" alt="Intergamma" /></a> <a href="https://www.bol.com"><img src="https://user-images.githubusercontent.com/321738/57380602-8ff32880-71a9-11e9-9936-a8bc77f2518b.png" height="40" alt="bol.com" /></a>
 
 Your organization here? [Let us know](https://github.com/ghengeveld/react-async/issues/22) you're using React Async!
 
