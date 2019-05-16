@@ -30,7 +30,7 @@
     "test:ci": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "build": "pack build",
     "publish": "pack publish",
-    "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
+    "preversion": "npm run lint && npm run test:compat && npm run build"
   },
   "dependencies": {
     "react": "16.8.6",

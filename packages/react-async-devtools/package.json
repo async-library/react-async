@@ -23,7 +23,7 @@
     "test:ci": "jest src/*.spec.js",
     "build": "pack build",
     "publish": "pack publish",
-    "prepublishOnly": "npm run lint && npm run test && npm run build"
+    "preversion": "npm run lint && npm run test && npm run build"
   },
   "dependencies": {},
   "peerDependencies": {
