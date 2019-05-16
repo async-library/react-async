@@ -31,7 +31,7 @@
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
     "build": "pack build",
     "publish": "pack publish",
-    "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
+    "preversion": "npm run lint && npm run test:compat && npm run build"
   },
   "dependencies": {},
   "peerDependencies": {
