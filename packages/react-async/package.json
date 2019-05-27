@@ -27,10 +27,11 @@
     "test:backwards": "yarn add react@16.3.1 react-dom@16.3.1 && yarn test:components",
     "test:forwards": "yarn add react@next react-dom@next && yarn test",
     "test:latest": "yarn add react@latest react-dom@latest && yarn test",
-    "test:ci": "yarn test:backwards && yarn test:forwards && yarn test:latest",
+    "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
+    "ci": "yarn lint && yarn test:compat",
     "build": "pack build",
     "publish": "pack publish",
-    "preversion": "npm run lint && npm run test:compat && npm run build"
+    "preversion": "yarn lint && yarn test:compat && yarn build"
   },
   "dependencies": {
     "react": "16.8.6",

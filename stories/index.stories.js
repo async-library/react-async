@@ -1,8 +1,8 @@
 import React from "react"
 import { storiesOf } from "@storybook/react"
 
-import { useAsync } from "../react-async/src"
-import DevTools from "../react-async-devtools/src"
+import { useAsync } from "../packages/react-async/src"
+import DevTools from "../packages/react-async-devtools/src"
 import "./photos.css"
 
 const loadPhoto = ({ photoId }) =>

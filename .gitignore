@@ -1,5 +1,7 @@
-pkg/
-node_modules/
 coverage/
+docs/
+node_modules/
+pkg/
+
 package-lock.json
 yarn.lock
