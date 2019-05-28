@@ -1,7 +1,7 @@
 import React from "react"
 import { actionTypes, reducer } from "react-async"
 
-import "./DevTools.css"
+import { Root, Range, Checkbox, Label, Small, Ol, Li, Button } from "./components"
 
 const state = {
   intercept: window.sessionStorage.getItem("intercept") === "true",
@@ -64,51 +64,51 @@ const DevTools = () => {
   const rejected = states.filter(({ state }) => state.status === "rejected")
 
   return (
-    <div className="devTools">
-      <div>
+    <Root>
+      <Label>
         Latency:{" "}
         <b>
           {latencyState} {latencyState === "1" ? "second" : "seconds"}
         </b>
-      </div>
-      <input type="range" max="5" value={latencyState} onChange={updateLatency} />
-      <label>
-        <input type="checkbox" checked={interceptState} onChange={updateIntercept} />
+        <Range max="5" value={latencyState} onChange={updateLatency} />
+      </Label>
+      <Label>
+        <Checkbox checked={interceptState} onChange={updateIntercept} />
         Pause new requests
-      </label>
+      </Label>
       {pending.length > 0 && (
         <section>
-          <small>Pending</small>
-          <ol>
+          <Small>Pending</Small>
+          <Ol>
             {pending.map(({ label, run }, index) => (
-              <li key={index}>
-                {label} {run && <button onClick={run}>run</button>}
-              </li>
+              <Li key={index}>
+                {label} {run && <Button onClick={run}>run</Button>}
+              </Li>
             ))}
-          </ol>
+          </Ol>
         </section>
       )}
       {fulfilled.length > 0 && (
         <section>
-          <small>Fulfilled</small>
-          <ol>
+          <Small>Fulfilled</Small>
+          <Ol>
             {fulfilled.map((promise, index) => (
-              <li key={index}>{promise.label}</li>
+              <Li key={index}>{promise.label}</Li>
             ))}
-          </ol>
+          </Ol>
         </section>
       )}
       {rejected.length > 0 && (
         <section>
-          <small>Rejected</small>
-          <ol>
+          <Small>Rejected</Small>
+          <Ol>
             {rejected.map((promise, index) => (
-              <li key={index}>{promise.label}</li>
+              <Li key={index}>{promise.label}</Li>
             ))}
-          </ol>
+          </Ol>
         </section>
       )}
-    </div>
+    </Root>
   )
 }
 
