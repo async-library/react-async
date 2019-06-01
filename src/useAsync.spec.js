@@ -31,12 +31,12 @@ const Fetch = ({ children = () => null, input, init, options }) =>
   children(useFetch(input, init, options))
 
 describe("useAsync", () => {
-  describe("common", common(Async, abortCtrl))
-  describe("with `promise`", withPromise(Async, abortCtrl))
+  describe("common", common(Async))
+  describe("with `promise`", withPromise(Async))
   describe("with `promiseFn`", withPromiseFn(Async, abortCtrl))
   describe("with `deferFn`", withDeferFn(Async, abortCtrl))
-  describe("with `reducer`", withReducer(Async, abortCtrl))
-  describe("with `dispatcher`", withDispatcher(Async, abortCtrl))
+  describe("with `reducer`", withReducer(Async))
+  describe("with `dispatcher`", withDispatcher(Async))
 
   test("accepts [promiseFn, options] shorthand, with the former taking precedence", async () => {
     const promiseFn1 = () => resolveTo("done")
