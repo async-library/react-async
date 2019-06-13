@@ -1,6 +1,6 @@
-import * as React from "react"
+import { Component } from "react"
 
-export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
+export type AsyncChildren<T> = ((state: AsyncState<T>) => JSX.Element) | JSX.Element
 export type PromiseFn<T> = (props: object, controller: AbortController) => Promise<T>
 export type DeferFn<T> = (args: any[], props: object, controller: AbortController) => Promise<T>
 
@@ -114,40 +114,28 @@ export type AsyncRejected<T> = AbstractState<T> & {
 }
 export type AsyncState<T> = AsyncInitial<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
-declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+declare class Async<T> extends Component<AsyncProps<T>, AsyncState<T>> {}
 
 declare namespace Async {
-  export function Initial<T>(props: {
-    children?: AsyncChildren<T>
-    persist?: boolean
-  }): React.ReactNode
-  export function Pending<T>(props: {
-    children?: AsyncChildren<T>
-    initial?: boolean
-  }): React.ReactNode
-  export function Loading<T>(props: {
-    children?: AsyncChildren<T>
-    initial?: boolean
-  }): React.ReactNode
+  export function Initial<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  export function Pending<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
+  export function Loading<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
   export function Fulfilled<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
-  }): React.ReactNode
+  }): JSX.Element
   export function Resolved<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
-  }): React.ReactNode
+  }): JSX.Element
   export function Rejected<T>(props: {
     children?: AsyncChildren<T>
     persist?: boolean
-  }): React.ReactNode
-  export function Settled<T>(props: {
-    children?: AsyncChildren<T>
-    persist?: boolean
-  }): React.ReactNode
+  }): JSX.Element
+  export function Settled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
 }
 
-declare function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
+export function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
 
 export function useAsync<T>(
   arg1: AsyncOptions<T> | PromiseFn<T>,
@@ -165,4 +153,4 @@ export function useFetch<T>(
   options?: FetchOptions<T>
 ): AsyncState<T>
 
-export default createInstance
+export default Async

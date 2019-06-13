@@ -21,9 +21,8 @@
     "test": "jest src/*.spec.js",
     "test:watch": "yarn test -- --watch",
     "ci": "yarn lint && yarn test",
-    "build": "pack build",
-    "publish": "pack publish",
-    "preversion": "yarn lint && yarn test && yarn build"
+    "build": "yarn lint && yarn test && yarn && pack build",
+    "publish": "yarn build && pack publish"
   },
   "dependencies": {},
   "peerDependencies": {

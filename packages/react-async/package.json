@@ -29,9 +29,8 @@
     "test:latest": "yarn add react@latest react-dom@latest && yarn test",
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "ci": "yarn lint && yarn test:compat",
-    "build": "pack build",
-    "publish": "pack publish",
-    "preversion": "yarn lint && yarn test:compat && yarn build"
+    "build": "yarn lint && yarn test:compat && yarn && pack build",
+    "publish": "yarn build && pack publish"
   },
   "dependencies": {
     "react": "16.8.6",

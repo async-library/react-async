@@ -7,9 +7,9 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <Async promiseFn={() => Promise.resolve("foo")}>{({ data }: { data: string }) => data}</Async>
+          <Async promiseFn={() => Promise.resolve("foo")}>{({ data }) => <>{data}</>}</Async>
           <Async promiseFn={() => Promise.resolve("bar")}>
-            <Async.Pending>{(data: string) => data}</Async.Pending>
+            <Async.Resolved>{data => <>{data}</>}</Async.Resolved>
           </Async>
         </header>
       </div>
