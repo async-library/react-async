@@ -29,9 +29,8 @@
     "test:forwards": "npm i react@next react-dom@next --no-save && npm test",
     "test:latest": "npm i react@latest react-dom@latest --no-save && npm test",
     "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
-    "build": "pack build",
-    "publish": "pack publish",
-    "prepublishOnly": "npm run lint && npm run test:compat && npm run build"
+    "build": "npm run lint && npm run test:compat && npm i && pack build",
+    "publish": "npm run build && pack publish"
   },
   "dependencies": {},
   "peerDependencies": {
