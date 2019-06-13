@@ -146,7 +146,7 @@ declare namespace Async {
   }): React.ReactNode
 }
 
-declare function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
+export function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
 
 export function useAsync<T>(
   arg1: AsyncOptions<T> | PromiseFn<T>,
@@ -164,4 +164,4 @@ export function useFetch<T>(
   options?: FetchOptions<T>
 ): AsyncState<T>
 
-export default createInstance
+export default Async
