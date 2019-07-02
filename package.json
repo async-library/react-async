@@ -20,8 +20,7 @@
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "ci": "yarn lint && yarn test:compat",
     "build": "lerna run build",
-    "bump": "yarn workspaces run lerna version",
-    "publish": "yarn build && lerna publish from-package --contents pkg",
+    "bump": "yarn workspaces run lerna version && yarn build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs"
   },
