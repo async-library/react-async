@@ -1,3 +1,1 @@
-console.log("Loading Babel configuration")
-
-module.exports = require("../../babel.config")
+module.exports = require("../../babel.config.js")

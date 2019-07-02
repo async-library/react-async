@@ -1,10 +1,13 @@
+/* eslint-disable no-console */
+console.log("Loaded babel.config.js")
+
 module.exports = {
   presets: ["@babel/preset-env", "@babel/preset-react"],
   plugins: ["@babel/plugin-proposal-object-rest-spread"],
-  include: ["../../packages"],
+
   env: {
     test: {
-      presets: ["@babel/preset-env"],
+      presets: ["@babel/preset-env", "@babel/preset-react"],
       plugins: ["@babel/plugin-transform-runtime"],
     },
   },
