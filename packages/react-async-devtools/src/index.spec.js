@@ -1,6 +1,6 @@
 import "jest-dom/extend-expect"
 import React from "react"
-import { render, cleanup, waitForElement } from "react-testing-library"
+import { render, cleanup, waitForElement } from "@testing-library/react"
 import DevTools from "./index"
 
 afterEach(cleanup)

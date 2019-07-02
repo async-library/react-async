@@ -2,7 +2,7 @@
 
 import "jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, waitForElement } from "react-testing-library"
+import { render, fireEvent, waitForElement } from "@testing-library/react"
 
 export const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
 export const resolveTo = resolveIn(0)
