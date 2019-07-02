@@ -21,7 +21,7 @@
     "ci": "yarn lint && yarn test:compat",
     "build": "lerna run build",
     "bump": "yarn workspaces run lerna version",
-    "publish": "lerna publish from-package --contents pkg",
+    "publish": "yarn build && lerna publish from-package --contents pkg",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs"
   },
