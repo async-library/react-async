@@ -33,9 +33,7 @@
     "@pika/plugin-build-types": "0.3.16",
     "@pika/plugin-build-web": "0.3.15",
     "@pika/plugin-standard-pkg": "0.3.15",
-    "react": "16.8.6",
-    "react-async": "6.2.0",
-    "react-dom": "16.8.6"
+    "react-async": "6.2.0"
   },
   "@pika/pack": {
     "pipeline": [
