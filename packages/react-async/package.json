@@ -19,7 +19,8 @@
   },
   "main": "src",
   "scripts": {
-    "build": "pack build"
+    "build": "pack build",
+    "publish": "npm publish pkg"
   },
   "dependencies": {},
   "peerDependencies": {
