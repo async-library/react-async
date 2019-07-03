@@ -33,6 +33,7 @@ export interface AsyncOptions<T> {
     internalDispatch: (action: AsyncAction<T>) => void,
     props: object
   ) => void
+  debugLabel?: string
   [prop: string]: any
 }
 

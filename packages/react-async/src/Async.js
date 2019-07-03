@@ -42,9 +42,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         setData: this.setData,
         setError: this.setError,
       }
+      this.debugLabel = props.debugLabel || defaultProps.debugLabel
 
+      const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
       const _reducer = props.reducer || defaultProps.reducer
-      const _dispatcher = props.dispatcher || defaultProps.dispatcher
+      const _dispatcher = props.dispatcher || defaultProps.dispatcher || devToolsDispatcher
       const reducer = _reducer
         ? (state, action) => _reducer(state, action, asyncReducer)
         : asyncReducer
@@ -84,6 +86,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     getMeta(meta) {
       return {
         counter: this.counter,
+        debugLabel: this.debugLabel,
         ...meta,
       }
     }

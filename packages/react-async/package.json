@@ -1,0 +1,61 @@
+{
+  "name": "react-async",
+  "version": "6.2.2",
+  "description": "React component for declarative promise resolution and data fetching",
+  "keywords": [
+    "react",
+    "async",
+    "promise",
+    "fetch",
+    "hook"
+  ],
+  "author": "Gert Hengeveld <info@ghengeveld.nl>",
+  "license": "ISC",
+  "homepage": "https://react-async.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghengeveld/react-async.git",
+    "directory": "packages/react-async"
+  },
+  "main": "src",
+  "scripts": {
+    "build": "pack build",
+    "publish": "npm publish pkg"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": ">=16.3.1"
+  },
+  "optionalDependencies": {
+    "prop-types": ">=15.5.7"
+  },
+  "devDependencies": {
+    "@pika/pack": "0.3.7",
+    "@pika/plugin-build-node": "0.3.15",
+    "@pika/plugin-build-types": "0.3.16",
+    "@pika/plugin-build-web": "0.3.15",
+    "@pika/plugin-standard-pkg": "0.3.15"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-standard-pkg",
+        {
+          "exclude": [
+            "specs.js",
+            "*.spec.js"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ],
+      [
+        "@pika/plugin-build-types"
+      ]
+    ]
+  }
+}

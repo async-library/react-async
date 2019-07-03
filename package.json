@@ -1,38 +1,32 @@
 {
-  "name": "react-async",
-  "version": "6.2.2",
-  "description": "React component for declarative promise resolution and data fetching",
-  "keywords": [
-    "react",
-    "async",
-    "promise",
-    "fetch",
-    "hook"
-  ],
+  "name": "root",
+  "private": true,
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
   "homepage": "https://react-async.dev",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ghengeveld/react-async.git"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
+  "repository": "git+https://github.com/ghengeveld/react-async.git",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "lint": "eslint src",
-    "test": "jest src/*.spec.js",
-    "test:watch": "npm test -- --watch",
-    "test:hooks": "jest src/useAsync.spec.js --collectCoverageFrom=src/useAsync.js",
+    "bootstrap": "lerna bootstrap",
+    "lint": "eslint packages/*/src/*.js",
+    "test": "jest packages/*/src/*.spec.js",
+    "test:watch": "yarn test -- --watch",
+    "test:devtools": "jest react-async-devtools/src",
     "test:components": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
-    "test:backwards": "npm i react@16.3.1 react-dom@16.3.1 --no-save && npm run test:components",
-    "test:forwards": "npm i react@next react-dom@next --no-save && npm test",
-    "test:latest": "npm i react@latest react-dom@latest --no-save && npm test",
-    "test:compat": "npm run test:backwards && npm run test:forwards && npm run test:latest",
-    "build": "npm run lint && npm run test:compat && npm i && pack build",
-    "publish": "npm run build && pack publish"
+    "test:backwards": "yarn add -D -W react@16.3.1 react-dom@16.3.1 && yarn test:components",
+    "test:forwards": "yarn add -D -W react@next react-dom@next && yarn test",
+    "test:latest": "yarn add -D -W react@latest react-dom@latest && yarn test",
+    "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
+    "ci": "yarn lint && yarn test:compat",
+    "build": "lerna run build",
+    "bump": "yarn workspaces run lerna version && yarn build",
+    "publish:react-async": "npm publish packages/react-async/pkg",
+    "publish:devtools": "npm publish packages/react-async-devtools/pkg",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook -o docs"
   },
-  "dependencies": {},
   "peerDependencies": {
     "react": ">=16.3.1"
   },
@@ -40,55 +34,31 @@
     "prop-types": ">=15.5.7"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-object-rest-spread": "7.4.3",
-    "@babel/plugin-transform-runtime": "7.4.3",
-    "@babel/preset-env": "7.4.3",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-object-rest-spread": "7.4.4",
+    "@babel/plugin-transform-runtime": "7.4.4",
+    "@babel/preset-env": "7.4.5",
     "@babel/preset-react": "7.0.0",
-    "@pika/pack": "0.3.7",
-    "@pika/plugin-build-node": "0.3.15",
-    "@pika/plugin-build-types": "0.3.16",
-    "@pika/plugin-build-web": "0.3.15",
-    "@pika/plugin-standard-pkg": "0.3.15",
-    "babel-eslint": "10.0.1",
-    "babel-jest": "24.7.1",
-    "eslint": "5.16.0",
-    "eslint-config-prettier": "4.1.0",
-    "eslint-plugin-jest": "22.4.1",
-    "eslint-plugin-prettier": "3.0.1",
-    "eslint-plugin-promise": "4.1.1",
-    "eslint-plugin-react": "7.12.4",
-    "eslint-plugin-react-hooks": "1.6.0",
-    "jest": "24.7.1",
-    "jest-dom": "3.1.3",
+    "@storybook/addon-actions": "^5.1.9",
+    "@storybook/addon-links": "^5.1.9",
+    "@storybook/addons": "^5.1.9",
+    "@storybook/react": "^5.1.9",
+    "@testing-library/react": "^8.0.4",
+    "babel-eslint": "10.0.2",
+    "babel-jest": "24.8.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "6.0.1",
+    "eslint-config-prettier": "6.0.0",
+    "eslint-plugin-jest": "22.7.1",
+    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-react": "7.14.2",
+    "eslint-plugin-react-hooks": "1.6.1",
+    "jest": "24.8.0",
+    "jest-dom": "3.5.0",
+    "lerna": "^3.15.0",
     "prettier": "1.17.0",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
-    "react-testing-library": "6.1.2"
-  },
-  "jest": {
-    "collectCoverage": true,
-    "coverageDirectory": "./coverage/"
-  },
-  "@pika/pack": {
-    "pipeline": [
-      [
-        "@pika/plugin-standard-pkg",
-        {
-          "exclude": [
-            "specs.js",
-            "*.spec.js"
-          ]
-        }
-      ],
-      [
-        "@pika/plugin-build-node"
-      ],
-      [
-        "@pika/plugin-build-web"
-      ],
-      [
-        "@pika/plugin-build-types"
-      ]
-    ]
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   }
 }

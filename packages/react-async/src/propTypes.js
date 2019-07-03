@@ -42,6 +42,7 @@ export default PropTypes && {
     onReject: PropTypes.func,
     reducer: PropTypes.func,
     dispatcher: PropTypes.func,
+    debugLabel: PropTypes.string,
   },
   Initial: {
     children: childrenFn.isRequired,

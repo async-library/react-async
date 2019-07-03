@@ -2,7 +2,7 @@
 
 import "jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, cleanup, waitForElement } from "react-testing-library"
+import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
 import { useAsync, useFetch } from "./index"
 import {
   sleep,
@@ -14,6 +14,7 @@ import {
   withReducer,
   withDispatcher,
 } from "./specs"
+import "../../../jest.setup"
 
 const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 window.AbortController = jest.fn(() => abortCtrl)

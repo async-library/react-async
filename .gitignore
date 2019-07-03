@@ -1,4 +1,6 @@
-pkg/
-node_modules/
 coverage/
-package-lock.json
+docs/
+node_modules/
+pkg/
+
+examples/*/yarn.lock

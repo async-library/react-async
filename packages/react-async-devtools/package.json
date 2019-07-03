@@ -1,0 +1,58 @@
+{
+  "name": "react-async-devtools",
+  "version": "0.0.0",
+  "description": "DevTools for React Async",
+  "keywords": [
+    "react",
+    "async",
+    "devtools"
+  ],
+  "author": "Gert Hengeveld <info@ghengeveld.nl>",
+  "license": "ISC",
+  "homepage": "https://react-async.dev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ghengeveld/react-async.git",
+    "directory": "packages/react-async-devtools"
+  },
+  "main": "src",
+  "scripts": {
+    "build": "pack build",
+    "publish": "npm publish pkg"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": ">=16.3.1",
+    "react-async": ">=6.2.0"
+  },
+  "optionalDependencies": {
+    "prop-types": ">=15.5.7"
+  },
+  "devDependencies": {
+    "@pika/pack": "0.3.7",
+    "@pika/plugin-build-node": "0.3.15",
+    "@pika/plugin-build-types": "0.3.16",
+    "@pika/plugin-build-web": "0.3.15",
+    "@pika/plugin-standard-pkg": "0.3.15",
+    "react-async": "6.2.0"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-standard-pkg",
+        {
+          "exclude": [
+            "specs.js",
+            "*.spec.js"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web"
+      ]
+    ]
+  }
+}

@@ -337,6 +337,7 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `onReject` Callback invoked when Promise rejects.
 - `reducer` State reducer to control internal state updates.
 - `dispatcher` Action dispatcher to control internal action dispatching.
+- `debugLabel` Unique label used in DevTools.
 
 `useFetch` additionally takes these options:
 
@@ -433,6 +434,13 @@ dispatcher at some point.
 
 > This is a power feature similar to the [state reducer pattern]. It allows you to control state changes by
 > intercepting actions before they are dispatched, to dispatch additional actions, possibly later in time.
+
+#### `debugLabel`
+
+> `string`
+
+A unique label to describe this React Async instance, used in React DevTools (through `useDebugValue`) and React Async
+DevTools.
 
 #### `defer`
 

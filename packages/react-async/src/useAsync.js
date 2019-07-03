@@ -12,7 +12,8 @@ const useAsync = (arg1, arg2) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
-  const { reducer, dispatcher } = options
+  const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
+  const { reducer, dispatcher = devToolsDispatcher } = options
   const [state, _dispatch] = useReducer(
     reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
     options,
@@ -22,7 +23,7 @@ const useAsync = (arg1, arg2) => {
     ? action => dispatcher(action, dispatchMiddleware(_dispatch), options)
     : dispatchMiddleware(_dispatch)
 
-  const getMeta = meta => ({ counter: counter.current, ...meta })
+  const getMeta = meta => ({ counter: counter.current, debugLabel: options.debugLabel, ...meta })
 
   const setData = (data, callback = noop) => {
     if (isMounted.current) {
