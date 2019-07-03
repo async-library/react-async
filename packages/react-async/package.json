@@ -1,6 +1,6 @@
 {
   "name": "react-async",
-  "version": "6.2.2",
+  "version": "7.0.0",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
@@ -22,7 +22,6 @@
     "build": "pack build",
     "publish": "npm publish pkg"
   },
-  "dependencies": {},
   "peerDependencies": {
     "react": ">=16.3.1"
   },
