@@ -13,6 +13,7 @@
     "lint": "eslint packages/*/src/*.js",
     "test": "jest packages/*/src/*.spec.js",
     "test:watch": "yarn test -- --watch",
+    "test:devtools": "jest react-async-devtools/src",
     "test:components": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
     "test:backwards": "yarn add -D -W react@16.3.1 react-dom@16.3.1 && yarn test:components",
     "test:forwards": "yarn add -D -W react@next react-dom@next && yarn test",

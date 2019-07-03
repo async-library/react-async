@@ -14,6 +14,7 @@ import {
   withReducer,
   withDispatcher,
 } from "./specs"
+import "../../../jest.setup"
 
 const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 window.AbortController = jest.fn(() => abortCtrl)

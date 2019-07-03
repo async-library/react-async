@@ -25,6 +25,7 @@ export const Root = props => (
 export const Range = props => (
   <input
     type="range"
+    role="slider"
     {...props}
     style={{
       fontSize: "inherit",

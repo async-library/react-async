@@ -9,4 +9,5 @@ module.exports = {
   bail: true,
   transform: { "^.+\\.js$": "babel-jest" },
   projects: ["<rootDir>/packages/*"],
+  setupFiles: ["<rootDir>/jest.setup.js"],
 }
