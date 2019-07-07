@@ -469,8 +469,8 @@ is set to `"application/json"`.
 - `status` One of: `initial`, `pending`, `fulfilled`, `rejected`.
 - `isInitial` true when no promise has ever started, or one started but was cancelled.
 - `isPending` true when a promise is currently awaiting settlement. Alias: `isLoading`
-- `isFulfilled` true when the last promise was fulfilled with a value. Alias: `isResolved`
-- `isRejected` true when the last promise was rejected with a reason.
+- `isFulfilled` true when the last promise was fulfilled. Alias: `isResolved`
+- `isRejected` true when the last promise was rejected.
 - `isSettled` true when the last promise was fulfilled or rejected (not initial or pending).
 - `counter` The number of times a promise was started.
 - `cancel` Cancel any pending promise.
@@ -532,7 +532,7 @@ These are available for import as `statusTypes`.
 
 > `boolean`
 
-`true` while a promise is pending (aka loading), `false` otherwise.
+`true` while a promise is pending (loading), `false` otherwise.
 
 Alias: `isLoading`
 
@@ -540,7 +540,7 @@ Alias: `isLoading`
 
 > `boolean`
 
-`true` when the last promise was fulfilled (aka resolved) with a value.
+`true` when the last promise was fulfilled (resolved to a value).
 
 Alias: `isResolved`
 
@@ -548,7 +548,7 @@ Alias: `isResolved`
 
 > `boolean`
 
-`true` when the last promise was rejected with an error.
+`true` when the last promise was rejected.
 
 #### `isSettled`
 
@@ -644,7 +644,7 @@ return (
 
 ### `<Pending>` / `<Async.Pending>`
 
-This component renders only while the promise is pending (aka loading) (unsettled).
+This component renders only while the promise is pending (loading / unsettled).
 
 Alias: `<Async.Loading>`
 
@@ -677,7 +677,7 @@ return (
 
 ### `<Fulfilled>` / `<Async.Fulfilled>`
 
-This component renders only when the promise is fulfilled with data (`data !== undefined`).
+This component renders only when the promise is fulfilled (resolved to a value, could be `undefined`).
 
 Alias: `<Async.Resolved>`
 
