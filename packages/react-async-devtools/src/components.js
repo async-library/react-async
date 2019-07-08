@@ -15,6 +15,7 @@ export const Root = props => (
       boxShadow: "0 2px 1em #00000022",
       background: "white",
       padding: "1em",
+      color: "#000",
       fontSize: "1rem",
       fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif`,
       ...props.style,
@@ -53,6 +54,7 @@ export const Label = props => (
   <label
     {...props}
     style={{
+      fontSize: "inherit",
       display: "block",
       marginBottom: "1.5em",
       ...props.style,
@@ -66,6 +68,7 @@ export const Small = props => (
     style={{
       display: "block",
       marginTop: "0.5em",
+      fontSize: "0.75em",
       textTransform: "uppercase",
       opacity: "0.5",
       ...props.style,
@@ -106,6 +109,7 @@ export const Button = props => (
       border: "0",
       borderRadius: "0.5em",
       background: "#0366d6",
+      fontSize: "0.75em",
       color: "#fff",
       ...props.style,
     }}
