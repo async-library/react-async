@@ -56,6 +56,13 @@ export const common = Async => () => {
     await waitForElement(() => getByText("outer undefined"))
     await waitForElement(() => getByText("outer inner"))
   })
+
+  test("does not cancel on initial mount", async () => {
+    const onCancel = jest.fn()
+    const { getByText } = render(<Async onCancel={onCancel}>{() => "done"}</Async>)
+    await waitForElement(() => getByText("done"))
+    expect(onCancel).not.toHaveBeenCalled()
+  })
 }
 
 export const withPromise = Async => () => {
@@ -112,29 +119,41 @@ export const withPromise = Async => () => {
   })
 
   test("cancels a pending promise when unmounted", async () => {
+    const onCancel = jest.fn()
     const onResolve = jest.fn()
-    const { unmount } = render(<Async promise={resolveTo("ok")} onResolve={onResolve} />)
+    const { unmount } = render(
+      <Async promise={resolveTo("ok")} onCancel={onCancel} onResolve={onResolve} />
+    )
     unmount()
     await sleep(10)
+    expect(onCancel).toHaveBeenCalled()
     expect(onResolve).not.toHaveBeenCalled()
   })
 
   test("cancels and restarts the promise when `promise` changes", async () => {
     const promise1 = resolveTo("one")
     const promise2 = resolveTo("two")
+    const onCancel = jest.fn()
     const onResolve = jest.fn()
-    const { rerender } = render(<Async promise={promise1} onResolve={onResolve} />)
-    rerender(<Async promise={promise2} onResolve={onResolve} />)
+    const { rerender } = render(
+      <Async promise={promise1} onCancel={onCancel} onResolve={onResolve} />
+    )
+    rerender(<Async promise={promise2} onCancel={onCancel} onResolve={onResolve} />)
     await sleep(10)
+    expect(onCancel).toHaveBeenCalled()
     expect(onResolve).not.toHaveBeenCalledWith("one")
     expect(onResolve).toHaveBeenCalledWith("two")
   })
 
   test("cancels the promise when `promise` is unset", async () => {
+    const onCancel = jest.fn()
     const onResolve = jest.fn()
-    const { rerender } = render(<Async promise={resolveTo()} onResolve={onResolve} />)
-    rerender(<Async onResolve={onResolve} />)
+    const { rerender } = render(
+      <Async promise={resolveTo()} onCancel={onCancel} onResolve={onResolve} />
+    )
+    rerender(<Async onCancel={onCancel} onResolve={onResolve} />)
     await sleep(10)
+    expect(onCancel).toHaveBeenCalled()
     expect(onResolve).not.toHaveBeenCalled()
   })
 
@@ -241,10 +260,11 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
+    expect(abortCtrl.abort).toHaveBeenCalled()
+    abortCtrl.abort.mockClear()
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(3)
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(2)
+    expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
   test("re-runs the promise when `watchFn` returns truthy", () => {
@@ -271,17 +291,21 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(1)
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(0)
+    expect(abortCtrl.abort).not.toHaveBeenCalled()
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
+    expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
   test("cancels a pending promise when unmounted", async () => {
+    const onCancel = jest.fn()
     const onResolve = jest.fn()
-    const { unmount } = render(<Async promiseFn={() => resolveTo("ok")} onResolve={onResolve} />)
+    const { unmount } = render(
+      <Async promiseFn={() => resolveTo("ok")} onCancel={onCancel} onResolve={onResolve} />
+    )
     unmount()
     await sleep(10)
+    expect(onCancel).toHaveBeenCalled()
     expect(onResolve).not.toHaveBeenCalled()
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
@@ -289,13 +313,16 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
   test("cancels and restarts the promise when `promiseFn` changes", async () => {
     const promiseFn1 = () => resolveTo("one")
     const promiseFn2 = () => resolveTo("two")
+    const onCancel = jest.fn()
     const onResolve = jest.fn()
-    const { rerender } = render(<Async promiseFn={promiseFn1} onResolve={onResolve} />)
-    rerender(<Async promiseFn={promiseFn2} onResolve={onResolve} />)
+    const { rerender } = render(
+      <Async promiseFn={promiseFn1} onCancel={onCancel} onResolve={onResolve} />
+    )
+    rerender(<Async promiseFn={promiseFn2} onCancel={onCancel} onResolve={onResolve} />)
     await sleep(10)
+    expect(onCancel).toHaveBeenCalled()
     expect(onResolve).not.toHaveBeenCalledWith("one")
     expect(onResolve).toHaveBeenCalledWith("two")
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
   test("cancels the promise when `promiseFn` is unset", async () => {

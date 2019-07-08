@@ -65,16 +65,24 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     componentDidUpdate(prevProps) {
       const { watch, watchFn = defaultProps.watchFn, promise, promiseFn } = this.props
-      if (watch !== prevProps.watch) this.load()
-      if (watchFn && watchFn({ ...defaultProps, ...this.props }, { ...defaultProps, ...prevProps }))
-        this.load()
+      if (watch !== prevProps.watch) {
+        if (this.counter) this.cancel()
+        return this.load()
+      }
+      if (
+        watchFn &&
+        watchFn({ ...defaultProps, ...this.props }, { ...defaultProps, ...prevProps })
+      ) {
+        if (this.counter) this.cancel()
+        return this.load()
+      }
       if (promise !== prevProps.promise) {
-        if (promise) this.load()
-        else this.cancel()
+        if (this.counter) this.cancel()
+        if (promise) return this.load()
       }
       if (promiseFn !== prevProps.promiseFn) {
-        if (promiseFn) this.load()
-        else this.cancel()
+        if (this.counter) this.cancel()
+        if (promiseFn) return this.load()
       }
     }
 
@@ -135,6 +143,8 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     cancel() {
+      const onCancel = this.props.onCancel || defaultProps.onCancel
+      onCancel && onCancel()
       this.counter++
       this.abortController.abort()
       this.mounted && this.dispatch({ type: actionTypes.cancel, meta: this.getMeta() })

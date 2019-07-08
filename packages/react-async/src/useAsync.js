@@ -89,6 +89,7 @@ const useAsync = (arg1, arg2) => {
   }
 
   const cancel = () => {
+    options.onCancel && options.onCancel()
     counter.current++
     abortController.current.abort()
     isMounted.current && dispatch({ type: actionTypes.cancel, meta: getMeta() })
@@ -99,10 +100,11 @@ const useAsync = (arg1, arg2) => {
     if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
   })
   useEffect(() => {
-    promise || promiseFn ? load() : cancel()
+    if (counter.current) cancel()
+    if (promise || promiseFn) load()
   }, [promise, promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
-  useEffect(() => () => abortController.current.abort(), [])
+  useEffect(() => () => cancel(), [])
   useEffect(() => (prevOptions.current = options) && undefined)
 
   useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)

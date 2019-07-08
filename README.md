@@ -41,7 +41,7 @@ error states, without assumptions about the shape of your data or the type of re
 - Provides convenient `isLoading`, `startedAt`, `finishedAt`, et al metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
-- Accepts `onResolve` and `onReject` callbacks
+- Accepts `onResolve`, `onReject` and `onCancel` callbacks
 - Supports [abortable fetch] by providing an AbortController
 - Supports optimistic updates using `setData`
 - Supports server-side rendering through `initialValue`
@@ -335,6 +335,7 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `initialValue` Provide initial data or error for server-side rendering.
 - `onResolve` Callback invoked when Promise resolves.
 - `onReject` Callback invoked when Promise rejects.
+- `onCancel` Callback invoked when a Promise is cancelled.
 - `reducer` State reducer to control internal state updates.
 - `dispatcher` Action dispatcher to control internal action dispatching.
 - `debugLabel` Unique label used in DevTools.
@@ -410,6 +411,13 @@ Callback function invoked when a promise resolves, receives data as argument.
 > `function(reason: Error): void`
 
 Callback function invoked when a promise rejects, receives rejection reason (error) as argument.
+
+#### `onCancel`
+
+> `function(): void`
+
+Callback function invoked when a promise is cancelled, either manually using `cancel()` or automatically due to props
+changes or unmounting.
 
 #### `reducer`
 
