@@ -6,6 +6,7 @@
   "homepage": "https://react-async.dev",
   "repository": "git+https://github.com/ghengeveld/react-async.git",
   "workspaces": [
+    "examples/*",
     "packages/*"
   ],
   "scripts": {
