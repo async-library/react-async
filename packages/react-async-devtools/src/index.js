@@ -5,11 +5,14 @@ import { Root, Range, Checkbox, Label, Small, Ol, Li, Button } from "./component
 
 const root =
   (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global)
+  (typeof global === "object" && global.global === global && global) ||
+  {}
+
+const storage = root.sessionStorage
 
 const state = {
-  intercept: root.sessionStorage.getItem("intercept") === "true",
-  latency: root.sessionStorage.getItem("latency") || "0",
+  intercept: (storage && storage.getItem("intercept") === "true") || false,
+  latency: (storage && storage.getItem("latency")) || "0",
   update: () => {},
 }
 
@@ -50,13 +53,13 @@ const DevTools = () => {
     }))
   }
   const updateLatency = event => {
-    root.sessionStorage.setItem("latency", event.target.value)
+    storage && storage.setItem("latency", event.target.value)
     delay.current = event.target.value * 1000
     state.latency = event.target.value
     setLatency(event.target.value)
   }
   const updateIntercept = event => {
-    root.sessionStorage.setItem("intercept", event.target.checked ? "true" : "false")
+    storage && storage.setItem("intercept", event.target.checked ? "true" : "false")
     state.intercept = event.target.checked
     intercept.current = event.target.checked
     setIntercept(event.target.checked)
