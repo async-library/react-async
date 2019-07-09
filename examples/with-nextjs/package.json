@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@weco/next-plugin-transpile-modules": "^2.2.1",
     "isomorphic-fetch": "2.2.1",
     "next": "8.0.3",
     "react": "16.8.5",
