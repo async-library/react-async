@@ -21,7 +21,7 @@
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "ci": "yarn lint && yarn test:compat",
     "build": "lerna run build",
-    "bump": "yarn workspaces run lerna version",
+    "bump": "lerna version",
     "postbump": "yarn build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs"
