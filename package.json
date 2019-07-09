@@ -22,7 +22,7 @@
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "ci": "yarn lint && yarn test:compat",
     "build": "lerna run build",
-    "bump": "lerna version",
+    "bump": "lerna version -m \"Bump\"",
     "postbump": "yarn build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs"
