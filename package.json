@@ -60,5 +60,8 @@
     "prettier": "1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
+  },
+  "dependencies": {
+    "copyfiles": "^2.1.0"
   }
 }

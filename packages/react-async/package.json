@@ -20,6 +20,7 @@
   "main": "src",
   "scripts": {
     "build": "pack build",
+    "postbuild": "copyfiles -f ../../LICENSE ../../README.md pkg",
     "publish": "npm publish pkg"
   },
   "peerDependencies": {
