@@ -2,6 +2,9 @@ import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } fr
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
 const noop = () => {}
+const root =
+  (typeof self === "object" && self.self === self && self) ||
+  (typeof global === "object" && global.global === global && global)
 
 const useAsync = (arg1, arg2) => {
   const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
@@ -12,7 +15,7 @@ const useAsync = (arg1, arg2) => {
   const prevOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
-  const { devToolsDispatcher } = window.__REACT_ASYNC__ || {}
+  const { devToolsDispatcher } = root.__REACT_ASYNC__ || {}
   const { reducer, dispatcher = devToolsDispatcher } = options
   const [state, _dispatch] = useReducer(
     reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
@@ -48,9 +51,9 @@ const useAsync = (arg1, arg2) => {
     count === counter.current && setError(error, () => onReject && onReject(error))
 
   const start = promiseFn => {
-    if ("AbortController" in window) {
+    if ("AbortController" in root) {
       abortController.current.abort()
-      abortController.current = new window.AbortController()
+      abortController.current = new root.AbortController()
     }
     counter.current++
     return new Promise((resolve, reject) => {
@@ -133,7 +136,7 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
   const method = input.method || (init && init.method)
   const headers = input.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
-  const doFetch = (input, init) => window.fetch(input, init).then(parseResponse(accept, json))
+  const doFetch = (input, init) => root.fetch(input, init).then(parseResponse(accept, json))
   const isDefer = defer === true || ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
   const fn = defer === false || !isDefer ? "promiseFn" : "deferFn"
   const state = useAsync({

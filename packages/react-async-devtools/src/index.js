@@ -3,14 +3,18 @@ import { actionTypes, reducer } from "react-async"
 
 import { Root, Range, Checkbox, Label, Small, Ol, Li, Button } from "./components"
 
+const root =
+  (typeof self === "object" && self.self === self && self) ||
+  (typeof global === "object" && global.global === global && global)
+
 const state = {
-  intercept: window.sessionStorage.getItem("intercept") === "true",
-  latency: window.sessionStorage.getItem("latency") || "0",
+  intercept: root.sessionStorage.getItem("intercept") === "true",
+  latency: root.sessionStorage.getItem("latency") || "0",
   update: () => {},
 }
 
-window.__REACT_ASYNC__ = window.__REACT_ASYNC__ || {}
-window.__REACT_ASYNC__.devToolsDispatcher = (action, dispatch) => {
+root.__REACT_ASYNC__ = root.__REACT_ASYNC__ || {}
+root.__REACT_ASYNC__.devToolsDispatcher = (action, dispatch) => {
   const run = () => {
     dispatch(action)
     state.update(action)
@@ -46,13 +50,13 @@ const DevTools = () => {
     }))
   }
   const updateLatency = event => {
-    window.sessionStorage.setItem("latency", event.target.value)
+    root.sessionStorage.setItem("latency", event.target.value)
     delay.current = event.target.value * 1000
     state.latency = event.target.value
     setLatency(event.target.value)
   }
   const updateIntercept = event => {
-    window.sessionStorage.setItem("intercept", event.target.checked ? "true" : "false")
+    root.sessionStorage.setItem("intercept", event.target.checked ? "true" : "false")
     state.intercept = event.target.checked
     intercept.current = event.target.checked
     setIntercept(event.target.checked)
