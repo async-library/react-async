@@ -23,8 +23,6 @@
     "build": "lerna run build",
     "bump": "yarn workspaces run lerna version",
     "postbump": "yarn build",
-    "publish:react-async": "npm publish packages/react-async/pkg",
-    "publish:devtools": "npm publish packages/react-async-devtools/pkg",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs"
   },
