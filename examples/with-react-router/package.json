@@ -10,7 +10,8 @@
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.12.3",
     "react": "^16.8.5",
-    "react-async": "^5.1.2",
+    "react-async": "latest",
+    "react-async-devtools": "latest",
     "react-dom": "^16.8.5",
     "react-router-dom": "^5.0.0"
   },

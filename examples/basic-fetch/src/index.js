@@ -1,5 +1,6 @@
 import React from "react"
 import Async from "react-async"
+import DevTools from "react-async-devtools"
 import ReactDOM from "react-dom"
 import "./index.css"
 
@@ -26,7 +27,8 @@ const UserDetails = ({ data }) => (
 
 const App = () => (
   <>
-    <Async promiseFn={loadUser} userId={1}>
+    <DevTools />
+    <Async promiseFn={loadUser} userId={1} debugLabel="User 1">
       {({ data, error, isPending }) => {
         if (isPending) return <UserPlaceholder />
         if (error) return <p>{error.message}</p>
@@ -35,7 +37,7 @@ const App = () => (
       }}
     </Async>
 
-    <Async promiseFn={loadUser} userId={2}>
+    <Async promiseFn={loadUser} userId={2} debugLabel="User 2">
       <Async.Pending>
         <UserPlaceholder />
       </Async.Pending>

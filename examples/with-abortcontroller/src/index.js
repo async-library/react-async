@@ -1,5 +1,6 @@
 import React from "react"
 import { useAsync } from "react-async"
+import DevTools from "react-async-devtools"
 import ReactDOM from "react-dom"
 import "./index.css"
 
@@ -9,7 +10,7 @@ const download = (args, props, controller) =>
     .then(res => res.json())
 
 const App = () => {
-  const { run, cancel, isPending } = useAsync({ deferFn: download })
+  const { run, cancel, isPending } = useAsync({ deferFn: download, debugLabel: "User 1" })
   return (
     <>
       {isPending ? <button onClick={cancel}>cancel</button> : <button onClick={run}>start</button>}
@@ -22,4 +23,10 @@ const App = () => {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById("root"))
+ReactDOM.render(
+  <>
+    <DevTools />
+    <App />
+  </>,
+  document.getElementById("root")
+)

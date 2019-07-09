@@ -1,6 +1,6 @@
 import React from "react"
 import Async from "react-async"
-import { Route} from "react-router-dom"
+import { Route } from "react-router-dom"
 
 const loader = fetchUrl => () =>
   fetch(fetchUrl)
@@ -8,13 +8,14 @@ const loader = fetchUrl => () =>
     .then(res => res.json())
 
 const AsyncRoute = ({ component: Component, fetchUrl, ...props }) => (
-  <Route {...props} render={props => (
-    <Async promiseFn={loader(fetchUrl)}>
-      {asyncState => (
-        <Component {...props} {...asyncState} />
-      )}
-    </Async>
-  )} />
+  <Route
+    {...props}
+    render={props => (
+      <Async promiseFn={loader(fetchUrl)} debugLabel={fetchUrl}>
+        {asyncState => <Component {...props} {...asyncState} />}
+      </Async>
+    )}
+  />
 )
 
 export default AsyncRoute

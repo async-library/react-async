@@ -1,6 +1,7 @@
 import React from "react"
 import { useAsync } from "react-async"
 import ReactDOM from "react-dom"
+import DevTools from "react-async-devtools"
 import "./index.css"
 
 const loadUser = ({ userId }) =>
@@ -26,7 +27,11 @@ const UserDetails = ({ data }) => (
 )
 
 const User = ({ userId }) => {
-  const { data, error, isPending } = useAsync({ promiseFn: loadUser, userId })
+  const { data, error, isPending } = useAsync({
+    promiseFn: loadUser,
+    debugLabel: `User ${userId}`,
+    userId,
+  })
   if (isPending) return <UserPlaceholder />
   if (error) return <p>{error.message}</p>
   if (data) return <UserDetails data={data} />
@@ -35,6 +40,7 @@ const User = ({ userId }) => {
 
 const App = () => (
   <>
+    <DevTools />
     <User userId={1} />
     <User userId={2} />
   </>

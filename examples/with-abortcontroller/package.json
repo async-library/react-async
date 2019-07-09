@@ -5,6 +5,7 @@
   "dependencies": {
     "react": "16.8.5",
     "react-async": "latest",
+    "react-async-devtools": "latest",
     "react-dom": "16.8.5",
     "react-scripts": "2.1.8"
   },

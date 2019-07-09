@@ -61,7 +61,7 @@ const TopMovies = ({ handleSelect }) => (
         🍿
       </span>
     </h1>
-    <Async promiseFn={fetchMovies}>
+    <Async promiseFn={fetchMovies} debugLabel={`Movies`}>
       <Async.Pending>
         <p>Loading...</p>
       </Async.Pending>
@@ -98,7 +98,12 @@ const Details = ({ onBack, id }) => (
         👈
       </span>
     </button>
-    <Async promiseFn={fetchMovieDetails} id={id} onResolve={console.log}>
+    <Async
+      promiseFn={fetchMovieDetails}
+      debugLabel={`Details ${id}`}
+      id={id}
+      onResolve={console.log}
+    >
       <Async.Pending>
         <p>Loading...</p>
       </Async.Pending>
@@ -125,7 +130,12 @@ const Details = ({ onBack, id }) => (
               </div>
             </div>
             <div className="reviews">
-              <Async promiseFn={fetchMovieReviews} id={id} onResolve={console.log}>
+              <Async
+                promiseFn={fetchMovieReviews}
+                debugLabel={`Reviews ${id}`}
+                id={id}
+                onResolve={console.log}
+              >
                 <Async.Pending>
                   <p>Loading...</p>
                 </Async.Pending>

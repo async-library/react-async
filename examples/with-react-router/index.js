@@ -1,4 +1,5 @@
 import React from "react"
+import DevTools from "react-async-devtools"
 import ReactDOM from "react-dom"
 import { BrowserRouter as Router, NavLink } from "react-router-dom"
 import AsyncRoute from "./js/AsyncRoute"
@@ -8,15 +9,16 @@ import Repositories from "./js/Repositories"
 const App = () => (
   <Router>
     <>
+      <DevTools />
       <div>
         <NavLink to="/">Contributors To react-async</NavLink>
         <NavLink to="/repositories">Other github repositories</NavLink>
       </div>
-      <AsyncRoute 
+      <AsyncRoute
         exact
-        path="/" 
-        fetchUrl="https://api.github.com/repos/ghengeveld/react-async/contributors" 
-        component={Contributors} 
+        path="/"
+        fetchUrl="https://api.github.com/repos/ghengeveld/react-async/contributors"
+        component={Contributors}
       />
       <AsyncRoute
         path="/repositories"

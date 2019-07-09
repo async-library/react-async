@@ -1,5 +1,6 @@
 import React from "react"
 import { createInstance } from "react-async"
+import DevTools from "react-async-devtools"
 import ReactDOM from "react-dom"
 import "./index.css"
 
@@ -28,7 +29,8 @@ const UserDetails = ({ data }) => (
 
 const App = () => (
   <>
-    <AsyncUser userId={1}>
+    <DevTools />
+    <AsyncUser userId={1} debugLabel="User 1">
       {({ data, error, isPending }) => {
         if (isPending) return <UserPlaceholder />
         if (error) return <p>{error.message}</p>
@@ -36,8 +38,7 @@ const App = () => (
         return null
       }}
     </AsyncUser>
-
-    <AsyncUser userId={2}>
+    <AsyncUser userId={2} debugLabel="User 2">
       <AsyncUser.Pending>
         <UserPlaceholder />
       </AsyncUser.Pending>
