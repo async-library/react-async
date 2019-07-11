@@ -135,7 +135,17 @@ declare namespace Async {
   export function Settled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
 }
 
-export function createInstance<T>(defaultProps?: AsyncProps<T>): Async<T>
+export function createInstance<T>(
+  defaultProps?: AsyncProps<T>
+): (new () => Async<T>) & {
+  Initial<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  Pending<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
+  Loading<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
+  Fulfilled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  Resolved<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  Rejected<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  Settled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+}
 
 export function useAsync<T>(
   arg1: AsyncOptions<T> | PromiseFn<T>,
