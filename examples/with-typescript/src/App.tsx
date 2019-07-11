@@ -1,7 +1,10 @@
 import React, { Component } from "react"
-import Async from "react-async"
+import Async, { createInstance } from "react-async"
 import DevTools from "react-async-devtools"
 import "./App.css"
+
+const promiseFn = () => Promise.resolve("baz")
+const CustomAsync = createInstance({ promiseFn })
 
 class App extends Component {
   render() {
@@ -13,6 +16,9 @@ class App extends Component {
           <Async promiseFn={() => Promise.resolve("bar")}>
             <Async.Resolved>{data => <>{data}</>}</Async.Resolved>
           </Async>
+          <CustomAsync>
+            <CustomAsync.Resolved>{data => <>{data}</>}</CustomAsync.Resolved>
+          </CustomAsync>
         </header>
       </div>
     )
