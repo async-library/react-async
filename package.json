@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "yarn workspaces run install",
     "clean": "lerna clean",
     "lint": "eslint packages/*/src/*.js",
     "test": "jest packages/*/src/*.spec.js",
