@@ -21,20 +21,14 @@
   "scripts": {
     "build": "pack build",
     "postbuild": "copyfiles -f ../../LICENSE ../../README.md pkg",
-    "publish": "npm publish pkg"
+    "publish": "npm publish pkg",
+    "test": "true"
   },
   "peerDependencies": {
     "react": ">=16.3.1"
   },
   "optionalDependencies": {
     "prop-types": ">=15.5.7"
-  },
-  "devDependencies": {
-    "@pika/pack": "0.3.7",
-    "@pika/plugin-build-node": "0.3.15",
-    "@pika/plugin-build-types": "0.3.16",
-    "@pika/plugin-build-web": "0.3.15",
-    "@pika/plugin-standard-pkg": "0.3.15"
   },
   "@pika/pack": {
     "pipeline": [

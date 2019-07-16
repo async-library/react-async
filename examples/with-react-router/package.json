@@ -4,18 +4,26 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "postinstall": "relative-deps",
+    "prestart": "relative-deps",
+    "pretest": "relative-deps",
+    "start": "parcel index.html",
+    "test": "true"
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.12.3",
-    "react": "^16.8.5",
-    "react-async": "latest",
-    "react-async-devtools": "latest",
-    "react-dom": "^16.8.5",
+    "react": "^16.8.6",
+    "react-async": "^7.0.4",
+    "react-async-devtools": "^1.0.2",
+    "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.0"
+    "relative-deps": "^0.1.2"
+  },
+  "relativeDependencies": {
+    "react-async": "../../packages/react-async/pkg",
+    "react-async-devtools": "../../packages/react-async-devtools/pkg"
   }
 }
