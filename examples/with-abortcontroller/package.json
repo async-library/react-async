@@ -2,17 +2,24 @@
   "name": "with-abortcontroller",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "react": "16.8.5",
-    "react-async": "latest",
-    "react-async-devtools": "latest",
-    "react-dom": "16.8.5",
-    "react-scripts": "2.1.8"
-  },
   "scripts": {
+    "postinstall": "relative-deps",
+    "prestart": "relative-deps",
+    "prebuild": "relative-deps",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "now-build": "npm run build && mv build dist"
+  },
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-async": "^7.0.4",
+    "react-async-devtools": "^1.0.2",
+    "react-dom": "^16.8.6",
+    "react-scripts": "^3.0.1"
+  },
+  "relativeDependencies": {
+    "react-async": "../../packages/react-async/pkg",
+    "react-async-devtools": "../../packages/react-async-devtools/pkg"
   },
   "eslintConfig": {
     "extends": "react-app"

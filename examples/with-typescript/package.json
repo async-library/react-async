@@ -2,22 +2,29 @@
   "name": "with-typescript",
   "version": "1.0.1",
   "private": true,
+  "scripts": {
+    "postinstall": "relative-deps",
+    "prestart": "relative-deps",
+    "prebuild": "relative-deps",
+    "pretest": "relative-deps",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test"
+  },
   "dependencies": {
     "@types/node": "^12.0.8",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "react": "^16.8.6",
-    "react-async": "latest",
-    "react-async-devtools": "latest",
+    "react-async": "^7.0.4",
+    "react-async-devtools": "^1.0.2",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1",
     "typescript": "^3.5.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+  "relativeDependencies": {
+    "react-async": "../../packages/react-async/pkg",
+    "react-async-devtools": "../../packages/react-async-devtools/pkg"
   },
   "eslintConfig": {
     "extends": "react-app"

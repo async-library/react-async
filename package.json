@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
+    "clean": "lerna clean",
     "lint": "eslint packages/*/src/*.js",
     "test": "jest packages/*/src/*.spec.js",
     "test:watch": "yarn test -- --watch",
@@ -61,6 +62,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-async": "^7.0.4",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "relative-deps": "^0.1.2"
   }
 }
