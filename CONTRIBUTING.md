@@ -18,7 +18,8 @@ To start working on React Async, clone the repo and bootstrap the project:
 ```sh
 git clone https://github.com/ghengeveld/react-async.git
 cd react-async
-yarn && yarn bootstrap && yarn test
+yarn && yarn bootstrap
+yarn build && yarn test
 ```
 
 ### Working with Storybook
