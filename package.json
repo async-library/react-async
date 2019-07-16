@@ -63,7 +63,6 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-async": "^7.0.4",
-    "react-dom": "^16.8.6",
-    "relative-deps": "^0.1.2"
+    "react-dom": "^16.8.6"
   }
 }

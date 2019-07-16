@@ -22,6 +22,9 @@
     "react-async-devtools": "^1.0.2",
     "react-dom": "^16.8.6"
   },
+  "devDependencies": {
+    "relative-deps": "^0.1.2"
+  },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg",
     "react-async-devtools": "../../packages/react-async-devtools/pkg"
