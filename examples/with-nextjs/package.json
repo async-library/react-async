@@ -8,9 +8,11 @@
     "predev": "relative-deps",
     "prebuild": "relative-deps",
     "prestart": "relative-deps",
+    "pretest": "relative-deps",
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "true"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",

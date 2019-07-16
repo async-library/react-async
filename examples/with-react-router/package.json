@@ -6,7 +6,9 @@
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
-    "start": "parcel index.html"
+    "pretest": "relative-deps",
+    "start": "parcel index.html",
+    "test": "true"
   },
   "dependencies": {
     "@babel/preset-react": "^7.0.0",
