@@ -55,12 +55,10 @@ export const reducer = (state, { type, payload, meta }) => {
         ...getStatusProps(statusTypes.rejected),
       }
     case actionTypes.reinitialize:
-      return {
-        ...init(payload),
-        startedAt: undefined,
-        finishedAt: undefined,
-        ...getStatusProps(statusTypes.initial),
-      }
+      const newState = init(payload)
+      if (payload.initialValue) newState.finishedAt = state.finishedAt
+      if (payload.promise) newState.startedAt = state.startedAt
+      return newState
     default:
       return state
   }

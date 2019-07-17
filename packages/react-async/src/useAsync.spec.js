@@ -87,7 +87,45 @@ describe("useAsync", () => {
     ) // resolve deferFn
   })
 
-  test("reinitializes the state", async () => {
+  test("reinitializes the state with promise", async () => {
+    const promise = jest.fn().mockResolvedValue("some")()
+    function App() {
+      const { data, isInitial, isPending, isFulfilled, isRejected, reinitialize } = useAsync({
+        promise,
+      })
+      return (
+        <div>
+          <div data-testid="data">{`${data}`}</div>
+          <div data-testid="is-initial">{`${isInitial}`}</div>
+          <div data-testid="is-pending">{`${isPending}`}</div>
+          <div data-testid="is-fulfilled">{`${isFulfilled}`}</div>
+          <div data-testid="is-rejected">{`${isRejected}`}</div>
+          <button onClick={() => reinitialize()}>reinitialize</button>
+        </div>
+      )
+    }
+    const { getByText, getByTestId } = render(<App />)
+    expect(getByTestId("data")).toHaveTextContent("undefined")
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("true")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("false")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+
+    await wait(() => expect(getByTestId("data")).toHaveTextContent("some"))
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("true")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+
+    fireEvent.click(getByText("reinitialize"))
+    await wait(() => expect(getByTestId("data")).toHaveTextContent("undefined"))
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("true")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("false")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+  })
+
+  test("reinitializes the state with promiseFn", async () => {
     const promiseFn = jest.fn().mockResolvedValue("some")
     function App() {
       const { data, isInitial, isPending, isFulfilled, isRejected, reinitialize } = useAsync({
@@ -119,9 +157,57 @@ describe("useAsync", () => {
 
     fireEvent.click(getByText("reinitialize"))
     await wait(() => expect(getByTestId("data")).toHaveTextContent("undefined"))
-    expect(getByTestId("is-initial")).toHaveTextContent("true")
-    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("true")
     expect(getByTestId("is-fulfilled")).toHaveTextContent("false")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+  })
+
+  test("reinitializes the state with promiseFn and initialValue", async () => {
+    const initVal = "some-initial-value"
+    const promiseFn = jest.fn().mockResolvedValue("some")
+    function App() {
+      const {
+        data,
+        initialValue,
+        isInitial,
+        isPending,
+        isFulfilled,
+        isRejected,
+        reinitialize,
+      } = useAsync({
+        promiseFn,
+        initialValue: initVal,
+      })
+      return (
+        <div>
+          <div data-testid="data">{`${data || initialValue}`}</div>
+          <div data-testid="is-initial">{`${isInitial}`}</div>
+          <div data-testid="is-pending">{`${isPending}`}</div>
+          <div data-testid="is-fulfilled">{`${isFulfilled}`}</div>
+          <div data-testid="is-rejected">{`${isRejected}`}</div>
+          <button onClick={() => reinitialize()}>reinitialize</button>
+        </div>
+      )
+    }
+    const { getByText, getByTestId } = render(<App />)
+    expect(getByTestId("data")).toHaveTextContent(initVal)
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("true")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+
+    await wait(() => expect(getByTestId("data")).toHaveTextContent("some"))
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("true")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+
+    fireEvent.click(getByText("reinitialize"))
+    await wait(() => expect(getByTestId("data")).toHaveTextContent(initVal))
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("true")
     expect(getByTestId("is-rejected")).toHaveTextContent("false")
   })
 })
