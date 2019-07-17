@@ -484,7 +484,7 @@ is set to `"application/json"`.
 - `cancel` Cancel any pending promise.
 - `run` Invokes the `deferFn`.
 - `reload` Re-runs the promise when invoked, using any previous arguments.
-- `reinitialize` Reinitializes the state as `initial`.
+- `reinitialize` Reset the component as if it was destroyed and recreated
 - `setData` Sets `data` to the passed value, unsets `error` and cancels any pending promise.
 - `setError` Sets `error` to the passed value and cancels any pending promise.
 
@@ -593,7 +593,7 @@ Re-runs the promise when invoked, using the previous arguments.
 
 > `function(): void`
 
-Reinitializes the state as `initial`.
+Reset the component as if it was destroyed and recreated.
 
 #### `setData`
 
