@@ -25,6 +25,7 @@ const stateObject =
     cancel: PropTypes.func,
     run: PropTypes.func,
     reload: PropTypes.func,
+    reinitialize: PropTypes.func,
     setData: PropTypes.func,
     setError: PropTypes.func,
   })

@@ -22,6 +22,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.load = this.load.bind(this)
       this.run = this.run.bind(this)
       this.cancel = this.cancel.bind(this)
+      this.reinitialize = this.reinitialize.bind(this)
       this.onResolve = this.onResolve.bind(this)
       this.onReject = this.onReject.bind(this)
       this.setData = this.setData.bind(this)
@@ -43,6 +44,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
           this.load()
           this.run(...this.args)
         },
+        reinitialize: this.reinitialize,
         setData: this.setData,
         setError: this.setError,
       }
@@ -152,6 +154,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.counter++
       this.abortController.abort()
       this.mounted && this.dispatch({ type: actionTypes.cancel, meta: this.getMeta() })
+    }
+
+    reinitialize() {
+      this.mounted &&
+        this.dispatch({ type: actionTypes.reinitialize, meta: this.getMeta(), payload: this.props })
     }
 
     onResolve(counter) {

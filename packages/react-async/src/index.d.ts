@@ -47,6 +47,7 @@ interface AbstractState<T> {
   cancel: () => void
   run: (...args: any[]) => Promise<T>
   reload: () => void
+  reinitialize: () => void
   setData: (data: T, callback?: () => void) => T
   setError: (error: Error, callback?: () => void) => Error
 }

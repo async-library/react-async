@@ -2,7 +2,7 @@
 
 import "jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
+import { render, fireEvent, cleanup, waitForElement, wait } from "@testing-library/react"
 import Async, { createInstance } from "./index"
 import {
   resolveIn,
@@ -302,5 +302,46 @@ describe("createInstance", () => {
       expect.objectContaining(expectedProps),
       abortCtrl
     )
+  })
+
+  test("custom instance correctly reinitializes the state", async () => {
+    const promiseFn = jest.fn().mockResolvedValue("some")
+    const CustomAsync = createInstance({ promiseFn })
+
+    const { getByText, getByTestId } = render(
+      <CustomAsync>
+        {({ data, isInitial, isPending, isFulfilled, isRejected, reinitialize }) => (
+          <div>
+            <div data-testid="data">{`${data}`}</div>
+            <div data-testid="is-initial">{`${isInitial}`}</div>
+            <div data-testid="is-pending">{`${isPending}`}</div>
+            <div data-testid="is-fulfilled">{`${isFulfilled}`}</div>
+            <div data-testid="is-rejected">{`${isRejected}`}</div>
+            <button onClick={() => reinitialize()}>reinitialize</button>
+          </div>
+        )}
+      </CustomAsync>
+    )
+
+    expect(getByTestId("data")).toHaveTextContent("undefined")
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("true")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("false")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+
+    await wait(() => expect(getByTestId("data")).toHaveTextContent("some"))
+    expect(getByTestId("data")).toHaveTextContent("some")
+    expect(getByTestId("is-initial")).toHaveTextContent("false")
+    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("true")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
+
+    fireEvent.click(getByText("reinitialize"))
+    await wait(() => expect(getByTestId("data")).toHaveTextContent("undefined"))
+    expect(getByTestId("data")).toHaveTextContent("undefined")
+    expect(getByTestId("is-initial")).toHaveTextContent("true")
+    expect(getByTestId("is-pending")).toHaveTextContent("false")
+    expect(getByTestId("is-fulfilled")).toHaveTextContent("false")
+    expect(getByTestId("is-rejected")).toHaveTextContent("false")
   })
 })

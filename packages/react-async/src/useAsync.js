@@ -98,6 +98,10 @@ const useAsync = (arg1, arg2) => {
     isMounted.current && dispatch({ type: actionTypes.cancel, meta: getMeta() })
   }
 
+  const reinitialize = () =>
+    isMounted.current &&
+    dispatch({ type: actionTypes.reinitialize, payload: options, meta: getMeta() })
+
   const { watch, watchFn } = options
   useEffect(() => {
     if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
@@ -117,6 +121,7 @@ const useAsync = (arg1, arg2) => {
       ...state,
       cancel,
       run,
+      reinitialize,
       reload: () => (lastArgs.current ? run(...lastArgs.current) : load()),
       setData,
       setError,

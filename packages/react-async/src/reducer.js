@@ -5,6 +5,7 @@ export const actionTypes = {
   cancel: "cancel",
   fulfill: "fulfill",
   reject: "reject",
+  reinitialize: "reinitialize",
 }
 
 export const init = ({ initialValue, promise, promiseFn }) => ({
@@ -52,6 +53,13 @@ export const reducer = (state, { type, payload, meta }) => {
         value: payload,
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.rejected),
+      }
+    case actionTypes.reinitialize:
+      return {
+        ...init(payload),
+        startedAt: undefined,
+        finishedAt: undefined,
+        ...getStatusProps(statusTypes.initial),
       }
     default:
       return state
