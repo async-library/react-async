@@ -1,6 +1,9 @@
 {
   "npmClient": "yarn",
   "packages": ["examples/*", "packages/*"],
+  "publish": {
+    "ignoreChanges": ["examples/**"]
+  },
   "useWorkspaces": true,
   "version": "independent"
 }
