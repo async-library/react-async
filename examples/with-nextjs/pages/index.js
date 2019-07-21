@@ -3,6 +3,7 @@ import Async from "react-async"
 import DevTools from "react-async-devtools"
 import fetch from "isomorphic-fetch"
 import Link from "next/link"
+import { withRouter } from "next/router"
 
 const loadUser = ({ userId = 1 }) =>
   fetch(`https://reqres.in/api/users/${userId}`)
@@ -17,8 +18,8 @@ class Hello extends React.Component {
   }
 
   render() {
-    const { data, url } = this.props
-    const { userId = 1 } = url.query
+    const { data, router } = this.props
+    const { userId = 1 } = router.query
     return (
       <>
         {process.browser && <DevTools />}
@@ -62,4 +63,4 @@ class Hello extends React.Component {
   }
 }
 
-export default Hello
+export default withRouter(Hello)
