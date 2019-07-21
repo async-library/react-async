@@ -1,6 +1,6 @@
 {
   "name": "with-nextjs",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,8 @@
     "isomorphic-fetch": "^2.2.1",
     "next": "^8.0.3",
     "react": "^16.8.6",
-    "react-async": "^7.0.4",
-    "react-async-devtools": "^1.0.2",
+    "react-async": "^7.0.5",
+    "react-async-devtools": "^1.0.3",
     "react-dom": "^16.8.6"
   },
   "devDependencies": {

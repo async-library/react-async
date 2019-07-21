@@ -1,6 +1,6 @@
 {
   "name": "with-typescript",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "postinstall": "relative-deps",
@@ -16,8 +16,8 @@
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
     "react": "^16.8.6",
-    "react-async": "^7.0.4",
-    "react-async-devtools": "^1.0.2",
+    "react-async": "^7.0.5",
+    "react-async-devtools": "^1.0.3",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1",
     "typescript": "^3.5.1"
