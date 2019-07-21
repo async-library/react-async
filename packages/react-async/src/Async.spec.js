@@ -3,7 +3,7 @@
 import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
-import Async, { createInstance } from "./index"
+import Async, { createInstance, globalScope } from "./index"
 import {
   resolveIn,
   resolveTo,
@@ -17,7 +17,7 @@ import {
 } from "./specs"
 
 const abortCtrl = { abort: jest.fn() }
-window.AbortController = jest.fn().mockImplementation(() => abortCtrl)
+globalScope.AbortController = jest.fn().mockImplementation(() => abortCtrl)
 
 beforeEach(abortCtrl.abort.mockClear)
 afterEach(cleanup)

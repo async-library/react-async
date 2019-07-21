@@ -3,7 +3,7 @@
 import "jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
-import { useAsync, useFetch } from "./index"
+import { useAsync, useFetch, globalScope } from "./index"
 import {
   sleep,
   resolveTo,
@@ -17,13 +17,13 @@ import {
 import "../../../jest.setup"
 
 const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
-window.AbortController = jest.fn(() => abortCtrl)
+globalScope.AbortController = jest.fn(() => abortCtrl)
 
 const json = jest.fn(() => ({}))
-window.fetch = jest.fn(() => Promise.resolve({ ok: true, json }))
+globalScope.fetch = jest.fn(() => Promise.resolve({ ok: true, json }))
 
 beforeEach(abortCtrl.abort.mockClear)
-beforeEach(window.fetch.mockClear)
+beforeEach(globalScope.fetch.mockClear)
 beforeEach(json.mockClear)
 afterEach(cleanup)
 
@@ -89,7 +89,7 @@ describe("useAsync", () => {
 describe("useFetch", () => {
   test("sets up a fetch request", () => {
     render(<Fetch input="/test" />)
-    expect(window.fetch).toHaveBeenCalledWith(
+    expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
       expect.objectContaining({ signal: abortCtrl.signal })
     )
@@ -103,9 +103,9 @@ describe("useFetch", () => {
       </Fetch>
     )
     const { getByText } = render(component)
-    expect(window.fetch).not.toHaveBeenCalled()
+    expect(globalScope.fetch).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(window.fetch).toHaveBeenCalledWith(
+    expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
       expect.objectContaining({ method: "POST", signal: abortCtrl.signal })
     )
@@ -118,9 +118,9 @@ describe("useFetch", () => {
       </Fetch>
     )
     const { getByText } = render(component)
-    expect(window.fetch).not.toHaveBeenCalled()
+    expect(globalScope.fetch).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(window.fetch).toHaveBeenCalledWith(
+    expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
       expect.objectContaining({ signal: abortCtrl.signal })
     )
@@ -132,7 +132,7 @@ describe("useFetch", () => {
         {({ run }) => <button onClick={run}>run</button>}
       </Fetch>
     )
-    expect(window.fetch).toHaveBeenCalledWith(
+    expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
       expect.objectContaining({ method: "POST", signal: abortCtrl.signal })
     )

@@ -1,14 +1,9 @@
 import React from "react"
-import { actionTypes, reducer } from "react-async"
+import { actionTypes, reducer, globalScope } from "react-async"
 
 import { Root, Range, Checkbox, Label, Small, Ol, Li, Button } from "./components"
 
-const root =
-  (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global) ||
-  {}
-
-const storage = root.sessionStorage
+const storage = globalScope.sessionStorage
 
 const state = {
   intercept: (storage && storage.getItem("intercept") === "true") || false,
@@ -16,8 +11,7 @@ const state = {
   update: () => {},
 }
 
-root.__REACT_ASYNC__ = root.__REACT_ASYNC__ || {}
-root.__REACT_ASYNC__.devToolsDispatcher = (action, dispatch) => {
+globalScope.__REACT_ASYNC__.devToolsDispatcher = (action, dispatch) => {
   const run = () => {
     dispatch(action)
     state.update(action)

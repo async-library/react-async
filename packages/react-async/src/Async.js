@@ -1,11 +1,9 @@
 import React from "react"
+
+import globalScope from "./globalScope"
 import { Initial, Pending, Fulfilled, Rejected, Settled } from "./helpers"
 import propTypes from "./propTypes"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
-
-const root =
-  (typeof self === "object" && self.self === self && self) ||
-  (typeof global === "object" && global.global === global && global)
 
 /**
  * createInstance allows you to create instances of Async that are bound to a specific promise.
@@ -48,7 +46,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       }
       this.debugLabel = props.debugLabel || defaultProps.debugLabel
 
-      const { devToolsDispatcher } = root.__REACT_ASYNC__ || {}
+      const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
       const _reducer = props.reducer || defaultProps.reducer
       const _dispatcher = props.dispatcher || defaultProps.dispatcher || devToolsDispatcher
       const reducer = _reducer
@@ -104,9 +102,9 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     start(promiseFn) {
-      if ("AbortController" in root) {
+      if ("AbortController" in globalScope) {
         this.abortController.abort()
-        this.abortController = new root.AbortController()
+        this.abortController = new globalScope.AbortController()
       }
       this.counter++
       return new Promise((resolve, reject) => {
