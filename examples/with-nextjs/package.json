@@ -11,8 +11,7 @@
     "pretest": "relative-deps",
     "dev": "next",
     "build": "next build",
-    "start": "next start",
-    "test": "true"
+    "start": "next start"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",

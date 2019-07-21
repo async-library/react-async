@@ -21,8 +21,7 @@
   "scripts": {
     "build": "pack build",
     "postbuild": "copyfiles -f ../../LICENSE ../../README.md pkg",
-    "publish": "npm publish pkg",
-    "test": "true"
+    "publish": "npm publish pkg"
   },
   "peerDependencies": {
     "react": ">=16.3.1"
