@@ -114,9 +114,9 @@ export type AsyncRejected<T> = AbstractState<T> & {
 }
 export type AsyncState<T> = AsyncInitial<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
-declare class Async<T> extends Component<AsyncProps<T>, AsyncState<T>> {}
+export class Async<T> extends Component<AsyncProps<T>, AsyncState<T>> {}
 
-declare namespace Async {
+export namespace Async {
   export function Initial<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
   export function Pending<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
   export function Loading<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
