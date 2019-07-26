@@ -21,7 +21,7 @@
     "test:forwards": "yarn add -D -W react@next react-dom@next && yarn test",
     "test:latest": "yarn add -D -W react@latest react-dom@latest && yarn test",
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
-    "test:examples": "lerna run test -- --passWithNoTests --watchAll=false",
+    "test:examples": "CI=1 lerna run test -- --passWithNoTests --watchAll=false",
     "ci": "yarn lint && yarn test:compat && yarn test:examples",
     "build": "lerna run build",
     "bump": "lerna version -m 'Bump' --no-git-tag-version --no-push",
