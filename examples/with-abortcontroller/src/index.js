@@ -9,7 +9,7 @@ const download = (args, props, controller) =>
     .then(res => (res.ok ? res : Promise.reject(res)))
     .then(res => res.json())
 
-const App = () => {
+export const App = () => {
   const { run, cancel, isPending } = useAsync({ deferFn: download, debugLabel: "User 1" })
   return (
     <>
@@ -23,10 +23,11 @@ const App = () => {
   )
 }
 
-ReactDOM.render(
-  <>
-    <DevTools />
-    <App />
-  </>,
-  document.getElementById("root")
-)
+if (process.env.NODE_ENV !== "test")
+  ReactDOM.render(
+    <>
+      <DevTools />
+      <App />
+    </>,
+    document.getElementById("root")
+  )

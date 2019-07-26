@@ -38,7 +38,7 @@ const User = ({ userId }) => {
   return null
 }
 
-const App = () => (
+export const App = () => (
   <>
     <DevTools />
     <User userId={1} />
@@ -46,4 +46,4 @@ const App = () => (
   </>
 )
 
-ReactDOM.render(<App />, document.getElementById("root"))
+if (process.env.NODE_ENV !== "test") ReactDOM.render(<App />, document.getElementById("root"))

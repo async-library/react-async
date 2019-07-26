@@ -25,7 +25,7 @@ const UserDetails = ({ data }) => (
   </div>
 )
 
-const App = () => (
+export const App = () => (
   <>
     <DevTools />
     <Async promiseFn={loadUser} userId={1} debugLabel="User 1">
@@ -47,4 +47,4 @@ const App = () => (
   </>
 )
 
-ReactDOM.render(<App />, document.getElementById("root"))
+if (process.env.NODE_ENV !== "test") ReactDOM.render(<App />, document.getElementById("root"))

@@ -6,7 +6,6 @@
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
-    "pretest": "relative-deps",
     "start": "parcel index.html"
   },
   "dependencies": {

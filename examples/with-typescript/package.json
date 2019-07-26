@@ -23,6 +23,7 @@
     "typescript": "^3.5.1"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.15",
     "relative-deps": "^0.1.2"
   },
   "relativeDependencies": {
