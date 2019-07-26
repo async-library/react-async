@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://react-async.dev"><img src="./react-async.png" width="520" alt="React Async" /></a><br/>
+  <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/ghengeveld/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
   Handle promises with ease.
 </p>
 <br/>
