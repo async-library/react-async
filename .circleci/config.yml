@@ -75,6 +75,9 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Bootstrap
+          command: yarn bootstrap
+      - run:
           name: Build examples
           command: yarn build:examples
       - run:
