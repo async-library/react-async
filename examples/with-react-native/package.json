@@ -1,4 +1,5 @@
 {
+  "name": "with-react-native",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "postinstall": "relative-deps",
