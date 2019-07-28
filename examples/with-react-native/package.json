@@ -1,5 +1,6 @@
 {
   "name": "with-react-native-example",
+  "version": "0.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "postinstall": "relative-deps",
