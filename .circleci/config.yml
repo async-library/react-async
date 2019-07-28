@@ -36,7 +36,7 @@ jobs:
             - node_modules
             - examples
             - packages
-      - run: yarn build
+      - run: yarn build:packages
   lint:
     <<: *defaults
     steps:
@@ -71,6 +71,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
+      - run:
+          name: Build examples
+          command: yarn build:examples
       - run:
           name: Test examples
           command: yarn test:examples
