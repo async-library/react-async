@@ -30,13 +30,13 @@ jobs:
           key: root-dependencies-v1-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - run: yarn build:packages
       - persist_to_workspace:
           root: .
           paths:
             - node_modules
             - examples
             - packages
-      - run: yarn build:packages
   lint:
     <<: *defaults
     steps:
