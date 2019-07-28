@@ -27,16 +27,6 @@ const fetchMovieReviews = ({ id }) =>
     .then(data => data.results)
     .then(delay(1500))
 
-const iconRoot = "https://staticv2-4.rottentomatoes.com/static/images/icons/"
-const iconFile = {
-  certified_fresh: "CF_16x16.png",
-  fresh: "fresh-16.png",
-  upright: "popcorn-16.png",
-  rotten: "splat-16.png",
-  spilled: "badpopcorn-16.png",
-  wts: "wts-16.png",
-}
-
 const Movie = ({ title, vote_average, release_date, onSelect, overview, backdrop_path }) => (
   <div
     className="Movie"
@@ -80,16 +70,6 @@ const Review = ({ author, content }) => (
     <small>{author}</small>
   </div>
 )
-
-const Image = props => {
-  const loadImage = src =>
-    new Promise(resolve => {
-      const image = new Image()
-      image.onload = () => resolve(src)
-      image.src = props.src
-    })
-  return <img {...props} />
-}
 
 const Details = ({ onBack, id }) => (
   <div className="Details">
