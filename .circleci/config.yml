@@ -9,7 +9,7 @@ orbs:
 
 aliases:
   - &defaults
-    working_directory: ~/repo
+    working_directory: /tmp/react-async
     docker:
       - image: circleci/node:10
 
