@@ -25,6 +25,9 @@ jobs:
       - run:
           name: Install dependencies
           command: yarn install
+      - run:
+          name: Bootstrap
+          command: yarn bootstrap
       - save_cache:
           name: Cache root dependencies
           key: root-dependencies-v1-{{ checksum "yarn.lock" }}
