@@ -1,0 +1,94 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+
+orbs:
+  codecov: codecov/codecov@1.0.2
+
+aliases:
+  - &defaults
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:10
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore root dependencies from cache
+          keys:
+            - root-dependencies-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          name: Cache root dependencies
+          key: root-dependencies-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+            - examples
+            - packages
+      - run: yarn build
+  lint:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: yarn lint
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: 
+          name: Test with compatibility checks
+          command: yarn test:compat
+      - persist_to_workspace:
+          root: .
+          paths:
+            - coverage
+  coverage:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - codecov/upload:
+          file: coverage
+  examples:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test examples
+          command: yarn test:examples
+
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build
+      - coverage:
+          requires:
+            - test
+      - examples:
+          requires:
+            - build
