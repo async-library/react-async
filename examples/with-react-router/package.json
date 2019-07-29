@@ -6,11 +6,11 @@
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
-    "start": "parcel index.html"
+    "prebuild": "relative-deps",
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "dependencies": {
-    "@babel/preset-react": "^7.0.0",
-    "parcel-bundler": "^1.12.3",
     "react": "^16.8.6",
     "react-async": "^7.0.5",
     "react-async-devtools": "^1.0.3",
@@ -18,6 +18,9 @@
     "react-router-dom": "^5.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.12.3",
     "relative-deps": "^0.1.2"
   },
   "relativeDependencies": {
