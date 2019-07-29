@@ -4,9 +4,6 @@
 #
 version: 2
 
-orbs:
-  codecov: codecov/codecov@1.0.2
-
 aliases:
   - &defaults
     working_directory: /tmp/react-async
@@ -66,8 +63,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - codecov/upload:
-          file: coverage
+      - run: bash <(curl -s https://codecov.io/bash)
   examples:
     <<: *defaults
     steps:
