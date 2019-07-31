@@ -26,9 +26,6 @@
   "peerDependencies": {
     "react": ">=16.3.1"
   },
-  "optionalDependencies": {
-    "prop-types": ">=15.5.7"
-  },
   "@pika/pack": {
     "pipeline": [
       [
