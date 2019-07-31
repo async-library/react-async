@@ -27,6 +27,8 @@
     "build:examples": "lerna run --scope '*-example' build",
     "bump": "lerna version -m 'Bump' --no-git-tag-version --no-push",
     "postbump": "yarn build:packages",
+    "dev": "now dev",
+    "deploy": "now",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook -o docs"
   },
@@ -60,6 +62,7 @@
     "jest": "^24.8.0",
     "jest-dom": "^3.5.0",
     "lerna": "^3.15.0",
+    "now": "^15.8.7",
     "prettier": "1.17.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
