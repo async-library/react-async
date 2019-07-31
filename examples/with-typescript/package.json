@@ -2,6 +2,7 @@
   "name": "with-typescript-example",
   "version": "1.0.2",
   "private": true,
+  "homepage": "https://react-async.ghengeveld.now.sh/examples/with-typescript",
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
@@ -9,7 +10,8 @@
     "pretest": "relative-deps",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {
     "@types/node": "^12.0.8",

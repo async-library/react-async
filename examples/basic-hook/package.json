@@ -2,6 +2,7 @@
   "name": "basic-hook-example",
   "version": "1.0.2",
   "private": true,
+  "homepage": "https://react-async.ghengeveld.now.sh/examples/basic-hook",
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
@@ -10,7 +11,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "now-build": "npm run build && mv build dist"
+    "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {
     "react": "^16.8.6",

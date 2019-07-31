@@ -11,11 +11,12 @@
     "pretest": "relative-deps",
     "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "now-build": "next build"
   },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
-    "next": "^8.0.3",
+    "next": "^9.0.2",
     "react": "^16.8.6",
     "react-async": "^7.0.5",
     "react-async-devtools": "^1.0.3",

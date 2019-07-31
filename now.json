@@ -1,0 +1,48 @@
+{
+  "version": 2,
+  "name": "react-async",
+  "public": true,
+  "builds": [
+    {
+      "src": "examples/basic-fetch/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "examples/basic-hook/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "examples/custom-instance/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "examples/movie-app/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "examples/with-abortcontroller/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "examples/with-typescript/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
+      "src": "examples/with-nextjs/package.json",
+      "use": "@now/next"
+    }
+  ],
+  "routes": [
+    { "src": "/examples/with-nextjs/_next(.*)", "dest": "examples/with-nextjs/_next$1" },
+    { "src": "/examples/with-nextjs/", "dest": "examples/with-nextjs/examples/with-nextjs" },
+    { "src": "/examples/with-nextjs(.*)", "dest": "examples/with-nextjs/examples/with-nextjs$1" },
+    { "src": "/examples/(.*)", "dest": "/examples/$1" },
+    { "src": "(.*)", "dest": "/examples$1" }
+  ]
+}
