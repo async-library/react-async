@@ -79,6 +79,12 @@ jobs:
       - run:
           name: Test examples
           command: yarn test:examples
+      - run:
+          name: Deploy examples
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              yarn deploy:examples --token $NOW_API_TOKEN
+            fi
 
 workflows:
   version: 2
