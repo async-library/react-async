@@ -53,6 +53,46 @@ describe("Async", () => {
     )
     expect(one).toBe(two)
   })
+
+  test("skips the initial fetch on mount and fetches only after fetch is re-requested", async () => {
+    const promiseFn = () => resolveTo("data")
+    const { rerender, getByText, queryByText } = render(
+      <Async initialValue="initial" promiseFn={promiseFn} watch="1" skipOnMount>
+        <Async.Initial>{({ initialValue }) => <div>{initialValue}</div>}</Async.Initial>
+        <Async.Fulfilled>{value => <div>{value}</div>}</Async.Fulfilled>
+      </Async>
+    )
+
+    expect(queryByText("initial")).toBeInTheDocument()
+    expect(queryByText("data")).toBeNull()
+
+    rerender(
+      <Async initialValue="initial" promiseFn={promiseFn} watch="2" skipOnMount>
+        <Async.Initial>{({ initialValue }) => <div>{initialValue}</div>}</Async.Initial>
+        <Async.Fulfilled>{value => <div>{value}</div>}</Async.Fulfilled>
+      </Async>
+    )
+
+    await waitForElement(() => getByText("data"))
+
+    expect(queryByText("initial")).toBeNull()
+    expect(queryByText("data")).toBeInTheDocument()
+  })
+
+  test("does not skip the initial fetch if promise is given", async () => {
+    const promise = resolveTo("data")
+    const { getByText, queryByText } = render(
+      <Async initialValue="initial" promise={promise} skipOnMount>
+        <Async.Initial>{({ initialValue }) => <div>{initialValue}</div>}</Async.Initial>
+        <Async.Fulfilled>{value => <div>{value}</div>}</Async.Fulfilled>
+      </Async>
+    )
+
+    await waitForElement(() => getByText("data"))
+
+    expect(queryByText("initial")).toBeNull()
+    expect(queryByText("data")).toBeInTheDocument()
+  })
 })
 
 describe("Async.Fulfilled", () => {

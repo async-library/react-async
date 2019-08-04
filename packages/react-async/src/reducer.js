@@ -7,14 +7,15 @@ export const actionTypes = {
   reject: "reject",
 }
 
-export const init = ({ initialValue, promise, promiseFn }) => ({
+export const init = ({ initialValue, skipOnMount, promise, promiseFn }) => ({
   initialValue,
+  skipOnMount,
   data: initialValue instanceof Error ? undefined : initialValue,
   error: initialValue instanceof Error ? initialValue : undefined,
   value: initialValue,
   startedAt: promise || promiseFn ? new Date() : undefined,
   finishedAt: initialValue ? new Date() : undefined,
-  ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
+  ...getStatusProps(getInitialStatus(initialValue, skipOnMount, promise || promiseFn)),
   counter: 0,
 })
 
