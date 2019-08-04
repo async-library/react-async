@@ -21,6 +21,7 @@ export interface AsyncOptions<T> {
   watch?: any
   watchFn?: (props: object, prevProps: object) => any
   initialValue?: T
+  skipOnMount?: boolean
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
   reducer?: (

@@ -5,10 +5,11 @@ export const statusTypes = {
   rejected: "rejected",
 }
 
-export const getInitialStatus = (value, promise) => {
-  if (value instanceof Error) return statusTypes.rejected
-  if (value !== undefined) return statusTypes.fulfilled
-  if (promise) return statusTypes.pending
+export const getInitialStatus = (initialValue, skipOnMount, promise) => {
+  if (initialValue instanceof Error) return statusTypes.rejected
+  if (initialValue !== undefined && !skipOnMount) return statusTypes.fulfilled
+  if (promise instanceof Promise) return statusTypes.pending
+  if (typeof promise === "function" && !skipOnMount) return statusTypes.pending
   return statusTypes.initial
 }
 

@@ -38,6 +38,7 @@ export default PropTypes && {
     watch: PropTypes.any,
     watchFn: PropTypes.func,
     initialValue: PropTypes.any,
+    skipOnMount: PropTypes.bool,
     onResolve: PropTypes.func,
     onReject: PropTypes.func,
     reducer: PropTypes.func,

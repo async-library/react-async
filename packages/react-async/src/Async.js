@@ -28,13 +28,17 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       const promise = props.promise
       const promiseFn = props.promiseFn || defaultProps.promiseFn
       const initialValue = props.initialValue || defaultProps.initialValue
+      let skipOnMount = false
+
+      if (defaultProps.skipOnMount !== undefined) skipOnMount = defaultProps.skipOnMount
+      if (props.skipOnMount !== undefined) skipOnMount = props.skipOnMount
 
       this.mounted = false
       this.counter = 0
       this.args = []
       this.abortController = { abort: () => {} }
       this.state = {
-        ...init({ initialValue, promise, promiseFn }),
+        ...init({ initialValue, skipOnMount, promise, promiseFn }),
         cancel: this.cancel,
         run: this.run,
         reload: () => {
@@ -60,7 +64,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     componentDidMount() {
       this.mounted = true
-      if (this.props.promise || !this.state.initialValue) {
+      if (this.props.promise || (!this.state.skipOnMount && !this.state.initialValue)) {
         this.load()
       }
     }

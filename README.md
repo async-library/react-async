@@ -333,6 +333,7 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `watch` Watch a value and automatically reload when it changes.
 - `watchFn` Watch this function and automatically reload when it returns truthy.
 - `initialValue` Provide initial data or error for server-side rendering.
+- `skipOnMount` Skip running `promiseFn` on mount, useful for debounced requests.
 - `onResolve` Callback invoked when Promise resolves.
 - `onReject` Callback invoked when Promise rejects.
 - `onCancel` Callback invoked when a Promise is cancelled.
@@ -399,6 +400,13 @@ Re-runs the `promiseFn` when this callback returns truthy (called on every updat
 > `any | Error`
 
 Initial state for `data` or `error` (if instance of Error); useful for server-side rendering.
+
+#### `skipOnMount`
+
+> `boolean`
+
+Skips the `promiseFn` on mount and runs it only after refresh is requested in one way or another.
+Useful for debounced actions to skip the initial fetch.
 
 #### `onResolve`
 

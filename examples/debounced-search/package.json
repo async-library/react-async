@@ -1,0 +1,41 @@
+{
+  "name": "debounced-search-example",
+  "version": "1.0.0",
+  "private": true,
+  "homepage": "https://react-async.ghengeveld.now.sh/examples/debounced-search-example",
+  "scripts": {
+    "postinstall": "relative-deps",
+    "prestart": "relative-deps",
+    "prebuild": "relative-deps",
+    "pretest": "relative-deps",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
+  },
+  "dependencies": {
+    "debounce": "^1.2.0",
+    "faker": "^4.1.0",
+    "react": "^16.8.6",
+    "react-async": "^7.0.5",
+    "react-async-devtools": "^1.0.3",
+    "react-dom": "^16.8.6",
+    "react-scripts": "^3.0.1"
+  },
+  "devDependencies": {
+    "relative-deps": "^0.1.2"
+  },
+  "relativeDependencies": {
+    "react-async": "../../packages/react-async/pkg",
+    "react-async-devtools": "../../packages/react-async-devtools/pkg"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
