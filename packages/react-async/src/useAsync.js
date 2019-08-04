@@ -62,7 +62,7 @@ const useAsync = (arg1, arg2) => {
     })
   }
 
-  const { promise, promiseFn, initialValue } = options
+  const { promise, promiseFn } = options
   const load = () => {
     if (promise) {
       return start(() => promise).then(
@@ -70,8 +70,7 @@ const useAsync = (arg1, arg2) => {
         handleReject(counter.current)
       )
     }
-    const isPreInitialized = initialValue && counter.current === 0
-    if (promiseFn && !isPreInitialized) {
+    if (promiseFn) {
       return start(() => promiseFn(options, abortController.current)).then(
         handleResolve(counter.current),
         handleReject(counter.current)
@@ -97,13 +96,21 @@ const useAsync = (arg1, arg2) => {
     isMounted.current && dispatch({ type: actionTypes.cancel, meta: getMeta() })
   }
 
-  const { watch, watchFn } = options
+  const { watch, watchFn, initialValue, skipOnMount = false } = options
   useEffect(() => {
     if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
   })
   useEffect(() => {
     if (counter.current) cancel()
-    if (promise || promiseFn) load()
+    if (promise) load()
+    // promiseFn is given AND is not onMount with initialValue AND is not onMount with skipOnMount
+    // => use promiseFn on mount if not initialValue or skipOnMount AND if not on mount, always use promiseFn
+    else if (
+      promiseFn &&
+      !(initialValue && !prevOptions.current) &&
+      !(skipOnMount && !prevOptions.current)
+    )
+      load()
   }, [promise, promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
   useEffect(() => () => cancel(), [])

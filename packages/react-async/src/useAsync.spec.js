@@ -84,6 +84,30 @@ describe("useAsync", () => {
     await sleep(10) // resolve deferFn
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
   })
+
+  test("skips the initial fetch if skipOnMount passed", async () => {
+    const promiseFn = () => resolveTo("foo")
+    const Component = ({ bar }) => {
+      const foo = useAsync({ promiseFn, watch: bar, skipOnMount: true })
+      return (
+        <div>
+          {bar} {foo.data ? foo.data : "undefined"}
+        </div>
+      )
+    }
+
+    const { rerender, getByText, queryByText } = render(<Component bar="1" />)
+
+    await waitForElement(() => getByText("1 undefined"))
+    expect(queryByText("1 undefined")).toBeInTheDocument()
+
+    rerender(<Component bar="2" />)
+
+    await waitForElement(() => getByText("2 foo"))
+
+    expect(queryByText("2 foo")).toBeInTheDocument()
+    expect(queryByText("1 undefined")).toBeNull()
+  })
 })
 
 describe("useFetch", () => {
