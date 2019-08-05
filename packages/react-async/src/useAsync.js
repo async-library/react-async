@@ -11,7 +11,7 @@ const useAsync = (arg1, arg2) => {
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
-  const prevOptions = useRef(undefined)
+  const lastOptions = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
@@ -72,7 +72,7 @@ const useAsync = (arg1, arg2) => {
     }
     const isPreInitialized = initialValue && counter.current === 0
     if (promiseFn && !isPreInitialized) {
-      return start(() => promiseFn(options, abortController.current)).then(
+      return start(() => promiseFn(lastOptions.current, abortController.current)).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
@@ -83,7 +83,7 @@ const useAsync = (arg1, arg2) => {
   const run = (...args) => {
     if (deferFn) {
       lastArgs.current = args
-      return start(() => deferFn(args, options, abortController.current)).then(
+      return start(() => deferFn(args, lastOptions.current, abortController.current)).then(
         handleResolve(counter.current),
         handleReject(counter.current)
       )
@@ -99,15 +99,15 @@ const useAsync = (arg1, arg2) => {
 
   const { watch, watchFn } = options
   useEffect(() => {
-    if (watchFn && prevOptions.current && watchFn(options, prevOptions.current)) load()
+    if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) load()
   })
+  useEffect(() => (lastOptions.current = options) && undefined)
   useEffect(() => {
     if (counter.current) cancel()
     if (promise || promiseFn) load()
   }, [promise, promiseFn, watch])
   useEffect(() => () => (isMounted.current = false), [])
   useEffect(() => () => cancel(), [])
-  useEffect(() => (prevOptions.current = options) && undefined)
 
   useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)
 

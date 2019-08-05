@@ -397,6 +397,46 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining(props), abortCtrl)
   })
 
+  test("always passes the latest props", async () => {
+    const deferFn = jest.fn().mockReturnValue(resolveTo())
+    const Child = ({ count }) => (
+      <Async deferFn={deferFn} count={count}>
+        {({ run }) => (
+          <>
+            <button onClick={() => run(count)}>run</button>
+            <div data-testid="counter">{count}</div>
+          </>
+        )}
+      </Async>
+    )
+    class Parent extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = { count: 0 }
+      }
+      render() {
+        const inc = () => this.setState(state => ({ count: state.count + 1 }))
+        return (
+          <>
+            <button onClick={inc}>inc</button>
+            {this.state.count && <Child count={this.state.count} />}
+          </>
+        )
+      }
+    }
+    const { getByText, getByTestId } = render(<Parent />)
+    fireEvent.click(getByText("inc"))
+    expect(getByTestId("counter")).toHaveTextContent("1")
+    fireEvent.click(getByText("inc"))
+    expect(getByTestId("counter")).toHaveTextContent("2")
+    fireEvent.click(getByText("run"))
+    expect(deferFn).toHaveBeenCalledWith(
+      [2],
+      expect.objectContaining({ count: 2, deferFn }),
+      abortCtrl
+    )
+  })
+
   test("`reload` uses the arguments of the previous run", () => {
     let counter = 1
     const deferFn = jest.fn().mockReturnValue(resolveTo())
