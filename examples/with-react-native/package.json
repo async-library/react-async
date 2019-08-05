@@ -1,6 +1,6 @@
 {
   "name": "with-react-native-example",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "postinstall": "relative-deps",
@@ -16,7 +16,7 @@
   "dependencies": {
     "expo": "^33.0.0",
     "react": "16.8.3",
-    "react-async": "^7.0.4",
+    "react-async": "^7.0.6",
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-web": "^0.11.4"

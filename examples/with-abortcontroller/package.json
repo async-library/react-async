@@ -1,6 +1,6 @@
 {
   "name": "with-abortcontroller-example",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "homepage": "https://react-async.ghengeveld.now.sh/examples/with-abortcontroller",
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "react": "^16.8.6",
-    "react-async": "^7.0.5",
-    "react-async-devtools": "^1.0.3",
+    "react-async": "^7.0.6",
+    "react-async-devtools": "^1.0.4",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1"
   },

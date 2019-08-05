@@ -1,6 +1,6 @@
 {
   "name": "with-nextjs-example",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -18,8 +18,8 @@
     "isomorphic-fetch": "^2.2.1",
     "next": "^9.0.2",
     "react": "^16.8.6",
-    "react-async": "^7.0.5",
-    "react-async-devtools": "^1.0.3",
+    "react-async": "^7.0.6",
+    "react-async-devtools": "^1.0.4",
     "react-dom": "^16.8.6"
   },
   "devDependencies": {

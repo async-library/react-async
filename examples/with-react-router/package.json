@@ -1,6 +1,6 @@
 {
   "name": "with-react-router-example",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "react": "^16.8.6",
-    "react-async": "^7.0.5",
-    "react-async-devtools": "^1.0.3",
+    "react-async": "^7.0.6",
+    "react-async-devtools": "^1.0.4",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0"
   },
