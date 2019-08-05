@@ -409,14 +409,20 @@ export const withDeferFn = (Async, abortCtrl) => () => {
         )}
       </Async>
     )
-    const Parent = () => {
-      const [count, setCount] = React.useState(0)
-      return (
-        <>
-          <button onClick={() => setCount(count + 1)}>inc</button>
-          {count && <Child count={count} />}
-        </>
-      )
+    class Parent extends React.Component {
+      constructor(props) {
+        super(props)
+        this.state = { count: 0 }
+      }
+      render() {
+        const inc = () => this.setState(state => ({ count: state.count + 1 }))
+        return (
+          <>
+            <button onClick={inc}>inc</button>
+            {this.state.count && <Child count={this.state.count} />}
+          </>
+        )
+      }
     }
     const { getByText, getByTestId } = render(<Parent />)
     fireEvent.click(getByText("inc"))
