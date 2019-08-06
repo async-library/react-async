@@ -292,7 +292,7 @@ const MyComponent = () => {
 }
 ```
 
-#### As compounds to <Async>
+#### As compounds to `<Async>`
 
 Each of the helper components are also available as static properties of `<Async>`. In this case you won't have to pass
 the state object, instead it will be automatically provided through Context.
