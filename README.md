@@ -267,7 +267,7 @@ by passing in the state, or with `<Async>` by using Context. Each of these compo
 rendering of its children based on the current state.
 
 ```jsx
-import { useAsync, Pending, Fulfilled, Rejected } from "react-async"
+import { useAsync, IfPending, IfFulfilled, IfRejected } from "react-async"
 
 const loadCustomer = async ({ customerId }, { signal }) => {
   // ...
@@ -277,16 +277,16 @@ const MyComponent = () => {
   const state = useAsync({ promiseFn: loadCustomer, customerId: 1 })
   return (
     <>
-      <Pending state={state}>Loading...</Pending>
-      <Rejected state={state}>{error => `Something went wrong: ${error.message}`}</Rejected>
-      <Fulfilled state={state}>
+      <IfPending state={state}>Loading...</IfPending>
+      <IfRejected state={state}>{error => `Something went wrong: ${error.message}`}</IfRejected>
+      <IfFulfilled state={state}>
         {data => (
           <div>
             <strong>Loaded some data:</strong>
             <pre>{JSON.stringify(data, null, 2)}</pre>
           </div>
         )}
-      </Fulfilled>
+      </IfFulfilled>
     </>
   )
 }
@@ -607,7 +607,7 @@ invoked after the state update is completed. Returns the error to enable chainin
 React Async provides several helper components that make your JSX more declarative and less cluttered.
 They don't have to be direct children of `<Async>` and you can use the same component several times.
 
-### `<Initial>` / `<Async.Initial>`
+### `<IfInitial>` / `<Async.Initial>`
 
 Renders only while the deferred promise is still waiting to be run, or you have not provided any promise.
 
@@ -622,9 +622,9 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 ```jsx
 const state = useAsync(...)
 return (
-  <Initial state={state}>
+  <IfInitial state={state}>
     <p>This text is only rendered while `run` has not yet been invoked on `deferFn`.</p>
-  </Initial>
+  </IfInitial>
 )
 ```
 
@@ -650,7 +650,7 @@ return (
 </Async.Initial>
 ```
 
-### `<Pending>` / `<Async.Pending>`
+### `<IfPending>` / `<Async.Pending>`
 
 This component renders only while the promise is pending (loading / unsettled).
 
@@ -667,9 +667,9 @@ Alias: `<Async.Loading>`
 ```jsx
 const state = useAsync(...)
 return (
-  <Pending state={state}>
+  <IfPending state={state}>
     <p>This text is only rendered while performing the initial load.</p>
-  </Pending>
+  </IfPending>
 )
 ```
 
@@ -683,7 +683,7 @@ return (
 <Async.Pending>{({ startedAt }) => `Loading since ${startedAt.toISOString()}`}</Async.Pending>
 ```
 
-### `<Fulfilled>` / `<Async.Fulfilled>`
+### `<IfFulfilled>` / `<Async.Fulfilled>`
 
 This component renders only when the promise is fulfilled (resolved to a value, could be `undefined`).
 
@@ -700,9 +700,9 @@ Alias: `<Async.Resolved>`
 ```jsx
 const state = useAsync(...)
 return (
-  <Fulfilled state={state}>
+  <IfFulfilled state={state}>
     {data => <pre>{JSON.stringify(data)}</pre>}
-  </Fulfilled>
+  </IfFulfilled>
 )
 ```
 
@@ -716,7 +716,7 @@ return (
 </Async.Fulfilled>
 ```
 
-### `<Rejected>` / `<Async.Rejected>`
+### `<IfRejected>` / `<Async.Rejected>`
 
 This component renders only when the promise is rejected.
 
@@ -730,7 +730,7 @@ This component renders only when the promise is rejected.
 
 ```jsx
 const state = useAsync(...)
-return <Rejected state={state}>Oops.</Rejected>
+return <IfRejected state={state}>Oops.</IfRejected>
 ```
 
 ```jsx
@@ -741,7 +741,7 @@ return <Rejected state={state}>Oops.</Rejected>
 <Async.Rejected>{error => `Unexpected error: ${error.message}`}</Async.Rejected>
 ```
 
-### `<Settled>` / `<Async.Settled>`
+### `<IfSettled>` / `<Async.Settled>`
 
 This component renders only when the promise is fulfilled or rejected.
 
@@ -755,7 +755,7 @@ This component renders only when the promise is fulfilled or rejected.
 
 ```jsx
 const state = useAsync(...)
-return <Settled state={state}>{state => `Finished at ${state.finishedAt.toISOString()}`</Settled>
+return <IfSettled state={state}>{state => `Finished at ${state.finishedAt.toISOString()}`</IfSettled>
 ```
 
 ## Usage examples

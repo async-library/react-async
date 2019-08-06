@@ -1,6 +1,18 @@
-import { Component } from "react"
+import React from "react"
 
-export type AsyncChildren<T> = ((state: AsyncState<T>) => JSX.Element) | JSX.Element
+export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
+export type InitialChildren<T> = ((state: AsyncInitial<T>) => React.ReactNode) | React.ReactNode
+export type PendingChildren<T> = ((state: AsyncPending<T>) => React.ReactNode) | React.ReactNode
+export type FulfilledChildren<T> =
+  | ((data: T, state: AsyncFulfilled<T>) => React.ReactNode)
+  | React.ReactNode
+export type RejectedChildren<T> =
+  | ((error: Error, state: AsyncRejected<T>) => React.ReactNode)
+  | React.ReactNode
+export type SettledChildren<T> =
+  | ((state: AsyncFulfilled<T> | AsyncRejected<T>) => React.ReactNode)
+  | React.ReactNode
+
 export type PromiseFn<T> = (props: object, controller: AbortController) => Promise<T>
 export type DeferFn<T> = (args: any[], props: object, controller: AbortController) => Promise<T>
 
@@ -114,38 +126,86 @@ export type AsyncRejected<T> = AbstractState<T> & {
 }
 export type AsyncState<T> = AsyncInitial<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
-export class Async<T> extends Component<AsyncProps<T>, AsyncState<T>> {}
+export class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 
 export namespace Async {
-  export function Initial<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
-  export function Pending<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
-  export function Loading<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
+  export function Initial<T>(props: {
+    children?: InitialChildren<T>
+    persist?: boolean
+  }): JSX.Element
+  export function Pending<T>(props: {
+    children?: PendingChildren<T>
+    initial?: boolean
+  }): JSX.Element
+  export function Loading<T>(props: {
+    children?: PendingChildren<T>
+    initial?: boolean
+  }): JSX.Element
   export function Fulfilled<T>(props: {
-    children?: AsyncChildren<T>
+    children?: FulfilledChildren<T>
     persist?: boolean
   }): JSX.Element
   export function Resolved<T>(props: {
-    children?: AsyncChildren<T>
+    children?: FulfilledChildren<T>
     persist?: boolean
   }): JSX.Element
   export function Rejected<T>(props: {
-    children?: AsyncChildren<T>
+    children?: RejectedChildren<T>
     persist?: boolean
   }): JSX.Element
-  export function Settled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  export function Settled<T>(props: {
+    children?: SettledChildren<T>
+    persist?: boolean
+  }): JSX.Element
 }
 
 export function createInstance<T>(
   defaultProps?: AsyncProps<T>
 ): (new () => Async<T>) & {
-  Initial<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
-  Pending<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
-  Loading<T>(props: { children?: AsyncChildren<T>; initial?: boolean }): JSX.Element
-  Fulfilled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
-  Resolved<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
-  Rejected<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
-  Settled<T>(props: { children?: AsyncChildren<T>; persist?: boolean }): JSX.Element
+  Initial<T>(props: { children?: InitialChildren<T>; persist?: boolean }): JSX.Element
+  Pending<T>(props: { children?: PendingChildren<T>; initial?: boolean }): JSX.Element
+  Loading<T>(props: { children?: PendingChildren<T>; initial?: boolean }): JSX.Element
+  Fulfilled<T>(props: { children?: FulfilledChildren<T>; persist?: boolean }): JSX.Element
+  Resolved<T>(props: { children?: FulfilledChildren<T>; persist?: boolean }): JSX.Element
+  Rejected<T>(props: { children?: RejectedChildren<T>; persist?: boolean }): JSX.Element
+  Settled<T>(props: { children?: SettledChildren<T>; persist?: boolean }): JSX.Element
 }
+
+export function IfInitial<T>(props: {
+  children?: InitialChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}): JSX.Element
+export function IfPending<T>(props: {
+  children?: PendingChildren<T>
+  initial?: boolean
+  state: AsyncState<T>
+}): JSX.Element
+export function IfLoading<T>(props: {
+  children?: PendingChildren<T>
+  initial?: boolean
+  state: AsyncState<T>
+}): JSX.Element
+export function IfFulfilled<T>(props: {
+  children?: FulfilledChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}): JSX.Element
+export function IfResolved<T>(props: {
+  children?: FulfilledChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}): JSX.Element
+export function IfRejected<T>(props: {
+  children?: RejectedChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}): JSX.Element
+export function IfSettled<T>(props: {
+  children?: SettledChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}): JSX.Element
 
 export function useAsync<T>(
   arg1: AsyncOptions<T> | PromiseFn<T>,

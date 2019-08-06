@@ -1,7 +1,7 @@
 import React from "react"
 
 import globalScope from "./globalScope"
-import { Initial, Pending, Fulfilled, Rejected, Settled } from "./helpers"
+import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
 import propTypes from "./propTypes"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
@@ -201,11 +201,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
   if (propTypes) Async.propTypes = propTypes.Async
 
-  const AsyncInitial = props => <Consumer>{st => <Initial {...props} state={st} />}</Consumer>
-  const AsyncPending = props => <Consumer>{st => <Pending {...props} state={st} />}</Consumer>
-  const AsyncFulfilled = props => <Consumer>{st => <Fulfilled {...props} state={st} />}</Consumer>
-  const AsyncRejected = props => <Consumer>{st => <Rejected {...props} state={st} />}</Consumer>
-  const AsyncSettled = props => <Consumer>{st => <Settled {...props} state={st} />}</Consumer>
+  const AsyncInitial = props => <Consumer>{st => <IfInitial {...props} state={st} />}</Consumer>
+  const AsyncPending = props => <Consumer>{st => <IfPending {...props} state={st} />}</Consumer>
+  const AsyncFulfilled = props => <Consumer>{st => <IfFulfilled {...props} state={st} />}</Consumer>
+  const AsyncRejected = props => <Consumer>{st => <IfRejected {...props} state={st} />}</Consumer>
+  const AsyncSettled = props => <Consumer>{st => <IfSettled {...props} state={st} />}</Consumer>
 
   AsyncInitial.displayName = `${displayName}.Initial`
   AsyncPending.displayName = `${displayName}.Pending`
