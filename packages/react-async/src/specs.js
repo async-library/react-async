@@ -2,7 +2,7 @@
 
 import "@testing-library/jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, waitForElement } from "@testing-library/react"
+import { render, fireEvent } from "@testing-library/react"
 
 export const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
 export const resolveTo = resolveIn(0)
@@ -42,7 +42,7 @@ export const common = Async => () => {
   test("can be nested", async () => {
     const outerFn = () => resolveIn(0)("outer")
     const innerFn = () => resolveIn(100)("inner")
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promiseFn={outerFn}>
         {({ data: outer }) => (
           <Async promiseFn={innerFn}>
@@ -53,14 +53,14 @@ export const common = Async => () => {
         )}
       </Async>
     )
-    await waitForElement(() => getByText("outer undefined"))
-    await waitForElement(() => getByText("outer inner"))
+    await findByText("outer undefined")
+    await findByText("outer inner")
   })
 
   test("does not cancel on initial mount", async () => {
     const onCancel = jest.fn()
-    const { getByText } = render(<Async onCancel={onCancel}>{() => "done"}</Async>)
-    await waitForElement(() => getByText("done"))
+    const { findByText } = render(<Async onCancel={onCancel}>{() => "done"}</Async>)
+    await findByText("done")
     expect(onCancel).not.toHaveBeenCalled()
   })
 }
@@ -68,20 +68,20 @@ export const common = Async => () => {
 export const withPromise = Async => () => {
   test("passes resolved data to children as render prop", async () => {
     const promise = resolveTo("done")
-    const { getByText } = render(<Async promise={promise}>{({ data }) => data || null}</Async>)
-    await waitForElement(() => getByText("done"))
+    const { findByText } = render(<Async promise={promise}>{({ data }) => data || null}</Async>)
+    await findByText("done")
   })
 
   test("passes rejection error to children as render prop", async () => {
     const promise = rejectTo("oops")
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={promise}>{({ error }) => (error ? error.message : null)}</Async>
     )
-    await waitForElement(() => getByText("oops"))
+    await findByText("oops")
   })
 
   test("sets `startedAt` when a promise is provided", async () => {
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={resolveTo("done")}>
         {({ data, startedAt }) => {
           expect(startedAt.getTime()).toBeCloseTo(new Date().getTime(), -2)
@@ -89,11 +89,11 @@ export const withPromise = Async => () => {
         }}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
   })
 
   test("sets `finishedAt` when the provided promise settles", async () => {
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={resolveTo("done")}>
         {({ data, finishedAt }) => {
           if (data) expect(finishedAt.getTime()).toBeCloseTo(new Date().getTime(), -2)
@@ -101,7 +101,7 @@ export const withPromise = Async => () => {
         }}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
   })
 
   test("invokes `onResolve` callback when the promise resolves", async () => {
@@ -158,13 +158,13 @@ export const withPromise = Async => () => {
   })
 
   test("handles the promise settlement even when `initialValue` is provided", async () => {
-    const { getByText } = render(
+    const { findByText } = render(
       <Async initialValue="init" promise={resolveTo("done")}>
         {({ data }) => data || null}
       </Async>
     )
-    await waitForElement(() => getByText("init"))
-    await waitForElement(() => getByText("done"))
+    await findByText("init")
+    await findByText("done")
   })
 }
 
@@ -182,7 +182,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
   })
 
   test("sets `startedAt` when the promise starts", async () => {
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promiseFn={() => resolveTo()}>
         {({ startedAt }) => {
           if (startedAt) {
@@ -193,11 +193,11 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
         }}
       </Async>
     )
-    await waitForElement(() => getByText("started"))
+    await findByText("started")
   })
 
   test("sets `finishedAt` when the promise settles", async () => {
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promiseFn={() => resolveTo("done")}>
         {({ data, finishedAt }) => {
           if (data) expect(finishedAt.getTime()).toBeCloseTo(new Date().getTime(), -2)
@@ -205,7 +205,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
         }}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
   })
 
   test("invokes `onResolve` callback when the promise resolves", async () => {
@@ -344,7 +344,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
   test("does not start loading when using `initialValue`", async () => {
     const promiseFn = () => resolveTo("done")
     const states = []
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promiseFn={promiseFn} initialValue="done">
         {({ data, isPending }) => {
           states.push(isPending)
@@ -352,29 +352,29 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
         }}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
     expect(states).toEqual([false])
   })
 
   test("passes `initialValue` to children immediately", async () => {
     const promiseFn = () => resolveTo("done")
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promiseFn={promiseFn} initialValue="done">
         {({ data }) => data}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
   })
 
   test("sets `error` instead of `data` when `initialValue` is an Error object", async () => {
     const promiseFn = () => resolveTo("done")
     const error = new Error("oops")
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promiseFn={promiseFn} initialValue={error}>
         {({ error }) => error.message}
       </Async>
     )
-    await waitForElement(() => getByText("oops"))
+    await findByText("oops")
   })
 }
 
@@ -464,7 +464,7 @@ export const withDeferFn = (Async, abortCtrl) => () => {
   test("only accepts the last invocation of the promise", async () => {
     let i = 0
     const resolves = [resolveIn(10)("a"), resolveIn(20)("b"), resolveIn(10)("c")]
-    const { getByText } = render(
+    const { getByText, findByText } = render(
       <Async deferFn={i => resolves[i]}>
         {({ data, run }) => {
           if (data) {
@@ -480,7 +480,7 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     fireEvent.click(getByText("run"))
     i++
     fireEvent.click(getByText("run"))
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
   })
 }
 
@@ -488,12 +488,12 @@ export const withReducer = Async => () => {
   test("receives state, action and the original reducer", async () => {
     const promise = resolveTo("done")
     const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={promise} reducer={reducer}>
         {({ data }) => data || null}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
     expect(reducer).toHaveBeenCalledWith(
       expect.objectContaining({ status: expect.any(String) }),
       expect.objectContaining({ type: expect.any(String) }),
@@ -507,12 +507,12 @@ export const withReducer = Async => () => {
       if (action.type === "fulfill") action.payload = "cool"
       return asyncReducer(state, action)
     }
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={promise} reducer={reducer}>
         {({ data }) => data || null}
       </Async>
     )
-    await waitForElement(() => getByText("cool"))
+    await findByText("cool")
   })
 }
 
@@ -521,8 +521,8 @@ export const withDispatcher = Async => () => {
     const promise = resolveTo("done")
     const dispatcher = jest.fn((action, dispatch) => dispatch(action))
     const props = { promise, dispatcher }
-    const { getByText } = render(<Async {...props}>{({ data }) => data || null}</Async>)
-    await waitForElement(() => getByText("done"))
+    const { findByText } = render(<Async {...props}>{({ data }) => data || null}</Async>)
+    await findByText("done")
     expect(dispatcher).toHaveBeenCalledWith(
       expect.objectContaining({ type: expect.any(String) }),
       expect.any(Function),
@@ -536,12 +536,12 @@ export const withDispatcher = Async => () => {
       if (action.type === "fulfill") action.payload = "cool"
       dispatch(action)
     }
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={promise} dispatcher={dispatcher}>
         {({ data }) => data || null}
       </Async>
     )
-    await waitForElement(() => getByText("cool"))
+    await findByText("cool")
   })
 
   test("allows dispatching additional actions", async () => {
@@ -552,12 +552,12 @@ export const withDispatcher = Async => () => {
       dispatch(customAction)
     }
     const reducer = jest.fn((state, action, asyncReducer) => asyncReducer(state, action))
-    const { getByText } = render(
+    const { findByText } = render(
       <Async promise={promise} dispatcher={dispatcher} reducer={reducer}>
         {({ data }) => data || null}
       </Async>
     )
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
     expect(reducer).toHaveBeenCalledWith(expect.anything(), customAction, expect.anything())
   })
 }

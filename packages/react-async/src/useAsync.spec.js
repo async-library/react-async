@@ -2,7 +2,7 @@
 
 import "@testing-library/jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
+import { render, fireEvent, cleanup } from "@testing-library/react"
 import { useAsync, useFetch, globalScope } from "./index"
 import {
   sleep,
@@ -49,8 +49,8 @@ describe("useAsync", () => {
         {({ data }) => data || null}
       </Async>
     )
-    const { getByText } = render(component)
-    await waitForElement(() => getByText("done"))
+    const { findByText } = render(component)
+    await findByText("done")
     expect(onResolve).toHaveBeenCalledWith("done")
   })
 

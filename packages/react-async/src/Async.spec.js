@@ -2,7 +2,7 @@
 
 import "@testing-library/jest-dom/extend-expect"
 import React from "react"
-import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
+import { render, fireEvent, cleanup } from "@testing-library/react"
 import Async, { createInstance, globalScope } from "./index"
 import {
   resolveIn,
@@ -59,7 +59,7 @@ describe("Async.Fulfilled", () => {
   test("renders only after the promise is resolved", async () => {
     const promiseFn = () => resolveTo("ok")
     const deferFn = () => rejectTo("fail")
-    const { getByText, queryByText } = render(
+    const { getByText, findByText, queryByText } = render(
       <Async promiseFn={promiseFn} deferFn={deferFn}>
         <Async.Fulfilled>
           {(data, { run }) => <button onClick={run}>{data}</button>}
@@ -68,11 +68,11 @@ describe("Async.Fulfilled", () => {
       </Async>
     )
     expect(queryByText("ok")).toBeNull()
-    await waitForElement(() => getByText("ok"))
+    await findByText("ok")
     expect(queryByText("ok")).toBeInTheDocument()
     expect(queryByText("fail")).toBeNull()
     fireEvent.click(getByText("ok"))
-    await waitForElement(() => getByText("fail"))
+    await findByText("fail")
     expect(queryByText("ok")).toBeNull()
     expect(queryByText("fail")).toBeInTheDocument()
   })
@@ -80,7 +80,7 @@ describe("Async.Fulfilled", () => {
   test("with persist renders old data on error", async () => {
     const promiseFn = () => resolveTo("ok")
     const deferFn = () => rejectTo("fail")
-    const { getByText, queryByText } = render(
+    const { getByText, findByText, queryByText } = render(
       <Async promiseFn={promiseFn} deferFn={deferFn}>
         <Async.Fulfilled persist>
           {(data, { run }) => <button onClick={run}>{data}</button>}
@@ -89,11 +89,11 @@ describe("Async.Fulfilled", () => {
       </Async>
     )
     expect(queryByText("ok")).toBeNull()
-    await waitForElement(() => getByText("ok"))
+    await findByText("ok")
     expect(queryByText("ok")).toBeInTheDocument()
     expect(queryByText("fail")).toBeNull()
     fireEvent.click(getByText("ok"))
-    await waitForElement(() => getByText("fail"))
+    await findByText("fail")
     expect(queryByText("ok")).toBeInTheDocument()
     expect(queryByText("fail")).toBeInTheDocument()
   })
@@ -101,7 +101,7 @@ describe("Async.Fulfilled", () => {
   test("Async.Fulfilled works also with nested Async", async () => {
     const outer = () => resolveIn(0)("outer")
     const inner = () => resolveIn(100)("inner")
-    const { getByText, queryByText } = render(
+    const { findByText, queryByText } = render(
       <Async promiseFn={outer}>
         <Async.Fulfilled>
           {outer => (
@@ -114,9 +114,9 @@ describe("Async.Fulfilled", () => {
       </Async>
     )
     expect(queryByText("outer pending")).toBeNull()
-    await waitForElement(() => getByText("outer pending"))
+    await findByText("outer pending")
     expect(queryByText("outer inner")).toBeNull()
-    await waitForElement(() => getByText("outer inner"))
+    await findByText("outer inner")
     expect(queryByText("outer inner")).toBeInTheDocument()
   })
 })
@@ -124,14 +124,14 @@ describe("Async.Fulfilled", () => {
 describe("Async.Pending", () => {
   test("renders only while the promise is pending", async () => {
     const promiseFn = () => resolveTo("ok")
-    const { getByText, queryByText } = render(
+    const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         <Async.Pending>pending</Async.Pending>
         <Async.Fulfilled>done</Async.Fulfilled>
       </Async>
     )
     expect(queryByText("pending")).toBeInTheDocument()
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
     expect(queryByText("pending")).toBeNull()
   })
 })
@@ -139,7 +139,7 @@ describe("Async.Pending", () => {
 describe("Async.Initial", () => {
   test("renders only while the deferred promise has not started yet", async () => {
     const deferFn = () => resolveTo("ok")
-    const { getByText, queryByText } = render(
+    const { getByText, findByText, queryByText } = render(
       <Async deferFn={deferFn}>
         <Async.Initial>{({ run }) => <button onClick={run}>initial</button>}</Async.Initial>
         <Async.Pending>pending</Async.Pending>
@@ -150,7 +150,7 @@ describe("Async.Initial", () => {
     fireEvent.click(getByText("initial"))
     expect(queryByText("initial")).toBeNull()
     expect(queryByText("pending")).toBeInTheDocument()
-    await waitForElement(() => getByText("done"))
+    await findByText("done")
     expect(queryByText("pending")).toBeNull()
   })
 })
@@ -158,13 +158,13 @@ describe("Async.Initial", () => {
 describe("Async.Rejected", () => {
   test("renders only after the promise is rejected", async () => {
     const promiseFn = () => rejectTo("err")
-    const { getByText, queryByText } = render(
+    const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         <Async.Rejected>{error => error.message}</Async.Rejected>
       </Async>
     )
     expect(queryByText("err")).toBeNull()
-    await waitForElement(() => getByText("err"))
+    await findByText("err")
     expect(queryByText("err")).toBeInTheDocument()
   })
 })
@@ -172,31 +172,31 @@ describe("Async.Rejected", () => {
 describe("Async.Settled", () => {
   test("renders after the promise is fulfilled", async () => {
     const promiseFn = () => resolveTo("value")
-    const { getByText, queryByText } = render(
+    const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         <Async.Settled>{({ data }) => data}</Async.Settled>
       </Async>
     )
     expect(queryByText("value")).toBeNull()
-    await waitForElement(() => getByText("value"))
+    await findByText("value")
     expect(queryByText("value")).toBeInTheDocument()
   })
 
   test("renders after the promise is rejected", async () => {
     const promiseFn = () => rejectTo("err")
-    const { getByText, queryByText } = render(
+    const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         <Async.Settled>{({ error }) => error.message}</Async.Settled>
       </Async>
     )
     expect(queryByText("err")).toBeNull()
-    await waitForElement(() => getByText("err"))
+    await findByText("err")
     expect(queryByText("err")).toBeInTheDocument()
   })
 
   test("renders while loading new data and persist=true", async () => {
     const promiseFn = () => resolveTo("value")
-    const { getByText, queryByText } = render(
+    const { getByText, findByText, queryByText } = render(
       <Async initialValue="init" promiseFn={promiseFn}>
         <Async.Pending>
           <Async.Settled persist>loading</Async.Settled>
@@ -206,8 +206,7 @@ describe("Async.Settled", () => {
     )
     expect(queryByText("loading")).toBeNull()
     fireEvent.click(getByText("reload"))
-    await waitForElement(() => getByText("loading"))
-    expect(queryByText("loading")).toBeInTheDocument()
+    await findByText("loading")
   })
 })
 
@@ -216,8 +215,8 @@ describe("createInstance", () => {
     const promiseFn = () => resolveTo("done")
     const onResolve = jest.fn()
     const CustomAsync = createInstance({ promiseFn, onResolve })
-    const { getByText } = render(<CustomAsync>{({ data }) => data || null}</CustomAsync>)
-    await waitForElement(() => getByText("done"))
+    const { findByText } = render(<CustomAsync>{({ data }) => data || null}</CustomAsync>)
+    await findByText("done")
     expect(onResolve).toHaveBeenCalledWith("done")
   })
 
@@ -225,8 +224,8 @@ describe("createInstance", () => {
     const promiseFn = () => resolveTo("done")
     const watchFn = jest.fn()
     const CustomAsync = createInstance({ promiseFn, watchFn })
-    const { getByText } = render(<CustomAsync>{({ data }) => data || null}</CustomAsync>)
-    await waitForElement(() => getByText("done"))
+    const { findByText } = render(<CustomAsync>{({ data }) => data || null}</CustomAsync>)
+    await findByText("done")
     expect(watchFn).toHaveBeenCalledWith(
       expect.objectContaining({ promiseFn, watchFn }),
       expect.objectContaining({ promiseFn, watchFn })
@@ -236,14 +235,14 @@ describe("createInstance", () => {
   test("custom instances also have helper components", async () => {
     const promiseFn = () => resolveTo("done")
     const CustomAsync = createInstance({ promiseFn })
-    const { getByText } = render(
+    const { findByText } = render(
       <CustomAsync>
         <CustomAsync.Pending>pending</CustomAsync.Pending>
         <CustomAsync.Fulfilled>resolved</CustomAsync.Fulfilled>
       </CustomAsync>
     )
-    await waitForElement(() => getByText("pending"))
-    await waitForElement(() => getByText("resolved"))
+    await findByText("pending")
+    await findByText("resolved")
   })
 
   test("custom instance also passes defaultProps to deferFn", async () => {
