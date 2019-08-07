@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import "jest-dom/extend-expect"
+import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, waitForElement } from "@testing-library/react"
 

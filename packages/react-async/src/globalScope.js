@@ -1,5 +1,8 @@
+/* istanbul ignore file */
+
 /**
  * Universal global scope object. In the browser this is `self`, in Node.js and React Native it's `global`.
+ * This file is excluded from coverage reporting because these globals are environment-specific so we can't test them all.
  */
 const globalScope = (() => {
   if (typeof self === "object" && self.self === self) return self

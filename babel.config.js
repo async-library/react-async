@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-console.log("Loaded babel.config.js")
-
 module.exports = {
   presets: ["@babel/preset-react"],
   plugins: ["@babel/plugin-proposal-object-rest-spread"],

@@ -1,4 +1,4 @@
-import "jest-dom/extend-expect"
+import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { useAsync } from "react-async"
 import { render, cleanup, waitForElement, fireEvent } from "@testing-library/react"

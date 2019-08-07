@@ -1,4 +1,4 @@
-import "jest-dom/extend-expect"
+import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup, waitForElement } from "@testing-library/react"
 import Async, { Initial, Pending, Fulfilled, Rejected, Settled } from "./index"
