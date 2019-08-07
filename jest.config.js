@@ -1,5 +1,15 @@
 /* eslint-disable no-console */
-console.log("Loaded jest.config.js")
+for (let pkg of [
+  "@testing-library/jest-dom",
+  "@testing-library/react",
+  "jest",
+  "react",
+  "react-dom",
+]) {
+  console.log(
+    `Using \u001b[36;1m${pkg}@${require(`./node_modules/${pkg}/package.json`).version}\u001b[0m`
+  )
+}
 
 module.exports = {
   rootDir: "./",

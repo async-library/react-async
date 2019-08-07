@@ -5,8 +5,6 @@
  * @see https://github.com/facebook/react/pull/14853
  */
 
-console.log("Loaded jest.setup.js")
-
 const originalError = console.error
 
 beforeAll(() => {
