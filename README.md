@@ -50,9 +50,10 @@ error states, without assumptions about the shape of your data or the type of re
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
 
-> ## Upgrading to v6
+> ## Upgrading to v8
 >
-> Version 6 comes with a breaking change. See [Upgrading](#upgrading) for details.
+> Version 8 comes with breaking changes. See [Upgrading](#upgrading) for details.
+> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available.
 
 # Table of Contents
 
@@ -121,10 +122,25 @@ yarn add react-async
 
 ### Upgrading
 
+#### Upgrade to v8
+
+All standalone helper components were renamed to avoid import naming collision.
+
+- `<Initial>` was renamed to `<IfInitial>`.
+- `<Pending>` was renamed to `<IfPending>`.
+- `<Fulfilled>` was renamed to `<IfFulfilled>`.
+- `<Rejected>` was renamed to `<IfRejected`.
+- `<Settled>` was renamed to `<IfSettled>`.
+
+> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
+
 #### Upgrade to v6
 
 - `<Async.Pending>` was renamed to `<Async.Initial>`.
+- Some of the other helpers were also renamed, but the old ones remain as alias.
 - Don't forget to deal with any custom instances of `<Async>` when upgrading.
+
+> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
 
 #### Upgrade to v4
 
