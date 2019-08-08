@@ -85,6 +85,7 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               yarn deploy:examples --token $NOW_API_TOKEN
             fi
+          no_output_timeout: 30m
 
 workflows:
   version: 2
