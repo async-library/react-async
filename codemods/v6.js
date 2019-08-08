@@ -7,7 +7,7 @@
  * This includes any custom instances created with createInstance().
  */
 
-export default function transform({ path, source }, api) {
+module.exports = function transform({ path, source }, api) {
   if (path.includes("/node_modules/")) return
 
   const j = api.jscodeshift
