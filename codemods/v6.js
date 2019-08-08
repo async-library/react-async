@@ -8,7 +8,7 @@
  */
 
 module.exports = function transform({ path, source }, api) {
-  if (path.includes("/node_modules/")) return
+  if (path.includes("node_modules/")) return
 
   const j = api.jscodeshift
   const root = j(source)
