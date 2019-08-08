@@ -1,6 +1,6 @@
 {
   "name": "custom-instance-example",
-  "version": "1.0.2",
+  "version": "8.0.0-alpha.0",
   "private": true,
   "homepage": "https://react-async.ghengeveld.now.sh/examples/custom-instance",
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "react": "^16.8.6",
-    "react-async": "^7.0.6",
-    "react-async-devtools": "^1.0.4",
+    "react-async": "^8.0.0-alpha.0",
+    "react-async-devtools": "^8.0.0-alpha.0",
     "react-dom": "^16.8.6",
     "react-scripts": "^3.0.1"
   },

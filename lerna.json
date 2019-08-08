@@ -5,5 +5,5 @@
     "ignoreChanges": ["examples/**"]
   },
   "useWorkspaces": true,
-  "version": "independent"
+  "version": "8.0.0-alpha.0"
 }
