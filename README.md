@@ -31,13 +31,14 @@
   </a>
 </p>
 
-React component and hook for declarative promise resolution and data fetching. Leverages the Render Props pattern and
-Hooks for ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and
-error states, without assumptions about the shape of your data or the type of request.
+React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
+state of the asynchronous process, without assumptions about the shape of your data or the type of request.
+Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 - Zero dependencies
 - Works with promises, async/await and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
+- Debug and develop every part of the loading sequence with the [DevTools](#devtools)
 - Provides convenient `isLoading`, `startedAt`, `finishedAt`, et al metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
@@ -60,6 +61,7 @@ error states, without assumptions about the shape of your data or the type of re
 - [Rationale](#rationale)
   - [Concurrent React and Suspense](#concurrent-react-and-suspense)
 - [Installation](#installation)
+  - [DevTools](#devtools)
   - [Upgrading](#upgrading)
 - [Usage](#usage)
   - [As a hook](#as-a-hook)
@@ -119,6 +121,33 @@ yarn add react-async
 
 > This package requires `react` as a peer dependency. Please make sure to install that as well.
 > If you want to use the `useAsync` hook, you'll need `react@16.8.0` or later.
+
+### DevTools
+
+React Async comes with a separate DevTools package which helps you Debug and develop your asynchronous application states.
+
+```
+npm install --save react-async-devtools
+```
+
+Or with Yarn:
+
+```
+yarn add react-async-devtools
+```
+
+Then simply import it and render the`<DevTools/>` component at the root of your app:
+
+```jsx
+import DevTools from "react-async-devtools"
+
+export const Root = () => (
+  <>
+    <DevTools />
+    <App />
+  </>
+)
+```
 
 ### Upgrading
 
