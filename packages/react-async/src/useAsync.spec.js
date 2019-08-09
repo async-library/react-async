@@ -161,4 +161,21 @@ describe("useFetch", () => {
     await Promise.resolve()
     expect(json).toHaveBeenCalled()
   })
+
+  test("calling `run` with an argument allows to override `init` parameters", () => {
+    const component = (
+      <Fetch input="/test" init={{ method: "POST" }}>
+        {({ run }) => (
+          <button onClick={() => run(init => ({ ...init, body: '{"name":"test"}' }))}>run</button>
+        )}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(globalScope.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(globalScope.fetch).toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+    )
+  })
 })

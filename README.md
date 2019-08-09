@@ -251,6 +251,15 @@ const MyComponent = () => {
   const headers = { Accept: "application/json" }
   const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)
   // This will setup a promiseFn with a fetch request and JSON deserialization.
+
+  // you can later call `run` with an optional callback argument to 
+  // last-minute modify the `init` parameter that is passed to `fetch`
+  function clickHandler() {
+    run(init => ({
+      ...init, 
+      body: JSON.stringify(formValues)
+    }))
+  }
 }
 ```
 

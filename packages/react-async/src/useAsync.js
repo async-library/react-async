@@ -126,8 +126,7 @@ const useAsync = (arg1, arg2) => {
 
 const parseResponse = (accept, json) => res => {
   if (!res.ok) return Promise.reject(res)
-  if (json === false) return res
-  if (json === true || accept === "application/json") return res.json()
+  if (json === true || (json !== false && accept === "application/json")) return res.json()
   return res
 }
 
@@ -136,13 +135,17 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
   const headers = input.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input, init) => globalScope.fetch(input, init).then(parseResponse(accept, json))
-  const isDefer = defer === true || ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
-  const fn = defer === false || !isDefer ? "promiseFn" : "deferFn"
+  const isDefer =
+    defer === true || (defer !== false && ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method))
+  const fn = isDefer ? "deferFn" : "promiseFn"
   const state = useAsync({
     ...options,
     [fn]: useCallback(
-      (_, props, ctrl) => doFetch(input, { signal: ctrl ? ctrl.signal : props.signal, ...init }),
-      [JSON.stringify(input), JSON.stringify(init)]
+      isDefer
+        ? ([override], _, { signal }) =>
+            doFetch(input, { signal, ...(typeof override === "function" ? override(init) : init) })
+        : (_, { signal }) => doFetch(input, { signal, ...init }),
+      [isDefer, JSON.stringify(input), JSON.stringify(init)]
     ),
   })
   useDebugValue(state, ({ counter, status }) => `[${counter}] ${status}`)
