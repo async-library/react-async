@@ -1,5 +1,5 @@
 import React from "react"
-import { useAsync } from "react-async"
+import { useAsync, IfPending, IfFulfilled, IfRejected } from "react-async"
 import ReactDOM from "react-dom"
 import DevTools from "react-async-devtools"
 import "./index.css"
@@ -27,15 +27,16 @@ const UserDetails = ({ data }) => (
 )
 
 const User = ({ userId }) => {
-  const { data, error, isPending } = useAsync({
-    promiseFn: loadUser,
-    debugLabel: `User ${userId}`,
-    userId,
-  })
-  if (isPending) return <UserPlaceholder />
-  if (error) return <p>{error.message}</p>
-  if (data) return <UserDetails data={data} />
-  return null
+  const state = useAsync({ promiseFn: loadUser, debugLabel: `User ${userId}`, userId })
+  return (
+    <>
+      <IfPending state={state}>
+        <UserPlaceholder />
+      </IfPending>
+      <IfFulfilled state={state}>{data => <UserDetails data={data} />}</IfFulfilled>
+      <IfRejected state={state}>{error => <p>{error.message}</p>}</IfRejected>
+    </>
+  )
 }
 
 export const App = () => (

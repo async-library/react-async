@@ -1,12 +1,12 @@
 import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup } from "@testing-library/react"
-import Async, { Initial, Pending, Fulfilled, Rejected, Settled } from "./index"
+import Async, { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./index"
 import { resolveIn, resolveTo, rejectTo } from "./specs"
 
 afterEach(cleanup)
 
-describe("Fulfilled", () => {
+describe("IfFulfilled", () => {
   test("renders only after the promise is resolved", async () => {
     const promiseFn = () => resolveTo("ok")
     const deferFn = () => rejectTo("fail")
@@ -14,10 +14,10 @@ describe("Fulfilled", () => {
       <Async promiseFn={promiseFn} deferFn={deferFn}>
         {state => (
           <>
-            <Fulfilled state={state}>
+            <IfFulfilled state={state}>
               {(data, { run }) => <button onClick={run}>{data}</button>}
-            </Fulfilled>
-            <Rejected state={state}>{error => error.message}</Rejected>
+            </IfFulfilled>
+            <IfRejected state={state}>{error => error.message}</IfRejected>
           </>
         )}
       </Async>
@@ -39,10 +39,10 @@ describe("Fulfilled", () => {
       <Async promiseFn={promiseFn} deferFn={deferFn}>
         {state => (
           <>
-            <Fulfilled state={state} persist>
+            <IfFulfilled state={state} persist>
               {(data, { run }) => <button onClick={run}>{data}</button>}
-            </Fulfilled>
-            <Rejected state={state}>{error => error.message}</Rejected>
+            </IfFulfilled>
+            <IfRejected state={state}>{error => error.message}</IfRejected>
           </>
         )}
       </Async>
@@ -57,24 +57,24 @@ describe("Fulfilled", () => {
     expect(queryByText("fail")).toBeInTheDocument()
   })
 
-  test("Fulfilled works also with nested Async", async () => {
+  test("IfFulfilled works also with nested Async", async () => {
     const outer = () => resolveIn(0)("outer")
     const inner = () => resolveIn(100)("inner")
     const { findByText, queryByText } = render(
       <Async promiseFn={outer}>
         {state => (
-          <Fulfilled state={state}>
+          <IfFulfilled state={state}>
             {outer => (
               <Async promiseFn={inner}>
                 {state => (
                   <>
-                    <Pending state={state}>{outer} pending</Pending>
-                    <Fulfilled state={state}>{inner => outer + " " + inner}</Fulfilled>
+                    <IfPending state={state}>{outer} pending</IfPending>
+                    <IfFulfilled state={state}>{inner => outer + " " + inner}</IfFulfilled>
                   </>
                 )}
               </Async>
             )}
-          </Fulfilled>
+          </IfFulfilled>
         )}
       </Async>
     )
@@ -86,15 +86,15 @@ describe("Fulfilled", () => {
   })
 })
 
-describe("Pending", () => {
+describe("IfPending", () => {
   test("renders only while the promise is pending", async () => {
     const promiseFn = () => resolveTo("ok")
     const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
         {state => (
           <>
-            <Pending state={state}>pending</Pending>
-            <Fulfilled state={state}>done</Fulfilled>
+            <IfPending state={state}>pending</IfPending>
+            <IfFulfilled state={state}>done</IfFulfilled>
           </>
         )}
       </Async>
@@ -105,16 +105,18 @@ describe("Pending", () => {
   })
 })
 
-describe("Initial", () => {
+describe("IfInitial", () => {
   test("renders only while the deferred promise has not started yet", async () => {
     const deferFn = () => resolveTo("ok")
     const { getByText, findByText, queryByText } = render(
       <Async deferFn={deferFn}>
         {state => (
           <>
-            <Initial state={state}>{({ run }) => <button onClick={run}>initial</button>}</Initial>
-            <Pending state={state}>pending</Pending>
-            <Fulfilled state={state}>done</Fulfilled>
+            <IfInitial state={state}>
+              {({ run }) => <button onClick={run}>initial</button>}
+            </IfInitial>
+            <IfPending state={state}>pending</IfPending>
+            <IfFulfilled state={state}>done</IfFulfilled>
           </>
         )}
       </Async>
@@ -128,12 +130,12 @@ describe("Initial", () => {
   })
 })
 
-describe("Rejected", () => {
+describe("IfRejected", () => {
   test("renders only after the promise is rejected", async () => {
     const promiseFn = () => rejectTo("err")
     const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
-        {state => <Rejected state={state}>{error => error.message}</Rejected>}
+        {state => <IfRejected state={state}>{error => error.message}</IfRejected>}
       </Async>
     )
     expect(queryByText("err")).toBeNull()
@@ -142,12 +144,12 @@ describe("Rejected", () => {
   })
 })
 
-describe("Settled", () => {
+describe("IfSettled", () => {
   test("renders after the promise is fulfilled", async () => {
     const promiseFn = () => resolveTo("value")
     const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
-        {state => <Settled state={state}>{({ data }) => data}</Settled>}
+        {state => <IfSettled state={state}>{({ data }) => data}</IfSettled>}
       </Async>
     )
     expect(queryByText("value")).toBeNull()
@@ -159,7 +161,7 @@ describe("Settled", () => {
     const promiseFn = () => rejectTo("err")
     const { findByText, queryByText } = render(
       <Async promiseFn={promiseFn}>
-        {state => <Settled state={state}>{({ error }) => error.message}</Settled>}
+        {state => <IfSettled state={state}>{({ error }) => error.message}</IfSettled>}
       </Async>
     )
     expect(queryByText("err")).toBeNull()
@@ -173,14 +175,14 @@ describe("Settled", () => {
       <Async initialValue="init" promiseFn={promiseFn}>
         {state => (
           <>
-            <Pending state={state}>
-              <Settled state={state} persist>
+            <IfPending state={state}>
+              <IfSettled state={state} persist>
                 loading
-              </Settled>
-            </Pending>
-            <Settled state={state}>
+              </IfSettled>
+            </IfPending>
+            <IfSettled state={state}>
               {({ reload }) => <button onClick={reload}>reload</button>}
-            </Settled>
+            </IfSettled>
           </>
         )}
       </Async>
