@@ -626,7 +626,7 @@ Cancels the currently pending promise by ignoring its result and calls `abort()`
 
 > `function(...args: any[]): Promise`
 
-Runs the `deferFn`, passing any arguments provided as an array.
+Runs the `deferFn`, passing any arguments provided as an array. The returned Promise always **fulfills** to `data` or `error`, it never rejects.
 
 #### `reload`
 
