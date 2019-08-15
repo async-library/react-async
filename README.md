@@ -257,8 +257,18 @@ const MyComponent = () => {
   function clickHandler() {
     run(init => ({
       ...init, 
-      body: JSON.stringify(formValues)
+      headers: {
+        ...init.headers,
+        authentication: "..."
+      }
     }))
+  }
+
+  // alternatively, you can also just use an object that will be spread over `init`.
+  // please note that this is not deep-merged, so you might override properties present in the 
+  // original `init` parameter
+  function clickHandler2() {
+    run({ body: JSON.stringify(formValues) })
   }
 }
 ```

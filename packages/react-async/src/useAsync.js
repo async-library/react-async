@@ -143,7 +143,17 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
     [fn]: useCallback(
       isDefer
         ? ([override], _, { signal }) =>
-            doFetch(input, { signal, ...(typeof override === "function" ? override(init) : init) })
+            doFetch(input, {
+              signal,
+              ...// override is a function, call it with init
+              (typeof override === "function"
+                ? override(init)
+                : // override is an Event or SyntheticEvent - do not spread
+                "preventDefault" in override
+                ? init
+                : // otherwise, spread override over init
+                  { ...init, ...override }),
+            })
         : (_, { signal }) => doFetch(input, { signal, ...init }),
       [isDefer, JSON.stringify(input), JSON.stringify(init)]
     ),

@@ -162,7 +162,7 @@ describe("useFetch", () => {
     expect(json).toHaveBeenCalled()
   })
 
-  test("calling `run` with an argument allows to override `init` parameters", () => {
+  test("calling `run` with a method argument allows to override `init` parameters", () => {
     const component = (
       <Fetch input="/test" init={{ method: "POST" }}>
         {({ run }) => (
@@ -176,6 +176,37 @@ describe("useFetch", () => {
     expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
       expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+    )
+  })
+
+  test("calling `run` with an object as argument allows to override `init` parameters", () => {
+    const component = (
+      <Fetch input="/test" init={{ method: "POST" }}>
+        {({ run }) => <button onClick={() => run({ body: '{"name":"test"}' })}>run</button>}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(globalScope.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(globalScope.fetch).toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+    )
+  })
+
+  test("passing `run` directly as a click handler will not spread the event over init", () => {
+    const component = (
+      <Fetch input="/test" init={{ method: "POST" }}>
+        {({ run }) => <button onClick={run}>run</button>}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(globalScope.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(globalScope.fetch).toHaveBeenCalledWith("/test", expect.any(Object))
+    expect(globalScope.fetch).not.toHaveBeenCalledWith(
+      "/test",
+      expect.objectContaining({ preventDefault: expect.any(Function) })
     )
   })
 })
