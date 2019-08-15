@@ -22,7 +22,7 @@ export type DeferFn<T> = (
 
 interface AbstractAction {
   type: string
-  meta: { counter: number; [meta: string]: any }
+  meta: { counter: number;[meta: string]: any }
 }
 export type Start = AbstractAction & { type: "start"; payload: () => Promise<void> }
 export type Cancel = AbstractAction & { type: "cancel" }
@@ -130,7 +130,7 @@ export type AsyncRejected<T> = AbstractState<T> & {
 }
 export type AsyncState<T> = AsyncInitial<T> | AsyncPending<T> | AsyncFulfilled<T> | AsyncRejected<T>
 
-export class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+export class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> { }
 
 export namespace Async {
   export function Initial<T>(props: {
@@ -225,6 +225,17 @@ export function useFetch<T>(
   input: RequestInfo,
   init?: RequestInit,
   options?: FetchOptions<T>
-): AsyncState<T>
+): AsyncInitialWithout<'run', T> & FetchRun<T>;
+
+// unfortunately, we cannot just omit K from AsyncInitial as that would unbox the Discriminated Union
+type AsyncInitialWithout<K extends keyof AsyncInitial<T>, T> = (Omit<AsyncInitial<T>, K> | Omit<AsyncPending<T>, K> | Omit<AsyncFulfilled<T>, K> | Omit<AsyncRejected<T>, K>);
+
+type FetchRun<T> = {
+  run(overrideInit: Partial<RequestInit>): Promise<T>
+  run(overrideInit: (init: RequestInit) => RequestInit): Promise<T>
+  run(ignoredEvent: React.SyntheticEvent): Promise<T>;
+  run(ignoredEvent: Event): Promise<T>;
+  run(): Promise<T>;
+};
 
 export default Async

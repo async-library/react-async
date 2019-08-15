@@ -9,6 +9,7 @@ import Async, {
 } from "react-async"
 import DevTools from "react-async-devtools"
 import "./App.css"
+import { FetchHookExample } from "./FetchHookExample";
 
 const loadFirstName: PromiseFn<string> = ({ userId }) =>
   fetch(`https://reqres.in/api/users/${userId}`)
@@ -50,6 +51,7 @@ class App extends Component {
             <CustomAsync.Resolved>{data => <>{data}</>}</CustomAsync.Resolved>
           </CustomAsync>
           <UseAsync />
+          <FetchHookExample />
         </header>
       </div>
     )
