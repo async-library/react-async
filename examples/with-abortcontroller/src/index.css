@@ -15,6 +15,9 @@ button {
   padding: 10px 20px;
   font-size: 0.9em;
   font-weight: bold;
-  outline: 0;
   text-transform: uppercase;
+}
+
+button:focus {
+  outline: 0;
 }
