@@ -31,13 +31,14 @@
   </a>
 </p>
 
-React component and hook for declarative promise resolution and data fetching. Leverages the Render Props pattern and
-Hooks for ultimate flexibility as well as the new Context API for ease of use. Makes it easy to handle loading and
-error states, without assumptions about the shape of your data or the type of request.
+React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
+state of the asynchronous process, without assumptions about the shape of your data or the type of request.
+Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 - Zero dependencies
 - Works with promises, async/await and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
+- Debug and develop every part of the loading sequence with the [DevTools](#devtools)
 - Provides convenient `isLoading`, `startedAt`, `finishedAt`, et al metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
@@ -60,6 +61,7 @@ error states, without assumptions about the shape of your data or the type of re
 - [Rationale](#rationale)
   - [Concurrent React and Suspense](#concurrent-react-and-suspense)
 - [Installation](#installation)
+  - [DevTools](#devtools)
   - [Upgrading](#upgrading)
 - [Usage](#usage)
   - [As a hook](#as-a-hook)
@@ -81,13 +83,14 @@ error states, without assumptions about the shape of your data or the type of re
 
 ## Rationale
 
-React Async is different in that it tries to resolve data as close as possible to where it will be used, while using a
+React Async is different in that it tries to resolve data as close as possible to where it will be used, while using
 declarative syntax, using just JSX and native promises. This is in contrast to systems like Redux where you would
 configure any data fetching or updates on a higher (application global) level, using a special construct
 (actions/reducers).
 
-React Async works really well even in larger applications with multiple or nested data dependencies. It encourages loading
-data on-demand and in parallel at component level instead of in bulk at the route / page level. It's entirely decoupled
+React Async works well even in larger applications with multiple or nested data dependencies. It encourages loading
+data on-demand and in parallel at component level instead of in bulk at the route/
+page level. It's entirely decoupled
 from your routes, so it works well in complex applications that have a dynamic routing model or don't use routes at all.
 
 React Async is promise-based, so you can resolve anything you want, not just `fetch` requests.
@@ -100,8 +103,8 @@ a cache. It can render a fallback UI while loading data, much like `<Async.Loadi
 
 React Async has no direct relation to Concurrent React. They are conceptually close, but not the same. React Async is
 meant to make dealing with asynchronous business logic easier. Concurrent React will make those features have less
-impact on performance and usability. When Suspense lands, React Async will make full use of Suspense features. In fact
-you can already **start using React Async right now**, and in a later update you'll **get Suspense features for free**.
+impact on performance and usability. When Suspense lands, React Async will make full use of Suspense features. In fact,
+you can already **start using React Async right now**, and in a later update, you'll **get Suspense features for free**.
 
 [concurrent react]: https://github.com/sw-yx/fresh-concurrent-react/blob/master/Intro.md#introduction-what-is-concurrent-react
 
@@ -119,6 +122,33 @@ yarn add react-async
 
 > This package requires `react` as a peer dependency. Please make sure to install that as well.
 > If you want to use the `useAsync` hook, you'll need `react@16.8.0` or later.
+
+### DevTools
+
+React Async comes with a separate DevTools package which helps you Debug and develop your asynchronous application states.
+
+```
+npm install --save react-async-devtools
+```
+
+Or with Yarn:
+
+```
+yarn add react-async-devtools
+```
+
+Then simply import it and render the`<DevTools/>` component at the root of your app:
+
+```jsx
+import DevTools from "react-async-devtools"
+
+export const Root = () => (
+  <>
+    <DevTools />
+    <App />
+  </>
+)
+```
 
 ### Upgrading
 
@@ -596,7 +626,7 @@ Cancels the currently pending promise by ignoring its result and calls `abort()`
 
 > `function(...args: any[]): Promise`
 
-Runs the `deferFn`, passing any arguments provided as an array.
+Runs the `deferFn`, passing any arguments provided as an array. The returned Promise always **fulfills** to `data` or `error`, it never rejects.
 
 #### `reload`
 

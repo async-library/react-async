@@ -14,12 +14,12 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "^33.0.0",
-    "react": "16.8.3",
+    "expo": "^34.0.4",
+    "react": "16.9.0",
     "react-async": "^8.0.0-alpha.0",
-    "react-dom": "^16.8.6",
+    "react-dom": "^16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
-    "react-native-web": "^0.11.4"
+    "react-native-web": "^0.11.6"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.1.1",
