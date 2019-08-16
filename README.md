@@ -14,12 +14,6 @@
   <a href="https://bundlephobia.com/result?p=react-async">
     <img src="https://img.shields.io/bundlephobia/min/react-async.svg" alt="minified size">
   </a>
-  <a href="https://circleci.com/gh/ghengeveld/react-async">
-    <img src="https://img.shields.io/circleci/build/github/ghengeveld/react-async/master.svg" alt="build status">
-  </a>
-  <a href="https://codecov.io/github/ghengeveld/react-async">
-    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async/master.svg" alt="code coverage">
-  </a>
   <a href="https://opensource.org/licenses/ISC">
     <img src="https://img.shields.io/npm/l/react-async.svg" alt="license">
   </a>
@@ -28,6 +22,19 @@
   </a>
   <a href="https://github.com/ghengeveld/react-async/pulls">
     <img src="https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg" alt="pull requests">
+  </a>
+  <br/>
+  <a href="https://circleci.com/gh/ghengeveld/react-async">
+    <img src="https://img.shields.io/circleci/build/github/ghengeveld/react-async/master.svg?label=circleci" alt="circleci status">
+  </a>
+  <a href="https://travis-ci.org/ghengeveld/react-async">
+    <img src="https://img.shields.io/travis/ghengeveld/react-async/master?label=travis" alt="travis status">
+  </a>
+  <a href="https://codecov.io/github/ghengeveld/react-async">
+    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async/master.svg" alt="code coverage">
+  </a>
+  <a href="https://www.codefactor.io/repository/github/ghengeveld/react-async">
+    <img src="https://www.codefactor.io/repository/github/ghengeveld/react-async/badge" alt="code quality">
   </a>
 </p>
 
