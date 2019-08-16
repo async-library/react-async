@@ -50,7 +50,7 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: 
+      - run:
           name: Test with compatibility checks
           command: yarn test:compat
       - persist_to_workspace:
