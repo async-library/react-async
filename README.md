@@ -17,11 +17,18 @@
   <a href="https://opensource.org/licenses/ISC">
     <img src="https://img.shields.io/npm/l/react-async.svg" alt="license">
   </a>
+  <br/>
   <a href="https://github.com/ghengeveld/react-async/issues">
     <img src="https://img.shields.io/github/issues/ghengeveld/react-async.svg" alt="issues">
   </a>
   <a href="https://github.com/ghengeveld/react-async/pulls">
     <img src="https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg" alt="pull requests">
+  </a>
+  <a href="https://github.com/ghengeveld/react-async/releases">
+    <img src="https://img.shields.io/github/release/ghengeveld/react-async" alt="last release">
+  </a>
+  <a href="https://github.com/ghengeveld/react-async/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/ghengeveld/react-async" alt="contributors">
   </a>
   <br/>
   <a href="https://circleci.com/gh/ghengeveld/react-async">
