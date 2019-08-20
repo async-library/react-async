@@ -3,7 +3,7 @@ import Async from "react-async"
 import DevTools from "react-async-devtools"
 import fetch from "isomorphic-fetch"
 import Link from "next/link"
-import Router, { withRouter } from "next/router"
+import { withRouter } from "next/router"
 
 const loadUser = ({ userId = 1 }) =>
   fetch(`https://reqres.in/api/users/${userId}`)
