@@ -32,6 +32,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.mounted = false
       this.counter = 0
       this.args = []
+      this.promise = undefined
       this.abortController = { abort: () => {} }
       this.state = {
         ...init({ initialValue, promise, promiseFn }),
@@ -96,6 +97,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     getMeta(meta) {
       return {
         counter: this.counter,
+        promise: this.promise,
         debugLabel: this.debugLabel,
         ...meta,
       }
@@ -107,11 +109,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new globalScope.AbortController()
       }
       this.counter++
-      return new Promise((resolve, reject) => {
+      return (this.promise = new Promise((resolve, reject) => {
         if (!this.mounted) return
         const executor = () => promiseFn().then(resolve, reject)
         this.dispatch({ type: actionTypes.start, payload: executor, meta: this.getMeta() })
-      })
+      }))
     }
 
     load() {

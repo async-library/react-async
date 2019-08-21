@@ -12,7 +12,7 @@ export const rejectTo = rejectIn(0)
 export const sleep = ms => resolveIn(ms)()
 
 export const common = Async => () => {
-  test("passes `data`, `error`, metadata and methods as render props", async () => {
+  test("passes `data`, `error`, `promise`, metadata and methods as render props", async () => {
     render(
       <Async>
         {renderProps => {
@@ -28,9 +28,10 @@ export const common = Async => () => {
           expect(renderProps).toHaveProperty("isRejected")
           expect(renderProps).toHaveProperty("isSettled")
           expect(renderProps).toHaveProperty("counter")
-          expect(renderProps).toHaveProperty("cancel")
+          expect(renderProps).toHaveProperty("promise")
           expect(renderProps).toHaveProperty("run")
           expect(renderProps).toHaveProperty("reload")
+          expect(renderProps).toHaveProperty("cancel")
           expect(renderProps).toHaveProperty("setData")
           expect(renderProps).toHaveProperty("setError")
           return null
@@ -165,6 +166,38 @@ export const withPromise = Async => () => {
     )
     await findByText("init")
     await findByText("done")
+  })
+
+  test("exposes the wrapper promise", async () => {
+    const onFulfilled = jest.fn()
+    const onRejected = jest.fn()
+    const { findByText } = render(
+      <Async promise={resolveTo("done")}>
+        {({ data, promise }) => {
+          promise && promise.then(onFulfilled, onRejected)
+          return data || null
+        }}
+      </Async>
+    )
+    await findByText("done")
+    expect(onFulfilled).toHaveBeenCalledWith("done")
+    expect(onRejected).not.toHaveBeenCalled()
+  })
+
+  test("the wrapper promise rejects on error", async () => {
+    const onFulfilled = jest.fn()
+    const onRejected = jest.fn()
+    const { findByText } = render(
+      <Async promise={rejectTo("err")}>
+        {({ error, promise }) => {
+          promise && promise.then(onFulfilled, onRejected)
+          return error ? error.message : null
+        }}
+      </Async>
+    )
+    await findByText("err")
+    expect(onFulfilled).not.toHaveBeenCalled()
+    expect(onRejected).toHaveBeenCalledWith(new Error("err"))
   })
 }
 

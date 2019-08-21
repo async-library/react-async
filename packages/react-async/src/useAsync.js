@@ -12,6 +12,7 @@ const useAsync = (arg1, arg2) => {
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const lastOptions = useRef(undefined)
+  const lastPromise = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
@@ -29,9 +30,10 @@ const useAsync = (arg1, arg2) => {
   )
 
   const { debugLabel } = options
-  const getMeta = useCallback(meta => ({ counter: counter.current, debugLabel, ...meta }), [
-    debugLabel,
-  ])
+  const getMeta = useCallback(
+    meta => ({ counter: counter.current, promise: lastPromise.current, debugLabel, ...meta }),
+    [debugLabel]
+  )
 
   const setData = useCallback(
     (data, callback = noop) => {
@@ -72,11 +74,11 @@ const useAsync = (arg1, arg2) => {
         abortController.current = new globalScope.AbortController()
       }
       counter.current++
-      return new Promise((resolve, reject) => {
+      return (lastPromise.current = new Promise((resolve, reject) => {
         if (!isMounted.current) return
         const executor = () => promiseFn().then(resolve, reject)
         dispatch({ type: actionTypes.start, payload: executor, meta: getMeta() })
-      })
+      }))
     },
     [dispatch, getMeta]
   )
