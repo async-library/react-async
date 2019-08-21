@@ -13,6 +13,7 @@
   "plugins": ["jest", "promise", "react", "react-hooks"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "no-console": "error"
   },
   "settings": {
