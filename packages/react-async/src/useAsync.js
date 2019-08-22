@@ -130,7 +130,7 @@ const useAsync = (arg1, arg2) => {
   })
   useEffect(() => {
     lastOptions.current = options
-  })
+  }, [options])
   useEffect(() => {
     if (counter.current) cancel()
     if (promise || promiseFn) load()
