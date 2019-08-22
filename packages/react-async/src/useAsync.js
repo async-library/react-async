@@ -186,5 +186,5 @@ const unsupported = () => {
   )
 }
 
-export default (useEffect ? useAsync : unsupported)
+export default useEffect ? useAsync : unsupported
 export const useFetch = useEffect ? useAsyncFetch : unsupported
