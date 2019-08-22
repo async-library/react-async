@@ -12,6 +12,7 @@ const useAsync = (arg1, arg2) => {
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const lastOptions = useRef(undefined)
+  const lastPromise = useRef(undefined)
   const abortController = useRef({ abort: noop })
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
@@ -29,9 +30,10 @@ const useAsync = (arg1, arg2) => {
   )
 
   const { debugLabel } = options
-  const getMeta = useCallback(meta => ({ counter: counter.current, debugLabel, ...meta }), [
-    debugLabel,
-  ])
+  const getMeta = useCallback(
+    meta => ({ counter: counter.current, promise: lastPromise.current, debugLabel, ...meta }),
+    [debugLabel]
+  )
 
   const setData = useCallback(
     (data, callback = noop) => {
@@ -72,29 +74,26 @@ const useAsync = (arg1, arg2) => {
         abortController.current = new globalScope.AbortController()
       }
       counter.current++
-      return new Promise((resolve, reject) => {
+      return (lastPromise.current = new Promise((resolve, reject) => {
         if (!isMounted.current) return
         const executor = () => promiseFn().then(resolve, reject)
         dispatch({ type: actionTypes.start, payload: executor, meta: getMeta() })
-      })
+      }))
     },
     [dispatch, getMeta]
   )
 
   const { promise, promiseFn, initialValue } = options
   const load = useCallback(() => {
-    if (promise) {
-      return start(() => promise).then(
-        handleResolve(counter.current),
-        handleReject(counter.current)
-      )
-    }
     const isPreInitialized = initialValue && counter.current === 0
-    if (promiseFn && !isPreInitialized) {
-      return start(() => promiseFn(lastOptions.current, abortController.current)).then(
-        handleResolve(counter.current),
-        handleReject(counter.current)
-      )
+    if (promise) {
+      start(() => promise)
+        .then(handleResolve(counter.current))
+        .catch(handleReject(counter.current))
+    } else if (promiseFn && !isPreInitialized) {
+      start(() => promiseFn(lastOptions.current, abortController.current))
+        .then(handleResolve(counter.current))
+        .catch(handleReject(counter.current))
     }
   }, [start, promise, promiseFn, initialValue, handleResolve, handleReject])
 
@@ -103,17 +102,16 @@ const useAsync = (arg1, arg2) => {
     (...args) => {
       if (deferFn) {
         lastArgs.current = args
-        return start(() => deferFn(args, lastOptions.current, abortController.current)).then(
-          handleResolve(counter.current),
-          handleReject(counter.current)
-        )
+        start(() => deferFn(args, lastOptions.current, abortController.current))
+          .then(handleResolve(counter.current))
+          .catch(handleReject(counter.current))
       }
     },
     [start, deferFn, handleResolve, handleReject]
   )
 
   const reload = useCallback(() => {
-    return lastArgs.current ? run(...lastArgs.current) : load()
+    lastArgs.current ? run(...lastArgs.current) : load()
   }, [run, load])
 
   const { onCancel } = options
@@ -130,7 +128,9 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => {
     if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) load()
   })
-  useEffect(() => (lastOptions.current = options) && undefined)
+  useEffect(() => {
+    lastOptions.current = options
+  })
   useEffect(() => {
     if (counter.current) cancel()
     if (promise || promiseFn) load()

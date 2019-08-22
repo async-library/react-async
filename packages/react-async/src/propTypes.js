@@ -22,9 +22,10 @@ const stateObject =
     isRejected: PropTypes.bool,
     isSettled: PropTypes.bool,
     counter: PropTypes.number,
-    cancel: PropTypes.func,
+    promise: PropTypes.instanceOf(Promise),
     run: PropTypes.func,
     reload: PropTypes.func,
+    cancel: PropTypes.func,
     setData: PropTypes.func,
     setError: PropTypes.func,
   })

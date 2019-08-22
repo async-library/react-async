@@ -32,6 +32,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.mounted = false
       this.counter = 0
       this.args = []
+      this.promise = undefined
       this.abortController = { abort: () => {} }
       this.state = {
         ...init({ initialValue, promise, promiseFn }),
@@ -96,6 +97,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     getMeta(meta) {
       return {
         counter: this.counter,
+        promise: this.promise,
         debugLabel: this.debugLabel,
         ...meta,
       }
@@ -107,28 +109,25 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         this.abortController = new globalScope.AbortController()
       }
       this.counter++
-      return new Promise((resolve, reject) => {
+      return (this.promise = new Promise((resolve, reject) => {
         if (!this.mounted) return
         const executor = () => promiseFn().then(resolve, reject)
         this.dispatch({ type: actionTypes.start, payload: executor, meta: this.getMeta() })
-      })
+      }))
     }
 
     load() {
       const promise = this.props.promise
-      if (promise) {
-        return this.start(() => promise).then(
-          this.onResolve(this.counter),
-          this.onReject(this.counter)
-        )
-      }
       const promiseFn = this.props.promiseFn || defaultProps.promiseFn
-      if (promiseFn) {
+      if (promise) {
+        this.start(() => promise)
+          .then(this.onResolve(this.counter))
+          .catch(this.onReject(this.counter))
+      } else if (promiseFn) {
         const props = { ...defaultProps, ...this.props }
-        return this.start(() => promiseFn(props, this.abortController)).then(
-          this.onResolve(this.counter),
-          this.onReject(this.counter)
-        )
+        this.start(() => promiseFn(props, this.abortController))
+          .then(this.onResolve(this.counter))
+          .catch(this.onReject(this.counter))
       }
     }
 

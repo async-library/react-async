@@ -16,6 +16,7 @@ export const init = ({ initialValue, promise, promiseFn }) => ({
   finishedAt: initialValue ? new Date() : undefined,
   ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
   counter: 0,
+  promise: undefined,
 })
 
 export const reducer = (state, { type, payload, meta }) => {
@@ -27,6 +28,7 @@ export const reducer = (state, { type, payload, meta }) => {
         finishedAt: undefined,
         ...getStatusProps(statusTypes.pending),
         counter: meta.counter,
+        promise: meta.promise,
       }
     case actionTypes.cancel:
       return {
@@ -35,6 +37,7 @@ export const reducer = (state, { type, payload, meta }) => {
         finishedAt: undefined,
         ...getStatusProps(getIdleStatus(state.error || state.data)),
         counter: meta.counter,
+        promise: meta.promise,
       }
     case actionTypes.fulfill:
       return {
@@ -44,6 +47,7 @@ export const reducer = (state, { type, payload, meta }) => {
         error: undefined,
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.fulfilled),
+        promise: meta.promise,
       }
     case actionTypes.reject:
       return {
@@ -52,6 +56,7 @@ export const reducer = (state, { type, payload, meta }) => {
         value: payload,
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.rejected),
+        promise: meta.promise,
       }
     default:
       return state
