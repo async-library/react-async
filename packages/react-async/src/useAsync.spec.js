@@ -93,7 +93,16 @@ describe("useAsync", () => {
       const [count, setCount] = React.useState(0)
       const onReject = count === 0 ? onReject1 : onReject2
       const { run } = useAsync({ deferFn, onReject })
-      return <button onClick={() => run(count) && setCount(1)}>run</button>
+      return (
+        <button
+          onClick={() => {
+            run(count)
+            setCount(1)
+          }}
+        >
+          run
+        </button>
+      )
     }
     const { getByText } = render(<App />)
     fireEvent.click(getByText("run"))
@@ -110,7 +119,7 @@ test("does not return a new `run` function on every render", async () => {
   const DeleteScheduleForm = () => {
     const [value, setValue] = React.useState()
     const { run } = useAsync({ deferFn })
-    React.useEffect(() => value && run() && undefined, [value, run])
+    React.useEffect(() => value && run(), [value, run])
     return <button onClick={() => setValue(true)}>run</button>
   }
   const component = <DeleteScheduleForm />

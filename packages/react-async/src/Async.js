@@ -118,19 +118,16 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     load() {
       const promise = this.props.promise
-      if (promise) {
-        return this.start(() => promise).then(
-          this.onResolve(this.counter),
-          this.onReject(this.counter)
-        )
-      }
       const promiseFn = this.props.promiseFn || defaultProps.promiseFn
-      if (promiseFn) {
+      if (promise) {
+        this.start(() => promise)
+          .then(this.onResolve(this.counter))
+          .catch(this.onReject(this.counter))
+      } else if (promiseFn) {
         const props = { ...defaultProps, ...this.props }
-        return this.start(() => promiseFn(props, this.abortController)).then(
-          this.onResolve(this.counter),
-          this.onReject(this.counter)
-        )
+        this.start(() => promiseFn(props, this.abortController))
+          .then(this.onResolve(this.counter))
+          .catch(this.onReject(this.counter))
       }
     }
 

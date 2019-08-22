@@ -85,18 +85,15 @@ const useAsync = (arg1, arg2) => {
 
   const { promise, promiseFn, initialValue } = options
   const load = useCallback(() => {
-    if (promise) {
-      return start(() => promise).then(
-        handleResolve(counter.current),
-        handleReject(counter.current)
-      )
-    }
     const isPreInitialized = initialValue && counter.current === 0
-    if (promiseFn && !isPreInitialized) {
-      return start(() => promiseFn(lastOptions.current, abortController.current)).then(
-        handleResolve(counter.current),
-        handleReject(counter.current)
-      )
+    if (promise) {
+      start(() => promise)
+        .then(handleResolve(counter.current))
+        .catch(handleReject(counter.current))
+    } else if (promiseFn && !isPreInitialized) {
+      start(() => promiseFn(lastOptions.current, abortController.current))
+        .then(handleResolve(counter.current))
+        .catch(handleReject(counter.current))
     }
   }, [start, promise, promiseFn, initialValue, handleResolve, handleReject])
 
@@ -105,17 +102,16 @@ const useAsync = (arg1, arg2) => {
     (...args) => {
       if (deferFn) {
         lastArgs.current = args
-        return start(() => deferFn(args, lastOptions.current, abortController.current)).then(
-          handleResolve(counter.current),
-          handleReject(counter.current)
-        )
+        start(() => deferFn(args, lastOptions.current, abortController.current))
+          .then(handleResolve(counter.current))
+          .catch(handleReject(counter.current))
       }
     },
     [start, deferFn, handleResolve, handleReject]
   )
 
   const reload = useCallback(() => {
-    return lastArgs.current ? run(...lastArgs.current) : load()
+    lastArgs.current ? run(...lastArgs.current) : load()
   }, [run, load])
 
   const { onCancel } = options
@@ -132,7 +128,9 @@ const useAsync = (arg1, arg2) => {
   useEffect(() => {
     if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) load()
   })
-  useEffect(() => (lastOptions.current = options) && undefined)
+  useEffect(() => {
+    lastOptions.current = options
+  })
   useEffect(() => {
     if (counter.current) cancel()
     if (promise || promiseFn) load()

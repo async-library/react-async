@@ -547,9 +547,10 @@ is set to `"application/json"`.
 - `isRejected` true when the last promise was rejected.
 - `isSettled` true when the last promise was fulfilled or rejected (not initial or pending).
 - `counter` The number of times a promise was started.
-- `cancel` Cancel any pending promise.
+- `promise` A reference to the internal wrapper promise, which can be chained on.
 - `run` Invokes the `deferFn`.
 - `reload` Re-runs the promise when invoked, using any previous arguments.
+- `cancel` Cancel any pending promise.
 - `setData` Sets `data` to the passed value, unsets `error` and cancels any pending promise.
 - `setError` Sets `error` to the passed value and cancels any pending promise.
 
@@ -636,23 +637,31 @@ Alias: `isResolved`
 
 The number of times a promise was started.
 
-#### `cancel`
+#### `promise`
 
-> `function(): void`
+> `Promise`
 
-Cancels the currently pending promise by ignoring its result and calls `abort()` on the AbortController.
+A reference to the internal wrapper promise created when starting a new promise (either automatically or by invoking
+`run` / `reload`). It fulfills or rejects along with the provided `promise` / `promiseFn` / `deferFn`. Useful as a
+chainable alternative to the `onResolve` / `onReject` callbacks.
 
 #### `run`
 
-> `function(...args: any[]): Promise`
+> `function(...args: any[]): void`
 
-Runs the `deferFn`, passing any arguments provided as an array. The returned Promise always **fulfills** to `data` or `error`, it never rejects.
+Runs the `deferFn`, passing any arguments provided as an array.
 
 #### `reload`
 
 > `function(): void`
 
 Re-runs the promise when invoked, using the previous arguments.
+
+#### `cancel`
+
+> `function(): void`
+
+Cancels the currently pending promise by ignoring its result and calls `abort()` on the AbortController.
 
 #### `setData`
 
