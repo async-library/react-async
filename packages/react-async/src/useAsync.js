@@ -166,7 +166,7 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input, init) => globalScope.fetch(input, init).then(parseResponse(accept, json))
   const isDefer =
-    defer === true || (defer !== false && ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method))
+    typeof defer === "boolean" ? defer : ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
   const fn = isDefer ? "deferFn" : "promiseFn"
   const identity = JSON.stringify({ input, init, fn })
   const state = useAsync({
