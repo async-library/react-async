@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /* eslint-disable react/prop-types */
 
 import "@testing-library/jest-dom/extend-expect"
