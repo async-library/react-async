@@ -156,8 +156,8 @@ const useAsync = (arg1, arg2) => {
 
 const parseResponse = (accept, json) => res => {
   if (!res.ok) return Promise.reject(res)
-  if (json === true || (json !== false && accept === "application/json")) return res.json()
-  return res
+  if (typeof json === "boolean") return json ? res.json() : res
+  return accept === "application/json" ? res.json() : res
 }
 
 const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
