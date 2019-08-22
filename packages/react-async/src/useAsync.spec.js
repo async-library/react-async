@@ -54,7 +54,7 @@ describe("useAsync", () => {
     expect(onResolve).toHaveBeenCalledWith("done")
   })
 
-  test("calling run() will always use the latest onResolve/onReject callbacks", async () => {
+  test("calling run() will always use the latest onResolve callback", async () => {
     const promiseFn = jest.fn(() => resolveTo())
     const deferFn = () => resolveTo()
     function App() {
@@ -84,6 +84,47 @@ describe("useAsync", () => {
     await sleep(10) // resolve deferFn
     expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
   })
+
+  test("calling run() will always use the latest onReject callback", async () => {
+    const onReject1 = jest.fn()
+    const onReject2 = jest.fn()
+    const deferFn = ([count]) => Promise.reject(count)
+    function App() {
+      const [count, setCount] = React.useState(0)
+      const onReject = count === 0 ? onReject1 : onReject2
+      const { run } = useAsync({ deferFn, onReject })
+      return (
+        <button
+          onClick={() => {
+            run(count)
+            setCount(1)
+          }}
+        >
+          run
+        </button>
+      )
+    }
+    const { getByText } = render(<App />)
+    fireEvent.click(getByText("run"))
+    await sleep(10) // resolve deferFn
+    expect(onReject1).toHaveBeenCalledWith(0)
+    fireEvent.click(getByText("run"))
+    await sleep(10) // resolve deferFn
+    expect(onReject2).toHaveBeenCalledWith(1)
+  })
+})
+
+test("does not return a new `run` function on every render", async () => {
+  const deferFn = () => resolveTo("done")
+  const DeleteScheduleForm = () => {
+    const [value, setValue] = React.useState()
+    const { run } = useAsync({ deferFn })
+    React.useEffect(() => value && run(), [value, run])
+    return <button onClick={() => setValue(true)}>run</button>
+  }
+  const component = <DeleteScheduleForm />
+  const { getByText } = render(component)
+  fireEvent.click(getByText("run"))
 })
 
 describe("useFetch", () => {

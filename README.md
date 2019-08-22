@@ -6,42 +6,48 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/react-async">
-    <img src="https://img.shields.io/npm/v/react-async.svg" alt="npm version">
+    <img src="https://badgen.net/npm/v/react-async?icon=npm&label=react-async" alt="latest version">
   </a>
   <a href="https://www.npmjs.com/package/react-async">
-    <img src="https://img.shields.io/npm/dm/react-async.svg" alt="npm downloads">
+    <img src="https://badgen.net/npm/dm/react-async" alt="montly downloads">
   </a>
   <a href="https://bundlephobia.com/result?p=react-async">
-    <img src="https://img.shields.io/bundlephobia/min/react-async.svg" alt="minified size">
+    <img src="https://badgen.net/bundlephobia/min/react-async" alt="minified size">
   </a>
   <a href="https://opensource.org/licenses/ISC">
-    <img src="https://img.shields.io/npm/l/react-async.svg" alt="license">
+    <img src="https://badgen.net/npm/license/react-async" alt="license">
   </a>
   <br/>
   <a href="https://github.com/ghengeveld/react-async/issues">
-    <img src="https://img.shields.io/github/issues/ghengeveld/react-async.svg" alt="issues">
+    <img src="https://badgen.net/github/open-issues/ghengeveld/react-async?icon=github" alt="issues">
   </a>
   <a href="https://github.com/ghengeveld/react-async/pulls">
-    <img src="https://img.shields.io/github/issues-pr/ghengeveld/react-async.svg" alt="pull requests">
+    <img src="https://badgen.net/github/open-prs/ghengeveld/react-async?icon=github" alt="pull requests">
   </a>
   <a href="https://github.com/ghengeveld/react-async/releases">
-    <img src="https://img.shields.io/github/release/ghengeveld/react-async" alt="last release">
+    <img src="https://badgen.net/github/releases/ghengeveld/react-async?icon=github" alt="releases">
   </a>
   <a href="https://github.com/ghengeveld/react-async/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/ghengeveld/react-async" alt="contributors">
+    <img src="https://badgen.net/github/contributors/ghengeveld/react-async?icon=github" alt="contributors">
+  </a>
+  <a href="https://react-async.ghengeveld.now.sh/examples/">
+    <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
   </a>
   <br/>
   <a href="https://circleci.com/gh/ghengeveld/react-async">
-    <img src="https://img.shields.io/circleci/build/github/ghengeveld/react-async/master.svg?label=circleci" alt="circleci status">
+    <img src="https://badgen.net/circleci/github/ghengeveld/react-async/master?icon=circleci" alt="circleci status">
   </a>
-  <a href="https://travis-ci.org/ghengeveld/react-async">
-    <img src="https://img.shields.io/travis/ghengeveld/react-async/master?label=travis" alt="travis status">
+  <a href="https://travis-ci.com/ghengeveld/react-async">
+    <img src="https://badgen.net/travis/ghengeveld/react-async?icon=travis" alt="travis status">
   </a>
-  <a href="https://codecov.io/github/ghengeveld/react-async">
-    <img src="https://img.shields.io/codecov/c/github/ghengeveld/react-async/master.svg" alt="code coverage">
+  <a href="https://codecov.io/gh/ghengeveld/react-async">
+    <img src="https://badgen.net/codecov/c/github/ghengeveld/react-async/master?icon=codecov" alt="code coverage">
   </a>
   <a href="https://www.codefactor.io/repository/github/ghengeveld/react-async">
     <img src="https://www.codefactor.io/repository/github/ghengeveld/react-async/badge" alt="code quality">
+  </a>
+  <a href="https://deepscan.io/dashboard#view=project&tid=5147&pid=6925&bid=61474">
+    <img src="https://deepscan.io/api/teams/5147/projects/6925/branches/61474/badge/grade.svg" alt="DeepScan grade">
   </a>
 </p>
 
@@ -560,9 +566,10 @@ is set to `"application/json"`.
 - `isRejected` true when the last promise was rejected.
 - `isSettled` true when the last promise was fulfilled or rejected (not initial or pending).
 - `counter` The number of times a promise was started.
-- `cancel` Cancel any pending promise.
+- `promise` A reference to the internal wrapper promise, which can be chained on.
 - `run` Invokes the `deferFn`.
 - `reload` Re-runs the promise when invoked, using any previous arguments.
+- `cancel` Cancel any pending promise.
 - `setData` Sets `data` to the passed value, unsets `error` and cancels any pending promise.
 - `setError` Sets `error` to the passed value and cancels any pending promise.
 
@@ -649,23 +656,31 @@ Alias: `isResolved`
 
 The number of times a promise was started.
 
-#### `cancel`
+#### `promise`
 
-> `function(): void`
+> `Promise`
 
-Cancels the currently pending promise by ignoring its result and calls `abort()` on the AbortController.
+A reference to the internal wrapper promise created when starting a new promise (either automatically or by invoking
+`run` / `reload`). It fulfills or rejects along with the provided `promise` / `promiseFn` / `deferFn`. Useful as a
+chainable alternative to the `onResolve` / `onReject` callbacks.
 
 #### `run`
 
-> `function(...args: any[]): Promise`
+> `function(...args: any[]): void`
 
-Runs the `deferFn`, passing any arguments provided as an array. The returned Promise always **fulfills** to `data` or `error`, it never rejects.
+Runs the `deferFn`, passing any arguments provided as an array.
 
 #### `reload`
 
 > `function(): void`
 
 Re-runs the promise when invoked, using the previous arguments.
+
+#### `cancel`
+
+> `function(): void`
+
+Cancels the currently pending promise by ignoring its result and calls `abort()` on the AbortController.
 
 #### `setData`
 
