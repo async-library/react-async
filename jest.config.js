@@ -20,4 +20,5 @@ module.exports = {
   transform: { "^.+\\.js$": "babel-jest" },
   projects: ["<rootDir>/packages/*"],
   setupFiles: ["<rootDir>/jest.setup.js"],
+  testPathIgnorePatterns: ["/node_modules/", "/pkg/"],
 }

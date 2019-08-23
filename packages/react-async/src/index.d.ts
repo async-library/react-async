@@ -61,9 +61,9 @@ interface AbstractState<T> {
   initialValue?: T | Error
   counter: number
   promise: Promise<T>
-  cancel: () => void
   run: (...args: any[]) => void
   reload: () => void
+  cancel: () => void
   setData: (data: T, callback?: () => void) => T
   setError: (error: Error, callback?: () => void) => Error
 }
