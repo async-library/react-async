@@ -156,9 +156,8 @@ const useAsync = (arg1, arg2) => {
 
 const parseResponse = (accept, json) => res => {
   if (!res.ok) return Promise.reject(res)
-  if (json === false) return res
-  if (json === true || accept === "application/json") return res.json()
-  return res
+  if (typeof json === "boolean") return json ? res.json() : res
+  return accept === "application/json" ? res.json() : res
 }
 
 const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
@@ -166,13 +165,23 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
   const headers = input.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input, init) => globalScope.fetch(input, init).then(parseResponse(accept, json))
-  const isDefer = defer === true || ~["POST", "PUT", "PATCH", "DELETE"].indexOf(method)
-  const fn = defer === false || !isDefer ? "promiseFn" : "deferFn"
-  const identity = JSON.stringify({ input, init })
+  const isDefer =
+    typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1
+  const fn = isDefer ? "deferFn" : "promiseFn"
+  const identity = JSON.stringify({ input, init, isDefer })
   const state = useAsync({
     ...options,
     [fn]: useCallback(
-      (_, props, ctrl) => doFetch(input, { signal: ctrl ? ctrl.signal : props.signal, ...init }),
+      (arg1, arg2, arg3) => {
+        const [override, signal] = arg3 ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
+        if (typeof override === "object" && "preventDefault" in override) {
+          // Don't spread Events or SyntheticEvents
+          return doFetch(input, { signal, ...init })
+        }
+        return typeof override === "function"
+          ? doFetch(input, { signal, ...override(init) })
+          : doFetch(input, { signal, ...init, ...override })
+      },
       [identity] // eslint-disable-line react-hooks/exhaustive-deps
     ),
   })

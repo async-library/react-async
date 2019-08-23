@@ -226,6 +226,21 @@ export function useFetch<T>(
   input: RequestInfo,
   init?: RequestInit,
   options?: FetchOptions<T>
-): AsyncState<T>
+): AsyncInitialWithout<"run", T> & FetchRun<T>
+
+// unfortunately, we cannot just omit K from AsyncInitial as that would unbox the Discriminated Union
+type AsyncInitialWithout<K extends keyof AsyncInitial<T>, T> =
+  | Omit<AsyncInitial<T>, K>
+  | Omit<AsyncPending<T>, K>
+  | Omit<AsyncFulfilled<T>, K>
+  | Omit<AsyncRejected<T>, K>
+
+type FetchRun<T> = {
+  run(overrideInit: (init: RequestInit) => RequestInit): void
+  run(overrideInit: Partial<RequestInit>): void
+  run(ignoredEvent: React.SyntheticEvent): void
+  run(ignoredEvent: Event): void
+  run(): void
+}
 
 export default Async

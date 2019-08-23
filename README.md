@@ -261,6 +261,25 @@ const MyComponent = () => {
   const headers = { Accept: "application/json" }
   const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)
   // This will setup a promiseFn with a fetch request and JSON deserialization.
+
+  // you can later call `run` with an optional callback argument to
+  // last-minute modify the `init` parameter that is passed to `fetch`
+  function clickHandler() {
+    run(init => ({
+      ...init,
+      headers: {
+        ...init.headers,
+        authentication: "...",
+      },
+    }))
+  }
+
+  // alternatively, you can also just use an object that will be spread over `init`.
+  // please note that this is not deep-merged, so you might override properties present in the
+  // original `init` parameter
+  function clickHandler2() {
+    run({ body: JSON.stringify(formValues) })
+  }
 }
 ```
 
@@ -654,6 +673,14 @@ chainable alternative to the `onResolve` / `onReject` callbacks.
 > `function(...args: any[]): void`
 
 Runs the `deferFn`, passing any arguments provided as an array.
+
+When used with `useFetch`, `run` has a different signature:
+
+> `function(init: Object | (init: Object) => Object): void`
+
+This runs the `fetch` request using the provided `init`. If it's an object it will be spread over the default `init`
+(`useFetch`'s 2nd argument). If it's a function it will be invoked with the default `init` and should return a new
+`init` object. This way you can either extend or override the value of `init`, for example to set request headers.
 
 #### `reload`
 
