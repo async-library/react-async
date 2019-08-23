@@ -50,9 +50,9 @@
     <img src="https://deepscan.io/api/teams/5147/projects/6925/branches/61474/badge/grade.svg" alt="DeepScan grade">
   </a>
   <br/>
-  <img src="https://badgen.net/david/dep/ghengeveld/react-async" alt="dependencies">
+  <img src="https://badgen.net/david/dep/ghengeveld/react-async/packages/react-async" alt="dependencies">
   <img src="https://badgen.net/david/dev/ghengeveld/react-async" alt="devDependencies">
-  <img src="https://badgen.net/david/peer/ghengeveld/react-async" alt="peerDependencies">
+  <img src="https://badgen.net/david/peer/ghengeveld/react-async/packages/react-async" alt="peerDependencies">
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
