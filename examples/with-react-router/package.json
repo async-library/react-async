@@ -1,6 +1,6 @@
 {
   "name": "with-react-router-example",
-  "version": "8.0.0-alpha.0",
+  "version": "8.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "react": "^16.9.0",
-    "react-async": "^8.0.0-alpha.0",
-    "react-async-devtools": "^8.0.0-alpha.0",
+    "react-async": "^8.0.0",
+    "react-async-devtools": "^8.0.0",
     "react-dom": "^16.9.0",
     "react-router-dom": "^5.0.0"
   },

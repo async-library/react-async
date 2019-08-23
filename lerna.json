@@ -1,9 +1,14 @@
 {
   "npmClient": "yarn",
-  "packages": ["examples/*", "packages/*"],
+  "packages": [
+    "examples/*",
+    "packages/*"
+  ],
   "publish": {
-    "ignoreChanges": ["examples/**"]
+    "ignoreChanges": [
+      "examples/**"
+    ]
   },
   "useWorkspaces": true,
-  "version": "8.0.0-alpha.0"
+  "version": "8.0.0"
 }

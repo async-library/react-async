@@ -1,6 +1,6 @@
 {
   "name": "with-typescript-example",
-  "version": "8.0.0-alpha.0",
+  "version": "8.0.0",
   "private": true,
   "homepage": "https://react-async.ghengeveld.now.sh/examples/with-typescript",
   "scripts": {
@@ -18,8 +18,8 @@
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
     "react": "^16.9.0",
-    "react-async": "^8.0.0-alpha.0",
-    "react-async-devtools": "^8.0.0-alpha.0",
+    "react-async": "^8.0.0",
+    "react-async-devtools": "^8.0.0",
     "react-dom": "^16.9.0",
     "react-scripts": "^3.1.1",
     "typescript": "^3.5.1"

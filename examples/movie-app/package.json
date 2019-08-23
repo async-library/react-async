@@ -1,6 +1,6 @@
 {
   "name": "movie-app-example",
-  "version": "8.0.0-alpha.0",
+  "version": "8.0.0",
   "private": true,
   "homepage": "https://react-async.ghengeveld.now.sh/examples/movie-app",
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "react": "^16.9.0",
-    "react-async": "^8.0.0-alpha.0",
-    "react-async-devtools": "^8.0.0-alpha.0",
+    "react-async": "^8.0.0",
+    "react-async-devtools": "^8.0.0",
     "react-dom": "^16.9.0",
     "react-scripts": "^3.1.1"
   },
