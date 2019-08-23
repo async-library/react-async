@@ -188,6 +188,8 @@ All standalone helper components were renamed to avoid import naming collision.
 
 > A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
 
+The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This is a manual upgrade. See [`promise`](#promise-1) for details.
+
 #### Upgrade to v6
 
 - `<Async.Pending>` was renamed to `<Async.Initial>`.
