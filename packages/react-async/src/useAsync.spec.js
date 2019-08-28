@@ -250,4 +250,54 @@ describe("useFetch", () => {
       expect.objectContaining({ preventDefault: expect.any(Function) })
     )
   })
+
+  test("defer=true allows using the promise", () => {
+    let check = 0
+    const component = (
+      <Fetch input="/test" options={{ defer: true }}>
+        {({ run, promise }) => (
+          <button
+            onClick={() => {
+              run()
+              promise
+                .then(() => {
+                  return (check = 1)
+                })
+                .catch(() => {})
+            }}
+          >
+            run
+          </button>
+        )}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    fireEvent.click(getByText("run"))
+    expect(check).toEqual(1)
+  })
+
+  test("defer=false allows using the promise", () => {
+    let check = 0
+    const component = (
+      <Fetch input="/test" options={{ defer: false }}>
+        {({ run, promise }) => (
+          <button
+            onClick={() => {
+              run()
+              promise
+                .then(() => {
+                  return (check = 1)
+                })
+                .catch(() => {})
+            }}
+          >
+            run
+          </button>
+        )}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    fireEvent.click(getByText("run"))
+    expect(check).toEqual(1)
+  })
 })
