@@ -280,10 +280,9 @@ describe("useFetch", () => {
     let check = 0
     const component = (
       <Fetch input="/test" options={{ defer: false }}>
-        {({ run, promise }) => (
+        {({ promise }) => (
           <button
             onClick={() => {
-              run()
               promise
                 .then(() => {
                   return (check = 1)
