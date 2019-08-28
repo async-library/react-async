@@ -491,7 +491,12 @@ Re-runs the `promiseFn` when this callback returns truthy (called on every updat
 
 > `any | Error`
 
-Initial state for `data` or `error` (if instance of Error); useful for server-side rendering.
+Initial state for `data` or `error` (if instance of Error); useful for server-side rendering. When an `initialValue` is
+provided, the `promiseFn` will not be invoked on first render. Instead, `status` will be immediately set to `fulfilled`
+or `rejected` and your components will render accordingly. If you want to trigger the `promiseFn` regardless, you can
+call `reload()` or use the `watch` or `watchFn` option.
+
+> Note that `onResolve` or `onReject` is not invoked in this case and no `promise` prop will be created.
 
 #### `onResolve`
 
