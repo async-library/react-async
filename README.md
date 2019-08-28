@@ -149,7 +149,8 @@ yarn add react-async
 
 ### DevTools
 
-React Async comes with a separate DevTools package which helps you Debug and develop your asynchronous application states.
+React Async comes with a separate DevTools package which helps you Debug and develop your asynchronous application
+states.
 
 ```
 npm install --save react-async-devtools
@@ -188,7 +189,8 @@ All standalone helper components were renamed to avoid import naming collision.
 
 > A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
 
-The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This is a manual upgrade. See [`promise`](#promise-1) for details.
+The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This
+is a manual upgrade. See [`promise`](#promise-1) for details.
 
 #### Upgrade to v6
 
@@ -723,7 +725,8 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 
 - `children` `function(state: Object): Node | Node` Render function or React Node.
 - `state` `object` Async state object (return value of `useAsync()`).
-- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon as the promise starts loading.
+- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon
+  as the promise starts loading.
 
 #### Examples
 
