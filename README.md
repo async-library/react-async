@@ -30,9 +30,6 @@
   <a href="https://github.com/ghengeveld/react-async/graphs/contributors">
     <img src="https://badgen.net/github/contributors/ghengeveld/react-async?icon=github" alt="contributors">
   </a>
-  <a href="https://react-async.ghengeveld.now.sh/examples/">
-    <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
-  </a>
   <br/>
   <a href="https://circleci.com/gh/ghengeveld/react-async">
     <img src="https://badgen.net/circleci/github/ghengeveld/react-async/master?icon=circleci" alt="circleci status">
@@ -53,6 +50,13 @@
   <img src="https://badgen.net/david/dep/ghengeveld/react-async/packages/react-async" alt="dependencies">
   <img src="https://badgen.net/david/dev/ghengeveld/react-async" alt="devDependencies">
   <img src="https://badgen.net/david/peer/ghengeveld/react-async/packages/react-async" alt="peerDependencies">
+  <br/>
+  <a href="https://discord.gg/CAYQ6mU">
+    <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
+  </a>
+  <a href="https://react-async.ghengeveld.now.sh/examples/">
+    <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
+  </a>
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
