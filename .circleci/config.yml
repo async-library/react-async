@@ -86,6 +86,13 @@ jobs:
               yarn deploy:examples --token $NOW_API_TOKEN
             fi
           no_output_timeout: 30m
+  chromatic:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run: yarn test:chromatic
 
 workflows:
   version: 2
@@ -102,5 +109,8 @@ workflows:
           requires:
             - test
       - examples:
+          requires:
+            - build
+      - chromatic:
           requires:
             - build

@@ -25,6 +25,7 @@
     "test:latest": "yarn add -D -W react@latest react-dom@latest && yarn test",
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "test:examples": "CI=1 lerna run --scope '*-example' test -- --passWithNoTests --watchAll=false",
+    "test:chromatic": "chromatic test --app-code k5pzlywcw7c --build-script-name build:storybook",
     "ci": "yarn lint && yarn test:compat && yarn test:examples",
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
@@ -66,6 +67,7 @@
     "prop-types": "15.7.2",
     "react": "16.9.0",
     "react-async": "^8.0.0-alpha.0",
-    "react-dom": "16.9.0"
+    "react-dom": "16.9.0",
+    "storybook-chromatic": "^2.2.2"
   }
 }
