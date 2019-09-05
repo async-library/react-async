@@ -165,7 +165,8 @@ export namespace Async {
 }
 
 export function createInstance<T>(
-  defaultProps?: AsyncProps<T>
+  defaultProps?: AsyncProps<T>,
+  displayName?: string
 ): (new () => Async<T>) & {
   Initial<T>(props: { children?: InitialChildren<T>; persist?: boolean }): JSX.Element
   Pending<T>(props: { children?: PendingChildren<T>; initial?: boolean }): JSX.Element
