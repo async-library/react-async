@@ -187,17 +187,7 @@ export function IfPending<T>(props: {
   initial?: boolean
   state: AsyncState<T>
 }): JSX.Element
-export function IfLoading<T>(props: {
-  children?: PendingChildren<T>
-  initial?: boolean
-  state: AsyncState<T>
-}): JSX.Element
 export function IfFulfilled<T>(props: {
-  children?: FulfilledChildren<T>
-  persist?: boolean
-  state: AsyncState<T>
-}): JSX.Element
-export function IfResolved<T>(props: {
   children?: FulfilledChildren<T>
   persist?: boolean
   state: AsyncState<T>
