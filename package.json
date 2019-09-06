@@ -25,6 +25,7 @@
     "test:latest": "yarn add -D -W react@latest react-dom@latest && yarn test",
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "test:examples": "CI=1 lerna run --scope '*-example' test -- --passWithNoTests --watchAll=false",
+    "test:chromatic": "chromatic test --app-code k5pzlywcw7c --build-script-name build:storybook",
     "ci": "yarn lint && yarn test:compat && yarn test:examples",
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
@@ -34,10 +35,10 @@
     "postbump": "yarn build:packages"
   },
   "devDependencies": {
-    "@babel/core": "7.5.5",
+    "@babel/core": "7.6.0",
     "@babel/plugin-proposal-object-rest-spread": "7.5.5",
-    "@babel/plugin-transform-runtime": "7.5.5",
-    "@babel/preset-env": "7.5.5",
+    "@babel/plugin-transform-runtime": "7.6.0",
+    "@babel/preset-env": "7.6.0",
     "@babel/preset-react": "7.0.0",
     "@pika/pack": "0.5.0",
     "@pika/plugin-build-node": "0.6.0",
@@ -53,7 +54,7 @@
     "copyfiles": "2.1.1",
     "eslint": "6.3.0",
     "eslint-config-prettier": "6.2.0",
-    "eslint-plugin-jest": "22.16.0",
+    "eslint-plugin-jest": "22.17.0",
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.14.3",
@@ -66,6 +67,7 @@
     "prop-types": "15.7.2",
     "react": "16.9.0",
     "react-async": "^8.0.0-alpha.0",
-    "react-dom": "16.9.0"
+    "react-dom": "16.9.0",
+    "storybook-chromatic": "^2.2.2"
   }
 }
