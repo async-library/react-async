@@ -68,6 +68,6 @@
     "react": "16.9.0",
     "react-async": "^8.0.0-alpha.0",
     "react-dom": "16.9.0",
-    "storybook-chromatic": "^2.2.2"
+    "storybook-chromatic": "2.2.2"
   }
 }
