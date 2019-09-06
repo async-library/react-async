@@ -1,8 +1,34 @@
+import React from "react"
 import propTypes from "./propTypes"
 
-const nullify = children => (children === undefined ? null : children)
-const renderFn = (children, ...args) =>
-  nullify(typeof children === "function" ? children(...args) : children)
+import {
+  InitialChildren,
+  PendingChildren,
+  FulfilledChildren,
+  RejectedChildren,
+  SettledChildren,
+  AsyncState,
+} from "./Async"
+
+// these were exported as type, but never existed
+// export declare function IfLoading<T>(props: {
+//   children?: PendingChildren<T>
+//   initial?: boolean
+//   state: AsyncState<T>
+// }): React.ReactNode
+// export declare function IfResolved<T>(props: {
+//   children?: FulfilledChildren<T>
+//   persist?: boolean
+//   state: AsyncState<T>
+// }): React.ReactNode
+
+const nullify = <T extends {}>(children: T | undefined): T | null =>
+  children === undefined ? null : children
+
+const renderFn = (
+  children: React.ReactNode | ((...args: any[]) => React.ReactNode),
+  ...args: any[]
+) => nullify(typeof children === "function" ? (children as any)(...args) : children)
 
 /**
  * Renders only when no promise has started or completed yet.
@@ -11,8 +37,15 @@ const renderFn = (children, ...args) =>
  * @prop {Object} state React Async state object
  * @prop {boolean} persist Show until we have data, even while pending (loading) or when an error occurred
  */
-export const IfInitial = ({ children, persist, state = {} }) =>
-  state.isInitial || (persist && !state.data) ? renderFn(children, state) : null
+export const IfInitial = <T extends {}>({
+  children,
+  persist,
+  state = {} as any,
+}: {
+  children?: InitialChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}) => <>{state.isInitial || (persist && !state.data) ? renderFn(children, state) : null}</>
 
 /**
  * Renders only while pending (promise is loading).
@@ -21,8 +54,15 @@ export const IfInitial = ({ children, persist, state = {} }) =>
  * @prop {Object} state React Async state object
  * @prop {boolean} initial Show only on initial load (data is undefined)
  */
-export const IfPending = ({ children, initial, state = {} }) =>
-  state.isPending && (!initial || !state.value) ? renderFn(children, state) : null
+export const IfPending = <T extends {}>({
+  children,
+  initial,
+  state = {} as any,
+}: {
+  children?: PendingChildren<T>
+  initial?: boolean
+  state: AsyncState<T>
+}) => <>{state.isPending && (!initial || !state.value) ? renderFn(children, state) : null}</>
 
 /**
  * Renders only when promise is resolved.
@@ -31,8 +71,17 @@ export const IfPending = ({ children, initial, state = {} }) =>
  * @prop {Object} state React Async state object
  * @prop {boolean} persist Show old data while pending (promise is loading)
  */
-export const IfFulfilled = ({ children, persist, state = {} }) =>
-  state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null
+export const IfFulfilled = <T extends {}>({
+  children,
+  persist,
+  state = {} as any,
+}: {
+  children?: FulfilledChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}) => (
+  <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
+)
 
 /**
  * Renders only when promise is rejected.
@@ -41,8 +90,19 @@ export const IfFulfilled = ({ children, persist, state = {} }) =>
  * @prop {Object} state React Async state object
  * @prop {boolean} persist Show old error while pending (promise is loading)
  */
-export const IfRejected = ({ children, persist, state = {} }) =>
-  state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null
+export const IfRejected = <T extends {}>({
+  children,
+  persist,
+  state = {} as any,
+}: {
+  children?: RejectedChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}) => (
+  <>
+    {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
+  </>
+)
 
 /**
  * Renders only when promise is fulfilled or rejected.
@@ -51,8 +111,15 @@ export const IfRejected = ({ children, persist, state = {} }) =>
  * @prop {Object} state React Async state object
  * @prop {boolean} persist Show old data or error while pending (promise is loading)
  */
-export const IfSettled = ({ children, persist, state = {} }) =>
-  state.isSettled || (persist && state.value) ? renderFn(children, state) : null
+export const IfSettled = <T extends {}>({
+  children,
+  persist,
+  state = {} as any,
+}: {
+  children?: SettledChildren<T>
+  persist?: boolean
+  state: AsyncState<T>
+}) => <>{state.isSettled || (persist && state.value) ? renderFn(children, state) : null}</>
 
 if (propTypes) {
   IfInitial.propTypes = propTypes.Initial

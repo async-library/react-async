@@ -17,7 +17,9 @@ module.exports = {
   coverageDirectory: "<rootDir>/coverage",
   verbose: true,
   bail: true,
-  transform: { "^.+\\.js$": "babel-jest" },
+  transform: {
+    "^.+\\.[tj]s$": "babel-jest",
+  },
   projects: ["<rootDir>/packages/*"],
   setupFiles: ["<rootDir>/jest.setup.js"],
   testPathIgnorePatterns: ["/node_modules/", "/pkg/"],

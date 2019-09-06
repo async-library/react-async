@@ -1,24 +1,26 @@
-export const statusTypes = {
-  initial: "initial",
-  pending: "pending",
-  fulfilled: "fulfilled",
-  rejected: "rejected",
+import { PromiseFn } from "./Async"
+
+export enum statusTypes {
+  initial = "initial",
+  pending = "pending",
+  fulfilled = "fulfilled",
+  rejected = "rejected",
 }
 
-export const getInitialStatus = (value, promise) => {
+export const getInitialStatus = <T>(value?: T | Error, promise?: Promise<T> | PromiseFn<T>) => {
   if (value instanceof Error) return statusTypes.rejected
   if (value !== undefined) return statusTypes.fulfilled
   if (promise) return statusTypes.pending
   return statusTypes.initial
 }
 
-export const getIdleStatus = value => {
+export const getIdleStatus = <T>(value?: T | Error) => {
   if (value instanceof Error) return statusTypes.rejected
   if (value !== undefined) return statusTypes.fulfilled
   return statusTypes.initial
 }
 
-export const getStatusProps = status => ({
+export const getStatusProps = (status: statusTypes) => ({
   status,
   isInitial: status === statusTypes.initial,
   isPending: status === statusTypes.pending,

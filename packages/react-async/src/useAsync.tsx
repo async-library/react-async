@@ -3,17 +3,38 @@ import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } fr
 import globalScope from "./globalScope"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
+import { AsyncOptions, AsyncState, AbstractState, PromiseFn, Meta } from "./Async"
+
+export interface FetchOptions<T> extends AsyncOptions<T> {
+  defer?: boolean
+  json?: boolean
+}
+
 const noop = () => {}
 
-const useAsync = (arg1, arg2) => {
-  const options = typeof arg1 === "function" ? { ...arg2, promiseFn: arg1 } : arg1
+function useAsync<T extends {}>(options: AsyncOptions<T>): AsyncState<T>
+function useAsync<T extends {}>(promiseFn: PromiseFn<T>, options?: AsyncOptions<T>): AsyncState<T>
+
+function useAsync<T extends {}>(
+  arg1: AsyncOptions<T> | PromiseFn<T>,
+  arg2?: AsyncOptions<T>
+): AsyncState<T> {
+  const options: AsyncOptions<T> =
+    typeof arg1 === "function"
+      ? {
+          ...arg2,
+          promiseFn: arg1,
+        }
+      : arg1
 
   const counter = useRef(0)
   const isMounted = useRef(true)
-  const lastArgs = useRef(undefined)
-  const lastOptions = useRef(undefined)
-  const lastPromise = useRef(undefined)
-  const abortController = useRef({ abort: noop })
+  const lastArgs = useRef<any[] | undefined>(undefined)
+  const lastOptions = useRef<AsyncOptions<T> | undefined>(undefined)
+  const lastPromise = useRef<Promise<T> | undefined>(undefined)
+  const abortController = useRef<AbortController>({
+    abort: noop,
+  } as any)
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
   const { reducer, dispatcher = devToolsDispatcher } = options
@@ -30,15 +51,25 @@ const useAsync = (arg1, arg2) => {
   )
 
   const { debugLabel } = options
-  const getMeta = useCallback(
-    meta => ({ counter: counter.current, promise: lastPromise.current, debugLabel, ...meta }),
+  const getMeta: <M extends Meta = Meta>(meta?: M) => M = useCallback(
+    (meta?) =>
+      ({
+        counter: counter.current,
+        promise: lastPromise.current,
+        debugLabel,
+        ...meta,
+      } as any),
     [debugLabel]
   )
 
   const setData = useCallback(
     (data, callback = noop) => {
       if (isMounted.current) {
-        dispatch({ type: actionTypes.fulfill, payload: data, meta: getMeta() })
+        dispatch({
+          type: actionTypes.fulfill,
+          payload: data,
+          meta: getMeta(),
+        })
         callback()
       }
       return data
@@ -49,7 +80,12 @@ const useAsync = (arg1, arg2) => {
   const setError = useCallback(
     (error, callback = noop) => {
       if (isMounted.current) {
-        dispatch({ type: actionTypes.reject, payload: error, error: true, meta: getMeta() })
+        dispatch({
+          type: actionTypes.reject,
+          payload: error,
+          error: true,
+          meta: getMeta(),
+        })
         callback()
       }
       return error
@@ -59,11 +95,13 @@ const useAsync = (arg1, arg2) => {
 
   const { onResolve, onReject } = options
   const handleResolve = useCallback(
-    count => data => count === counter.current && setData(data, () => onResolve && onResolve(data)),
+    count => (data: T) =>
+      count === counter.current && setData(data, () => onResolve && onResolve(data)),
     [setData, onResolve]
   )
   const handleReject = useCallback(
-    count => err => count === counter.current && setError(err, () => onReject && onReject(err)),
+    count => (err: Error) =>
+      count === counter.current && setError(err, () => onReject && onReject(err)),
     [setError, onReject]
   )
 
@@ -71,13 +109,17 @@ const useAsync = (arg1, arg2) => {
     promiseFn => {
       if ("AbortController" in globalScope) {
         abortController.current.abort()
-        abortController.current = new globalScope.AbortController()
+        abortController.current = new globalScope.AbortController!()
       }
       counter.current++
       return (lastPromise.current = new Promise((resolve, reject) => {
         if (!isMounted.current) return
         const executor = () => promiseFn().then(resolve, reject)
-        dispatch({ type: actionTypes.start, payload: executor, meta: getMeta() })
+        dispatch({
+          type: actionTypes.start,
+          payload: executor,
+          meta: getMeta(),
+        })
       }))
     },
     [dispatch, getMeta]
@@ -91,7 +133,7 @@ const useAsync = (arg1, arg2) => {
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     } else if (promiseFn && !isPreInitialized) {
-      start(() => promiseFn(lastOptions.current, abortController.current))
+      start(() => promiseFn(lastOptions.current!, abortController.current))
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     }
@@ -102,7 +144,7 @@ const useAsync = (arg1, arg2) => {
     (...args) => {
       if (deferFn) {
         lastArgs.current = args
-        start(() => deferFn(args, lastOptions.current, abortController.current))
+        start(() => deferFn(args, lastOptions.current!, abortController.current))
           .then(handleResolve(counter.current))
           .catch(handleReject(counter.current))
       }
@@ -119,7 +161,11 @@ const useAsync = (arg1, arg2) => {
     onCancel && onCancel()
     counter.current++
     abortController.current.abort()
-    isMounted.current && dispatch({ type: actionTypes.cancel, meta: getMeta() })
+    isMounted.current &&
+      dispatch({
+        type: actionTypes.cancel,
+        meta: getMeta(),
+      })
   }, [onCancel, dispatch, getMeta])
 
   /* These effects should only be triggered on changes to specific props */
@@ -135,52 +181,97 @@ const useAsync = (arg1, arg2) => {
     if (counter.current) cancel()
     if (promise || promiseFn) load()
   }, [promise, promiseFn, watch])
-  useEffect(() => () => (isMounted.current = false), [])
+  useEffect(
+    () => () => {
+      isMounted.current = false
+    },
+    []
+  )
   useEffect(() => () => cancel(), [])
   /* eslint-enable react-hooks/exhaustive-deps */
 
   useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)
 
   return useMemo(
-    () => ({
-      ...state,
-      run,
-      reload,
-      cancel,
-      setData,
-      setError,
-    }),
+    () =>
+      ({
+        ...state,
+        run,
+        reload,
+        cancel,
+        setData,
+        setError,
+      } as AsyncState<T>),
     [state, run, reload, cancel, setData, setError]
   )
 }
 
-const parseResponse = (accept, json) => res => {
+const parseResponse = (accept: undefined | string, json: undefined | boolean) => (
+  res: Response
+) => {
   if (!res.ok) return Promise.reject(res)
   if (typeof json === "boolean") return json ? res.json() : res
   return accept === "application/json" ? res.json() : res
 }
 
-const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
-  const method = input.method || (init && init.method)
-  const headers = input.headers || (init && init.headers) || {}
-  const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
-  const doFetch = (input, init) => globalScope.fetch(input, init).then(parseResponse(accept, json))
+interface FetchRun<T> extends Omit<AbstractState<T>, "run"> {
+  run(overrideInit: (init: RequestInit) => RequestInit): void
+  run(overrideInit: Partial<RequestInit>): void
+  run(ignoredEvent: React.SyntheticEvent): void
+  run(ignoredEvent: Event): void
+  run(): void
+}
+
+/**
+ *
+ * @param {RequestInfo} input
+ * @param {RequestInit} init
+ * @param {FetchOptions} options
+ * @returns {AsyncState<T, FetchRun<T>>}
+ */
+const useAsyncFetch = <T extends {}>(
+  input: RequestInfo,
+  init: RequestInit,
+  { defer, json, ...options }: FetchOptions<T> = {}
+): AsyncState<T, FetchRun<T>> => {
+  const method = (input as Request).method || (init && init.method)
+  const headers: Headers & Record<string, any> =
+    (input as Request).headers || (init && init.headers) || {}
+  const accept: string | undefined =
+    headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
+  const doFetch = (input: RequestInfo, init: RequestInit) =>
+    globalScope.fetch(input, init).then(parseResponse(accept, json))
   const isDefer =
-    typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1
+    typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method!) !== -1
   const fn = isDefer ? "deferFn" : "promiseFn"
-  const identity = JSON.stringify({ input, init, isDefer })
+  const identity = JSON.stringify({
+    input,
+    init,
+    isDefer,
+  })
   const state = useAsync({
     ...options,
     [fn]: useCallback(
-      (arg1, arg2, arg3) => {
+      // TODO
+      (arg1: any, arg2: any, arg3: any) => {
         const [override, signal] = arg3 ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
         if (typeof override === "object" && "preventDefault" in override) {
           // Don't spread Events or SyntheticEvents
-          return doFetch(input, { signal, ...init })
+          return doFetch(input, {
+            signal,
+            ...init,
+          })
         }
         return typeof override === "function"
-          ? doFetch(input, { signal, ...override(init) })
-          : doFetch(input, { signal, ...init, ...override })
+          ? doFetch(input, {
+              signal,
+              ...override(init),
+            })
+          : doFetch(input, {
+              signal,
+              ...init,
+              ...override,
+            })
       },
       [identity] // eslint-disable-line react-hooks/exhaustive-deps
     ),

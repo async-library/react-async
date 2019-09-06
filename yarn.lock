@@ -350,7 +350,7 @@
     "@babel/helper-create-class-features-plugin" "^7.4.4"
     "@babel/helper-plugin-utils" "^7.0.0"
 
-"@babel/plugin-proposal-class-properties@7.5.5", "@babel/plugin-proposal-class-properties@^7.0.0", "@babel/plugin-proposal-class-properties@^7.3.3":
+"@babel/plugin-proposal-class-properties@7.5.5", "@babel/plugin-proposal-class-properties@^7.0.0", "@babel/plugin-proposal-class-properties@^7.3.3", "@babel/plugin-proposal-class-properties@^7.5.5":
   version "7.5.5"
   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-class-properties/-/plugin-proposal-class-properties-7.5.5.tgz#a974cfae1e37c3110e71f3c6a2e48b8e71958cd4"
   integrity sha512-AF79FsnWFxjlaosgdi421vmYG6/jg79bVD0dpD44QdgobzHKuLZ6S3vl8la9qIeSwGi8i1fS0O1mfuDAAdo1/A==
@@ -1072,7 +1072,7 @@
     "@babel/plugin-transform-react-jsx-self" "^7.0.0"
     "@babel/plugin-transform-react-jsx-source" "^7.0.0"
 
-"@babel/preset-typescript@7.3.3", "@babel/preset-typescript@^7.1.0":
+"@babel/preset-typescript@7.3.3", "@babel/preset-typescript@^7.1.0", "@babel/preset-typescript@^7.3.3":
   version "7.3.3"
   resolved "https://registry.yarnpkg.com/@babel/preset-typescript/-/preset-typescript-7.3.3.tgz#88669911053fa16b2b276ea2ede2ca603b3f307a"
   integrity sha512-mzMVuIP4lqtn4du2ynEfdO0+RYcslwrZiJHXu4MGaC1ctJiW2fyaeDrtjJGs7R/KebZ1sgowcIoWf4uRpEfKEg==
@@ -2463,6 +2463,14 @@
   integrity sha512-YIM4CWYx0XzVciqIu1qgkUVZQ9tsZOCaEd9szUh29yobHHRFw+HsRaJUgOCXdoRp5R/Zx5CXTGTbJ0Zd9I3S8Q==
   dependencies:
     "@types/node" "^10.12.18"
+    standard-pkg "^0.4.0"
+
+"@pika/plugin-ts-standard-pkg@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@pika/plugin-ts-standard-pkg/-/plugin-ts-standard-pkg-0.6.0.tgz#cf8fd7fa8a15709399e9cd61a0bd1c787365374c"
+  integrity sha512-R28JeAboHP9QrSZBijZGsbyOYBnGkRmNRWMjxqS81RugXLvBuivfLtaBVQWclN+c3lP6PDZFYpe6qRHIWvdTaQ==
+  dependencies:
+    execa "^2.0.0"
     standard-pkg "^0.4.0"
 
 "@pika/types@^0.6.0":
@@ -17629,6 +17637,11 @@ typescript@^3.5.1:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.3.tgz#c830f657f93f1ea846819e929092f5fe5983e977"
   integrity sha512-ACzBtm/PhXBDId6a6sDJfroT2pOWt/oOnk4/dElG5G33ZL776N3Y6/6bKZJBFpd+b05F3Ct9qDjMeJmRWtE2/g==
+
+typescript@^3.6.2:
+  version "3.6.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.2.tgz#105b0f1934119dde543ac8eb71af3a91009efe54"
+  integrity sha512-lmQ4L+J6mnu3xweP8+rOrUwzmN+MRAj7TgtJtDaXE5PMyX2kCrklhg3rvOsOIfNeAWMQWO2F1GPc1kMD2vLAfw==
 
 typescript@~3.4.0:
   version "3.4.5"
