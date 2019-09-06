@@ -1,5 +1,3 @@
-import { any } from "prop-types"
-
 /* istanbul ignore file */
 
 /**
