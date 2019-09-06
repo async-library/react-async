@@ -11,10 +11,10 @@
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
-  "homepage": "https://react-async.dev",
+  "homepage": "https://async-library.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ghengeveld/react-async.git",
+    "url": "https://github.com/async-library/react-async.git",
     "directory": "packages/react-async"
   },
   "main": "src",

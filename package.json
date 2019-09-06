@@ -3,8 +3,8 @@
   "private": true,
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
-  "homepage": "https://react-async.dev",
-  "repository": "git+https://github.com/ghengeveld/react-async.git",
+  "homepage": "https://async-library.com",
+  "repository": "git+https://github.com/async-library/react-async.git",
   "workspaces": [
     "examples/*",
     "packages/*"

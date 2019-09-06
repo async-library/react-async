@@ -26,8 +26,8 @@ Where `<target_dir>` should be replaced with the path to your project's source d
 For example:
 
 ```bash
-npx jscodeshift . -t https://raw.githubusercontent.com/ghengeveld/react-async/master/codemods/v6.js
+npx jscodeshift . -t https://raw.githubusercontent.com/async-library/react-async/master/codemods/v6.js
 ```
 
-This will apply the codemod for [v6](https://github.com/ghengeveld/react-async/blob/master/codemods/v6.js)
+This will apply the codemod for [v6](https://github.com/async-library/react-async/blob/master/codemods/v6.js)
 to the current working directory (`.`).

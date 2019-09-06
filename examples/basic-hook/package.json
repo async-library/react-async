@@ -2,7 +2,7 @@
   "name": "basic-hook-example",
   "version": "8.0.0",
   "private": true,
-  "homepage": "https://react-async.ghengeveld.now.sh/examples/basic-hook",
+  "homepage": "https://react-async.async-library.now.sh/examples/basic-hook",
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",

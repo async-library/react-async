@@ -16,7 +16,7 @@ Please have the **_latest_** stable versions of the following on your machine
 To start working on React Async, clone the repo and bootstrap the project:
 
 ```sh
-git clone https://github.com/ghengeveld/react-async.git
+git clone https://github.com/async-library/react-async.git
 cd react-async
 yarn && yarn bootstrap
 yarn build && yarn test

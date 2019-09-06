@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/ghengeveld/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
+  <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/async-library/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
   Handle promises with ease.
 </p>
 <br/>
@@ -18,43 +18,49 @@
     <img src="https://badgen.net/npm/license/react-async" alt="license">
   </a>
   <br/>
-  <a href="https://github.com/ghengeveld/react-async/issues">
-    <img src="https://badgen.net/github/open-issues/ghengeveld/react-async?icon=github" alt="issues">
+  <a href="https://github.com/async-library/react-async/issues">
+    <img src="https://badgen.net/github/open-issues/async-library/react-async?icon=github" alt="issues">
   </a>
-  <a href="https://github.com/ghengeveld/react-async/pulls">
-    <img src="https://badgen.net/github/open-prs/ghengeveld/react-async?icon=github" alt="pull requests">
+  <a href="https://github.com/async-library/react-async/pulls">
+    <img src="https://badgen.net/github/open-prs/async-library/react-async?icon=github" alt="pull requests">
   </a>
-  <a href="https://github.com/ghengeveld/react-async/releases">
-    <img src="https://badgen.net/github/releases/ghengeveld/react-async?icon=github" alt="releases">
+  <a href="https://github.com/async-library/react-async/releases">
+    <img src="https://badgen.net/github/releases/async-library/react-async?icon=github" alt="releases">
   </a>
-  <a href="https://github.com/ghengeveld/react-async/graphs/contributors">
-    <img src="https://badgen.net/github/contributors/ghengeveld/react-async?icon=github" alt="contributors">
+  <a href="https://github.com/async-library/react-async/graphs/contributors">
+    <img src="https://badgen.net/github/contributors/async-library/react-async?icon=github" alt="contributors">
   </a>
+<<<<<<< HEAD
+=======
+  <a href="https://react-async.async-library.now.sh/examples/">
+    <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
+  </a>
+>>>>>>> Transferred ownership of the repo to async-library.
   <br/>
-  <a href="https://circleci.com/gh/ghengeveld/react-async">
-    <img src="https://badgen.net/circleci/github/ghengeveld/react-async/master?icon=circleci" alt="circleci status">
+  <a href="https://circleci.com/gh/async-library/react-async">
+    <img src="https://badgen.net/circleci/github/async-library/react-async/master?icon=circleci" alt="circleci status">
   </a>
-  <a href="https://travis-ci.com/ghengeveld/react-async">
-    <img src="https://badgen.net/travis/ghengeveld/react-async?icon=travis" alt="travis status">
+  <a href="https://travis-ci.com/async-library/react-async">
+    <img src="https://badgen.net/travis/async-library/react-async?icon=travis" alt="travis status">
   </a>
-  <a href="https://codecov.io/gh/ghengeveld/react-async">
-    <img src="https://badgen.net/codecov/c/github/ghengeveld/react-async/master?icon=codecov" alt="code coverage">
+  <a href="https://codecov.io/gh/async-library/react-async">
+    <img src="https://badgen.net/codecov/c/github/async-library/react-async/master?icon=codecov" alt="code coverage">
   </a>
-  <a href="https://www.codefactor.io/repository/github/ghengeveld/react-async">
-    <img src="https://www.codefactor.io/repository/github/ghengeveld/react-async/badge" alt="code quality">
+  <a href="https://www.codefactor.io/repository/github/async-library/react-async">
+    <img src="https://www.codefactor.io/repository/github/async-library/react-async/badge" alt="code quality">
   </a>
   <a href="https://deepscan.io/dashboard#view=project&tid=5147&pid=6925&bid=61474">
     <img src="https://deepscan.io/api/teams/5147/projects/6925/branches/61474/badge/grade.svg" alt="DeepScan grade">
   </a>
   <br/>
-  <img src="https://badgen.net/david/dep/ghengeveld/react-async/packages/react-async" alt="dependencies">
-  <img src="https://badgen.net/david/dev/ghengeveld/react-async" alt="devDependencies">
-  <img src="https://badgen.net/david/peer/ghengeveld/react-async/packages/react-async" alt="peerDependencies">
+  <img src="https://badgen.net/david/dep/async-library/react-async/packages/react-async" alt="dependencies">
+  <img src="https://badgen.net/david/dev/async-library/react-async" alt="devDependencies">
+  <img src="https://badgen.net/david/peer/async-library/react-async/packages/react-async" alt="peerDependencies">
   <br/>
   <a href="https://discord.gg/CAYQ6mU">
     <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
   </a>
-  <a href="https://react-async.ghengeveld.now.sh/examples/">
+  <a href="https://react-async.async-library.now.sh/examples/">
     <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
   </a>
 </p>
@@ -82,7 +88,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 > ## Upgrading to v8
 >
 > Version 8 comes with breaking changes. See [Upgrading](#upgrading) for details.
-> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available.
+> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available.
 
 # Table of Contents
 
@@ -191,7 +197,7 @@ All standalone helper components were renamed to avoid import naming collision.
 - `<Rejected>` was renamed to `<IfRejected`.
 - `<Settled>` was renamed to `<IfSettled>`.
 
-> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
+> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available to automate the upgrade.
 
 The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This
 is a manual upgrade. See [`promise`](#promise-1) for details.
@@ -202,7 +208,7 @@ is a manual upgrade. See [`promise`](#promise-1) for details.
 - Some of the other helpers were also renamed, but the old ones remain as alias.
 - Don't forget to deal with any custom instances of `<Async>` when upgrading.
 
-> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
+> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available to automate the upgrade.
 
 #### Upgrade to v4
 
@@ -531,7 +537,7 @@ state, the dispatched action and the internal reducer. You probably want to invo
 > This is a power feature which loosely follows the [state reducer pattern]. It allows you to control state changes by
 > intercepting actions before they are handled, or by overriding or enhancing the reducer itself.
 
-[internal reducer]: https://github.com/ghengeveld/react-async/blob/master/src/reducer.js
+[internal reducer]: https://github.com/async-library/react-async/blob/master/src/reducer.js
 [state reducer pattern]: https://kentcdodds.com/blog/the-state-reducer-pattern
 
 #### `dispatcher`
@@ -881,7 +887,7 @@ return <IfSettled state={state}>{state => `Finished at ${state.finishedAt.toISOS
 ## Usage examples
 
 Here's several examples to give you an idea of what's possible with React Async. For fully working examples, please
-check out the [`examples` directory](https://github.com/ghengeveld/react-async/tree/master/examples).
+check out the [`examples` directory](https://github.com/async-library/react-async/tree/master/examples).
 
 ### Data fetching
 
@@ -995,7 +1001,7 @@ render() {
 
 <a href="https://xebia.com"><img src="https://user-images.githubusercontent.com/321738/52999660-a9949780-3426-11e9-9a7e-42b400f4ccbe.png" height="40" alt="Xebia" /></a> <a href="https://intergamma.nl"><img src="https://user-images.githubusercontent.com/321738/52999676-b5805980-3426-11e9-899e-6c9669176df4.png" height="40" alt="Intergamma" /></a> <a href="https://www.bol.com"><img src="https://user-images.githubusercontent.com/321738/57380602-8ff32880-71a9-11e9-9936-a8bc77f2518b.png" height="40" alt="bol.com" /></a>
 
-Your organization here? [Let us know](https://github.com/ghengeveld/react-async/issues/22) you're using React Async!
+Your organization here? [Let us know](https://github.com/async-library/react-async/issues/22) you're using React Async!
 
 ## Acknowledgements
 
