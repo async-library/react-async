@@ -30,12 +30,6 @@
   <a href="https://github.com/async-library/react-async/graphs/contributors">
     <img src="https://badgen.net/github/contributors/async-library/react-async?icon=github" alt="contributors">
   </a>
-<<<<<<< HEAD
-=======
-  <a href="https://react-async.async-library.now.sh/examples/">
-    <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
-  </a>
->>>>>>> Transferred ownership of the repo to async-library.
   <br/>
   <a href="https://circleci.com/gh/async-library/react-async">
     <img src="https://badgen.net/circleci/github/async-library/react-async/master?icon=circleci" alt="circleci status">
