@@ -172,7 +172,7 @@ export const createInstance = <T extends {}>(
 
   type Props = AsyncProps<T>
 
-  const Async: AsyncConstructor<T> = class extends React.Component<Props, AsyncState<T>> {
+  const Async: AsyncConstructor<T> = class Async extends React.Component<Props, AsyncState<T>> {
     private mounted = false
     private counter = 0
     private args: any[] = []
