@@ -18,9 +18,7 @@ To start working on React Async, clone the repo and bootstrap the project:
 ```sh
 git clone https://github.com/async-library/react-async.git
 cd react-async
-yarn && yarn build:packages
-yarn bootstrap
-yarn build && yarn test
+yarn && yarn bootstrap && yarn test
 ```
 
 Note that all work is done against the `next` branch, we only merge to `master` when doing a release.
@@ -84,6 +82,8 @@ In the `examples` folder, you will find sample React applications that use React
 To run sample examples on your local environments
 
 ```sh
+yarn build:examples
+yarn test:examples
 yarn start:examples
 ```
 
