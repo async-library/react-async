@@ -10,7 +10,7 @@
     "packages/*"
   ],
   "scripts": {
-    "bootstrap": "yarn workspaces run install",
+    "bootstrap": "yarn build:packages && yarn workspaces run install",
     "clean": "lerna clean",
     "start": "run-p start:*",
     "start:examples": "now dev",
