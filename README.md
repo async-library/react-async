@@ -67,7 +67,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 - Works with promises, async/await and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
 - Debug and develop every part of the loading sequence with the [DevTools](#devtools)
-- Provides convenient `isLoading`, `startedAt`, `finishedAt`, et al metadata
+- Provides convenient `isPending`, `startedAt`, `finishedAt`, et al metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
 - Accepts `onResolve`, `onReject` and `onCancel` callbacks
@@ -127,7 +127,7 @@ React Async is promise-based, so you can resolve anything you want, not just `fe
 
 The React team is currently working on a large rewrite called [Concurrent React], previously known as "Async React".
 Part of this rewrite is Suspense, which is a generic way for components to suspend rendering while they load data from
-a cache. It can render a fallback UI while loading data, much like `<Async.Loading>`.
+a cache. It can render a fallback UI while loading data, much like `<Async.Pending>`.
 
 React Async has no direct relation to Concurrent React. They are conceptually close, but not the same. React Async is
 meant to make dealing with asynchronous business logic easier. Concurrent React will make those features have less
@@ -232,8 +232,8 @@ const loadCustomer = async ({ customerId }, { signal }) => {
 }
 
 const MyComponent = () => {
-  const { data, error, isLoading } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
-  if (isLoading) return "Loading..."
+  const { data, error, isPending } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
+  if (isPending) return "Loading..."
   if (error) return `Something went wrong: ${error.message}`
   if (data)
     return (
@@ -253,7 +253,7 @@ Or using the shorthand version:
 
 ```jsx
 const MyComponent = () => {
-  const { data, error, isLoading } = useAsync(loadCustomer, options)
+  const { data, error, isPending } = useAsync(loadCustomer, options)
   // ...
 }
 ```
@@ -267,7 +267,7 @@ import { useFetch } from "react-async"
 
 const MyComponent = () => {
   const headers = { Accept: "application/json" }
-  const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)
+  const { data, error, isPending, run } = useFetch("/api/example", { headers }, options)
   // This will setup a promiseFn with a fetch request and JSON deserialization.
 
   // you can later call `run` with an optional callback argument to
@@ -315,8 +315,8 @@ const loadCustomer = ({ customerId }, { signal }) =>
 
 const MyComponent = () => (
   <Async promiseFn={loadCustomer} customerId={1}>
-    {({ data, error, isLoading }) => {
-      if (isLoading) return "Loading..."
+    {({ data, error, isPending }) => {
+      if (isPending) return "Loading..."
       if (error) return `Something went wrong: ${error.message}`
       if (data)
         return (
@@ -404,7 +404,7 @@ const loadCustomer = ({ customerId }, { signal }) =>
 
 const MyComponent = () => (
   <Async promiseFn={loadCustomer} customerId={1}>
-    <Async.Loading>Loading...</Async.Loading>
+    <Async.Pending>Loading...</Async.Pending>
     <Async.Fulfilled>
       {data => (
         <div>
@@ -895,8 +895,8 @@ class App extends Component {
     // The promiseFn should be defined outside of render()
     return (
       <Async promiseFn={this.getSession} sessionId={123}>
-        {({ data, error, isLoading, reload }) => {
-          if (isLoading) {
+        {({ data, error, isPending, reload }) => {
+          if (isPending) {
             return <div>Loading...</div>
           }
           if (error) {
@@ -926,10 +926,10 @@ This uses `deferFn` to trigger an update (e.g. POST / PUT request) after a form 
 const subscribeToNewsletter = (args, props, controller) => fetch(...)
 
 <Async deferFn={subscribeToNewsletter}>
-  {({ error, isLoading, run }) => (
+  {({ error, isPending, run }) => (
     <form onSubmit={run}>
       <input type="email" name="email" />
-      <button type="submit" disabled={isLoading}>
+      <button type="submit" disabled={isPending}>
         Subscribe
       </button>
       {error && <p>{error.toString()}</p>}
@@ -946,14 +946,14 @@ This uses both `promiseFn` and `deferFn` along with `setData` to implement optim
 const updateAttendance = ([attend]) => fetch(...).then(() => attend, () => !attend)
 
 <Async promiseFn={getAttendance} deferFn={updateAttendance}>
-  {({ data: isAttending, isLoading, run, setData }) => (
+  {({ data: isAttending, isPending, run, setData }) => (
     <Toggle
       on={isAttending}
       onClick={() => {
         setData(!isAttending)
         run(!isAttending)
       }}
-      disabled={isLoading}
+      disabled={isPending}
     />
   )}
 </Async>
@@ -974,8 +974,8 @@ render() {
   const { customers } = this.props // injected by getInitialProps
   return (
     <Async promiseFn={loadCustomers} initialValue={customers}>
-      {({ data, error, isLoading, initialValue }) => { // initialValue is passed along for convenience
-        if (isLoading) {
+      {({ data, error, isPending, initialValue }) => { // initialValue is passed along for convenience
+        if (isPending) {
           return <div>Loading...</div>
         }
         if (error) {
