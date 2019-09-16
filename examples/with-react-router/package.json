@@ -26,5 +26,8 @@
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg",
     "react-async-devtools": "../../packages/react-async-devtools/pkg"
+  },
+  "engines": {
+    "node": "^8 || ^10"
   }
 }
