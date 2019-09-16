@@ -10,7 +10,6 @@
     "packages/*"
   ],
   "scripts": {
-    "postinstall": "yarn bootstrap",
     "bootstrap": "yarn build:packages && yarn workspaces run install",
     "clean": "lerna clean",
     "start": "run-p start:*",
@@ -30,6 +29,7 @@
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
     "build:storybook": "build-storybook -o docs",
+    "now-build": "yarn bootstrap",
     "bump": "lerna version -m 'Bump' --no-git-tag-version --no-push",
     "postbump": "yarn build:packages"
   },
