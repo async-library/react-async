@@ -1,4 +1,4 @@
-import React from "react"
+import * as React from "react"
 
 export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
 export type InitialChildren<T> = ((state: AsyncInitial<T>) => React.ReactNode) | React.ReactNode
