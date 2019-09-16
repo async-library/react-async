@@ -15,7 +15,7 @@
     "start": "run-p start:*",
     "start:examples": "now dev",
     "start:storybook": "start-storybook -p 6006",
-    "lint": "eslint packages/*/src/*.{j,t}{s,sx}",
+    "lint": "eslint packages/*/src/*.{js,ts,tsx}",
     "test": "jest packages/*/src/*.spec.js",
     "test:watch": "yarn test -- --watch",
     "test:devtools": "jest react-async-devtools/src",

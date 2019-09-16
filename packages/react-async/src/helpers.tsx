@@ -16,7 +16,7 @@ import {
  * AbstractState imported in this file, even though it is only used implicitly.
  * This _uses_ AbstractState so it is not accidentally removed by someone.
  */
-declare type ImportWorkaround<T> = AbstractState<T>;
+declare type ImportWorkaround<T> = AbstractState<T>
 
 // these were exported as type, but never existed
 // export declare function IfLoading<T>(props: {
@@ -88,8 +88,8 @@ export const IfFulfilled = <T extends {}>({
   persist?: boolean
   state: AsyncState<T>
 }) => (
-    <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
-  )
+  <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
+)
 
 /**
  * Renders only when promise is rejected.
@@ -107,10 +107,10 @@ export const IfRejected = <T extends {}>({
   persist?: boolean
   state: AsyncState<T>
 }) => (
-    <>
-      {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
-    </>
-  )
+  <>
+    {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
+  </>
+)
 
 /**
  * Renders only when promise is fulfilled or rejected.

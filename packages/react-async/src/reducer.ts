@@ -15,8 +15,7 @@ import {
  * AbstractState imported in this file, even though it is only used implicitly.
  * This _uses_ AbstractState so it is not accidentally removed by someone.
  */
-declare type ImportWorkaround<T> = AbstractState<T>;
-
+declare type ImportWorkaround<T> = AbstractState<T>
 
 export enum actionTypes {
   start = "start",
