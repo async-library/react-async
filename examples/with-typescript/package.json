@@ -42,6 +42,6 @@
     "not op_mini all"
   ],
   "engines": {
-    "node": "^8 || ^10"
+    "node": ">=8"
   }
 }

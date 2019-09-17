@@ -30,6 +30,6 @@
     "react-async": "../../packages/react-async/pkg"
   },
   "engines": {
-    "node": "^8 || ^10"
+    "node": ">=8"
   }
 }
