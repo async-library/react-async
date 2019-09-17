@@ -30,7 +30,7 @@
   <a href="https://github.com/async-library/react-async/graphs/contributors">
     <img src="https://badgen.net/github/contributors/async-library/react-async?icon=github" alt="contributors">
   </a>
-  <a href="https://react-async.async-library.now.sh/examples/">
+  <a href="https://react-async.now.sh/examples/">
     <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
   </a>
   <br/>
