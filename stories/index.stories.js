@@ -50,4 +50,6 @@ const App = () => {
   )
 }
 
-storiesOf("React Async", module).add("DevTools", () => <App />)
+storiesOf("React Async", module).add("DevTools", () => <App />, {
+  chromatic: { delay: 2000 },
+})
