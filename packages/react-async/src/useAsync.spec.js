@@ -3,7 +3,7 @@
 import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup } from "@testing-library/react"
-import { useAsync, useFetch, globalScope } from "./index"
+import { useAsync, useFetch, globalScope, FetchError } from "./index"
 import {
   sleep,
   resolveTo,
@@ -20,11 +20,11 @@ const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 globalScope.AbortController = jest.fn(() => abortCtrl)
 
 const json = jest.fn(() => ({}))
-globalScope.fetch = jest.fn(() => Promise.resolve({ ok: true, json }))
+globalScope.fetch = jest.fn()
 
 beforeEach(abortCtrl.abort.mockClear)
-beforeEach(globalScope.fetch.mockClear)
 beforeEach(json.mockClear)
+beforeEach(() => globalScope.fetch.mockReset().mockResolvedValue({ ok: true, json }))
 afterEach(cleanup)
 
 const Async = ({ children = () => null, ...props }) => children(useAsync(props))
@@ -249,5 +249,21 @@ describe("useFetch", () => {
       "/test",
       expect.objectContaining({ preventDefault: expect.any(Function) })
     )
+  })
+
+  test("throws a FetchError for failed requests", async () => {
+    const errorResponse = { ok: false, statusText: "Bad Request", json }
+    globalScope.fetch.mockResolvedValue(errorResponse)
+    const onResolve = jest.fn()
+    const onReject = jest.fn()
+    render(<Fetch input="/test" options={{ onResolve, onReject }} />)
+    expect(globalScope.fetch).toHaveBeenCalled()
+    await sleep(10)
+    expect(onResolve).not.toHaveBeenCalled()
+    expect(onReject).toHaveBeenCalled()
+    let [err] = onReject.mock.calls[0]
+    expect(err).toBeInstanceOf(FetchError)
+    expect(err.message).toEqual("Bad Request")
+    expect(err.response).toBe(errorResponse)
   })
 })
