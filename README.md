@@ -54,7 +54,7 @@
   <a href="https://discord.gg/CAYQ6mU">
     <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
   </a>
-  <a href="https://react-async.async-library.now.sh/examples/">
+  <a href="https://react-async.now.sh/examples/">
     <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
   </a>
 </p>
@@ -192,9 +192,13 @@ All standalone helper components were renamed to avoid import naming collision.
 - `<Settled>` was renamed to `<IfSettled>`.
 
 > A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available to automate the upgrade.
+> <<<<<<< HEAD
 
 The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This
 is a manual upgrade. See [`promise`](#promise-1) for details.
+=======
+
+> > > > > > > master
 
 #### Upgrade to v6
 
