@@ -25,6 +25,7 @@
     "test:latest": "yarn add -D -W react@latest react-dom@latest && yarn test",
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "test:examples": "CI=1 lerna run --scope '*-example' test -- --passWithNoTests --watchAll=false",
+    "test:chromatic": "chromatic test --app-code iiua39bmt0j --build-script-name build:storybook",
     "ci": "yarn lint && yarn test:compat && yarn test:examples",
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
