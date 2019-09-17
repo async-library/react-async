@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "react-async",
-  "alias": "react-async.now.sh",
   "public": true,
   "builds": [
     {
