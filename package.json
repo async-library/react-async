@@ -30,7 +30,7 @@
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
     "build:storybook": "build-storybook -o docs",
-    "deploy:examples": "now --scope async-library --token $NOW_API_TOKEN",
+    "deploy:examples": "now --prod --scope async-library --token $NOW_API_TOKEN",
     "bump": "lerna version -m 'Bump' --no-git-tag-version --no-push",
     "postbump": "yarn build:packages"
   },
