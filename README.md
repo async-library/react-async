@@ -195,13 +195,9 @@ All standalone helper components were renamed to avoid import naming collision.
 - `<Settled>` was renamed to `<IfSettled>`.
 
 > A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available to automate the upgrade.
-> <<<<<<< HEAD
 
 The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This
 is a manual upgrade. See [`promise`](#promise-1) for details.
-=======
-
-> > > > > > > master
 
 #### Upgrade to v6
 
