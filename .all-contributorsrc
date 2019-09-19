@@ -87,6 +87,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "sibelius",
+      "name": "Sibelius Seraphini",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/2005841?v=4",
+      "profile": "https://twitter.com/sseraphini",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
