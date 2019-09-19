@@ -14,6 +14,16 @@
         "code",
         "platform"
       ]
+    },
+    {
+      "login": "phryneas",
+      "name": "Lenz Weber",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/4282439?v=4",
+      "profile": "https://twitter.com/phry",
+      "contributions": [
+        "code",
+        "platform"
+      ]
     }
   ],
   "contributorsPerLine": 7,
