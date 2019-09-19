@@ -1040,6 +1040,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/aratcliffe"><img src="https://avatars3.githubusercontent.com/u/491126?v=4" width="100px;" alt="Adam Ratcliffe"/><br /><sub><b>Adam Ratcliffe</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=aratcliffe" title="Code">💻</a></td>
     <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars0.githubusercontent.com/u/1500684?v=4" width="100px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=kentcdodds" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/walter-ind"><img src="https://avatars2.githubusercontent.com/u/52423075?v=4" width="100px;" alt="walter-ind"/><br /><sub><b>walter-ind</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=walter-ind" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://twitter.com/arthurdenture"><img src="https://avatars3.githubusercontent.com/u/80536?v=4" width="100px;" alt="Jacob Lee"/><br /><sub><b>Jacob Lee</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=artdent" title="Code">💻</a></td>
   </tr>
 </table>
 
