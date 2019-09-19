@@ -2,6 +2,7 @@
   "files": [
     "README.md"
   ],
+  "badgeTemplate": "<a href=\"#contributors\"><img src=\"https://badgen.net/badge/all%20contributors/<%= contributors.length %>/6d60e6\" alt=\"All Contributors\"></a>",
   "imageSize": 75,
   "commit": false,
   "contributors": [
