@@ -33,6 +33,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "FredKSchott",
+      "name": "Fred K. Schott",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/622227?v=4",
+      "profile": "http://www.fredkschott.com",
+      "contributions": [
+        "tool"
+      ]
     }
   ],
   "contributorsPerLine": 7,
