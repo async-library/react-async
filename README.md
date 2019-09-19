@@ -1029,6 +1029,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://philippeterson.com/"><img src="https://avatars1.githubusercontent.com/u/1326208?v=4" width="100px;" alt="Philip Peterson"/><br /><sub><b>Philip Peterson</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=philip-peterson" title="Code">💻</a></td>
     <td align="center"><a href="https://twitter.com/sseraphini"><img src="https://avatars3.githubusercontent.com/u/2005841?v=4" width="100px;" alt="Sibelius Seraphini"/><br /><sub><b>Sibelius Seraphini</b></sub></a><br /><a href="#review-sibelius" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://jimthedev.com"><img src="https://avatars0.githubusercontent.com/u/108938?v=4" width="100px;" alt="Jim Cummins"/><br /><sub><b>Jim Cummins</b></sub></a><br /><a href="#review-jimthedev" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://mihkel.sokk.ee"><img src="https://avatars3.githubusercontent.com/u/231978?v=4" width="100px;" alt="Mihkel Sokk"/><br /><sub><b>Mihkel Sokk</b></sub></a><br /><a href="#review-msokk" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 

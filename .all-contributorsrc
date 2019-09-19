@@ -105,6 +105,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "msokk",
+      "name": "Mihkel Sokk",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/231978?v=4",
+      "profile": "http://mihkel.sokk.ee",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
