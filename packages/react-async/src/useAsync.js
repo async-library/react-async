@@ -154,8 +154,15 @@ const useAsync = (arg1, arg2) => {
   )
 }
 
+export class FetchError extends Error {
+  constructor(response) {
+    super(`${response.status} ${response.statusText}`)
+    this.response = response
+  }
+}
+
 const parseResponse = (accept, json) => res => {
-  if (!res.ok) return Promise.reject(res)
+  if (!res.ok) return Promise.reject(new FetchError(res))
   if (typeof json === "boolean") return json ? res.json() : res
   return accept === "application/json" ? res.json() : res
 }

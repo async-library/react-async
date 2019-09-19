@@ -234,4 +234,8 @@ type FetchRun<T> = {
   run(): void
 }
 
+export class FetchError extends Error {
+  response: Response
+}
+
 export default Async
