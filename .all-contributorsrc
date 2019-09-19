@@ -51,6 +51,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "tomshane",
+      "name": "Tom Shane",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/11005356?v=4",
+      "profile": "https://github.com/tomshane",
+      "contributions": [
+        "review"
+      ]
     }
   ],
   "contributorsPerLine": 7,
