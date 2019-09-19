@@ -1027,6 +1027,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="http://philippeterson.com/"><img src="https://avatars1.githubusercontent.com/u/1326208?v=4" width="100px;" alt="Philip Peterson"/><br /><sub><b>Philip Peterson</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=philip-peterson" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitter.com/sseraphini"><img src="https://avatars3.githubusercontent.com/u/2005841?v=4" width="100px;" alt="Sibelius Seraphini"/><br /><sub><b>Sibelius Seraphini</b></sub></a><br /><a href="#review-sibelius" title="Reviewed Pull Requests">👀</a></td>
   </tr>
 </table>
 
