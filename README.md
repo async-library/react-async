@@ -60,7 +60,9 @@
   <a href="https://www.chromaticqa.com/builds?appId=5d7fff2b307e4b0020ae1be4">
     <img src="https://badgen.net/badge/tested%20with/chromatic/fc521f" alt="Chromatic">
   </a>
-  <img src="https://img.shields.io/badge/all_contributors-1-orange.svg" alt="All Contributors">
+  <a href="#contributors">
+    <img src="https://img.shields.io/badge/all_contributors-1-orange.svg" alt="All Contributors">
+  </a>
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
