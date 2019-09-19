@@ -1009,7 +1009,7 @@ Versions 1.x and 2.x of `react-async` on npm are from a different project abando
 kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of this
 project is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
 
-## Contributors ✨
+## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
