@@ -1036,6 +1036,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/dhurlburtusa"><img src="https://avatars3.githubusercontent.com/u/4006431?v=4" width="100px;" alt="Danny Hurlburt"/><br /><sub><b>Danny Hurlburt</b></sub></a><br /><a href="#ideas-dhurlburtusa" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/async-library/react-async/commits?author=dhurlburtusa" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://noelyoo.github.io/resume"><img src="https://avatars2.githubusercontent.com/u/25740248?v=4" width="100px;" alt="Noel Yoo"/><br /><sub><b>Noel Yoo</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=noelyoo" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
