@@ -156,7 +156,7 @@ const useAsync = (arg1, arg2) => {
 
 export class FetchError extends Error {
   constructor(response) {
-    super(response.statusText)
+    super(`${response.status} ${response.statusText}`)
     this.response = response
   }
 }

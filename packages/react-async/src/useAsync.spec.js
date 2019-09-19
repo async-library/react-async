@@ -252,7 +252,7 @@ describe("useFetch", () => {
   })
 
   test("throws a FetchError for failed requests", async () => {
-    const errorResponse = { ok: false, statusText: "Bad Request", json }
+    const errorResponse = { ok: false, status: 400, statusText: "Bad Request", json }
     globalScope.fetch.mockResolvedValue(errorResponse)
     const onResolve = jest.fn()
     const onReject = jest.fn()
@@ -263,7 +263,7 @@ describe("useFetch", () => {
     expect(onReject).toHaveBeenCalled()
     let [err] = onReject.mock.calls[0]
     expect(err).toBeInstanceOf(FetchError)
-    expect(err.message).toEqual("Bad Request")
+    expect(err.message).toEqual("400 Bad Request")
     expect(err.response).toBe(errorResponse)
   })
 })
