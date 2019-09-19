@@ -234,7 +234,7 @@ type FetchRun<T> = {
   run(): void
 }
 
-export interface FetchError extends Error {
+export class FetchError extends Error {
   response: Response
 }
 
