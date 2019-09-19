@@ -123,6 +123,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "unorsk",
+      "name": "Andrii U",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/25188?v=4",
+      "profile": "https://github.com/unorsk",
+      "contributions": [
+        "example"
+      ]
     }
   ],
   "contributorsPerLine": 7,

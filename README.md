@@ -1031,6 +1031,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://jimthedev.com"><img src="https://avatars0.githubusercontent.com/u/108938?v=4" width="100px;" alt="Jim Cummins"/><br /><sub><b>Jim Cummins</b></sub></a><br /><a href="#review-jimthedev" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="http://mihkel.sokk.ee"><img src="https://avatars3.githubusercontent.com/u/231978?v=4" width="100px;" alt="Mihkel Sokk"/><br /><sub><b>Mihkel Sokk</b></sub></a><br /><a href="#review-msokk" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="https://github.com/brabeji"><img src="https://avatars3.githubusercontent.com/u/2237954?v=4" width="100px;" alt="Jiří Brabec"/><br /><sub><b>Jiří Brabec</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=brabeji" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/unorsk"><img src="https://avatars0.githubusercontent.com/u/25188?v=4" width="100px;" alt="Andrii U"/><br /><sub><b>Andrii U</b></sub></a><br /><a href="#example-unorsk" title="Examples">💡</a></td>
   </tr>
 </table>
 
