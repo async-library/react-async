@@ -60,9 +60,6 @@
   <a href="https://www.chromaticqa.com/builds?appId=5d7fff2b307e4b0020ae1be4">
     <img src="https://badgen.net/badge/tested%20with/chromatic/fc521f" alt="Chromatic">
   </a>
-  <a href="#contributors">
-    <img src="https://img.shields.io/badge/all_contributors-1-orange.svg" alt="All Contributors">
-  </a>
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
@@ -113,6 +110,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
   - [Optimistic updates](#optimistic-updates)
   - [Server-side rendering](#server-side-rendering)
 - [Who's using React Async?](#whos-using-react-async)
+- [Contributors](#contributors)
 - [Acknowledgements](#acknowledgements)
 
 ## Rationale
@@ -1003,12 +1001,6 @@ render() {
 
 Your organization here? [Let us know](https://github.com/async-library/react-async/issues/22) you're using React Async!
 
-## Acknowledgements
-
-Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
-kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of this
-project is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
-
 ## Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -1048,3 +1040,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Acknowledgements
+
+Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
+kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of this
+project is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
