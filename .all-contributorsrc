@@ -78,6 +78,15 @@
       "contributions": [
         "review"
       ]
+    },
+    {
+      "login": "philip-peterson",
+      "name": "Philip Peterson",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1326208?v=4",
+      "profile": "http://philippeterson.com/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
