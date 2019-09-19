@@ -180,6 +180,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "walter-ind",
+      "name": "walter-ind",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/52423075?v=4",
+      "profile": "https://github.com/walter-ind",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
