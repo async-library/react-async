@@ -1025,6 +1025,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://bycedric.com"><img src="https://avatars2.githubusercontent.com/u/1203991?v=4" width="100px;" alt="Cedric van Putten"/><br /><sub><b>Cedric van Putten</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=byCedric" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/tomshane"><img src="https://avatars1.githubusercontent.com/u/11005356?v=4" width="100px;" alt="Tom Shane"/><br /><sub><b>Tom Shane</b></sub></a><br /><a href="#review-tomshane" title="Reviewed Pull Requests">👀</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="http://philippeterson.com/"><img src="https://avatars1.githubusercontent.com/u/1326208?v=4" width="100px;" alt="Philip Peterson"/><br /><sub><b>Philip Peterson</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=philip-peterson" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
