@@ -132,6 +132,15 @@
       "contributions": [
         "example"
       ]
+    },
+    {
+      "login": "matthisk",
+      "name": "Matthisk Heimensen",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/602837?v=4",
+      "profile": "http://matthisk.nl",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
