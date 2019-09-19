@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "Khartir",
+      "name": "Khartir",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/5592420?v=4",
+      "profile": "https://github.com/Khartir",
+      "contributions": [
+        "code",
+        "platform"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "react-async",
+  "projectOwner": "async-library",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

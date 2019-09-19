@@ -60,6 +60,7 @@
   <a href="https://www.chromaticqa.com/builds?appId=5d7fff2b307e4b0020ae1be4">
     <img src="https://badgen.net/badge/tested%20with/chromatic/fc521f" alt="Chromatic">
   </a>
+  <img src="https://img.shields.io/badge/all_contributors-1-orange.svg" alt="All Contributors">
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
@@ -1005,3 +1006,19 @@ Your organization here? [Let us know](https://github.com/async-library/react-asy
 Versions 1.x and 2.x of `react-async` on npm are from a different project abandoned years ago. The original author was
 kind enough to transfer ownership so the `react-async` package name could be repurposed. The first version of this
 project is v3.0.0. Many thanks to Andrey Popp for handing over ownership of `react-async` on npm.
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/Khartir"><img src="https://avatars3.githubusercontent.com/u/5592420?v=4" width="100px;" alt="Khartir"/><br /><sub><b>Khartir</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=Khartir" title="Code">💻</a> <a href="#platform-Khartir" title="Packaging/porting to new platform">📦</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
