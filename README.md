@@ -1035,7 +1035,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://matthisk.nl"><img src="https://avatars0.githubusercontent.com/u/602837?v=4" width="100px;" alt="Matthisk Heimensen"/><br /><sub><b>Matthisk Heimensen</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=matthisk" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/dhurlburtusa"><img src="https://avatars3.githubusercontent.com/u/4006431?v=4" width="100px;" alt="Danny Hurlburt"/><br /><sub><b>Danny Hurlburt</b></sub></a><br /><a href="#ideas-dhurlburtusa" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/dhurlburtusa"><img src="https://avatars3.githubusercontent.com/u/4006431?v=4" width="100px;" alt="Danny Hurlburt"/><br /><sub><b>Danny Hurlburt</b></sub></a><br /><a href="#ideas-dhurlburtusa" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/async-library/react-async/commits?author=dhurlburtusa" title="Documentation">📖</a></td>
   </tr>
 </table>
 
