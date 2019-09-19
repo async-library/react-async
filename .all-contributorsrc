@@ -6,6 +6,24 @@
   "commit": false,
   "contributors": [
     {
+      "login": "ghengeveld",
+      "name": "Gert Hengeveld",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/321738?v=4",
+      "profile": "https://medium.com/@ghengeveld",
+      "contributions": [
+        "code",
+        "review",
+        "question",
+        "blog",
+        "doc",
+        "design",
+        "example",
+        "financial",
+        "infra",
+        "maintenance"
+      ]
+    },
+    {
       "login": "Khartir",
       "name": "Khartir",
       "avatar_url": "https://avatars3.githubusercontent.com/u/5592420?v=4",
