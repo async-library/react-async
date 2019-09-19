@@ -1021,6 +1021,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://twitter.com/phry"><img src="https://avatars1.githubusercontent.com/u/4282439?v=4" width="100px;" alt="Lenz Weber"/><br /><sub><b>Lenz Weber</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=phryneas" title="Code">💻</a> <a href="#platform-phryneas" title="Packaging/porting to new platform">📦</a></td>
     <td align="center"><a href="https://github.com/Avi98"><img src="https://avatars1.githubusercontent.com/u/26133749?v=4" width="100px;" alt="Avinash"/><br /><sub><b>Avinash</b></sub></a><br /><a href="#review-Avi98" title="Reviewed Pull Requests">👀</a></td>
     <td align="center"><a href="http://www.fredkschott.com"><img src="https://avatars1.githubusercontent.com/u/622227?v=4" width="100px;" alt="Fred K. Schott"/><br /><sub><b>Fred K. Schott</b></sub></a><br /><a href="#tool-FredKSchott" title="Tools">🔧</a></td>
+    <td align="center"><a href="https://bycedric.com"><img src="https://avatars2.githubusercontent.com/u/1203991?v=4" width="100px;" alt="Cedric van Putten"/><br /><sub><b>Cedric van Putten</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=byCedric" title="Code">💻</a></td>
   </tr>
 </table>
 
