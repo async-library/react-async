@@ -1,5 +1,4 @@
 <p align="center">
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
   <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/async-library/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
   Handle promises with ease.
 </p>
@@ -61,6 +60,7 @@
   <a href="https://www.chromaticqa.com/builds?appId=5d7fff2b307e4b0020ae1be4">
     <img src="https://badgen.net/badge/tested%20with/chromatic/fc521f" alt="Chromatic">
   </a>
+  <img src="https://img.shields.io/badge/all_contributors-1-orange.svg" alt="All Contributors">
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
