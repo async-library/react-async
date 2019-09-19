@@ -1016,6 +1016,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://github.com/Khartir"><img src="https://avatars3.githubusercontent.com/u/5592420?v=4" width="100px;" alt="Khartir"/><br /><sub><b>Khartir</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=Khartir" title="Code">💻</a> <a href="#platform-Khartir" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://twitter.com/phry"><img src="https://avatars1.githubusercontent.com/u/4282439?v=4" width="100px;" alt="Lenz Weber"/><br /><sub><b>Lenz Weber</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=phryneas" title="Code">💻</a> <a href="#platform-phryneas" title="Packaging/porting to new platform">📦</a></td>
   </tr>
 </table>
 
