@@ -1,6 +1,6 @@
 import { PromiseFn } from "./types"
 
-export enum statusTypes {
+export enum StatusTypes {
   initial = "initial",
   pending = "pending",
   fulfilled = "fulfilled",
@@ -8,25 +8,25 @@ export enum statusTypes {
 }
 
 export const getInitialStatus = <T>(value?: T | Error, promise?: Promise<T> | PromiseFn<T>) => {
-  if (value instanceof Error) return statusTypes.rejected
-  if (value !== undefined) return statusTypes.fulfilled
-  if (promise) return statusTypes.pending
-  return statusTypes.initial
+  if (value instanceof Error) return StatusTypes.rejected
+  if (value !== undefined) return StatusTypes.fulfilled
+  if (promise) return StatusTypes.pending
+  return StatusTypes.initial
 }
 
 export const getIdleStatus = <T>(value?: T | Error) => {
-  if (value instanceof Error) return statusTypes.rejected
-  if (value !== undefined) return statusTypes.fulfilled
-  return statusTypes.initial
+  if (value instanceof Error) return StatusTypes.rejected
+  if (value !== undefined) return StatusTypes.fulfilled
+  return StatusTypes.initial
 }
 
-export const getStatusProps = (status: statusTypes) => ({
+export const getStatusProps = (status: StatusTypes) => ({
   status,
-  isInitial: status === statusTypes.initial,
-  isPending: status === statusTypes.pending,
-  isLoading: status === statusTypes.pending, // alias
-  isFulfilled: status === statusTypes.fulfilled,
-  isResolved: status === statusTypes.fulfilled, // alias
-  isRejected: status === statusTypes.rejected,
-  isSettled: status === statusTypes.fulfilled || status === statusTypes.rejected,
+  isInitial: status === StatusTypes.initial,
+  isPending: status === StatusTypes.pending,
+  isLoading: status === StatusTypes.pending, // alias
+  isFulfilled: status === StatusTypes.fulfilled,
+  isResolved: status === StatusTypes.fulfilled, // alias
+  isRejected: status === StatusTypes.rejected,
+  isSettled: status === StatusTypes.fulfilled || status === StatusTypes.rejected,
 })

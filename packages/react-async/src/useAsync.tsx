@@ -1,7 +1,7 @@
 import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 
 import globalScope from "./globalScope"
-import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import { ActionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
 import {
   AsyncOptions,
@@ -88,7 +88,7 @@ function useAsync<T extends {}>(
     (data, callback = noop) => {
       if (isMounted.current) {
         dispatch({
-          type: actionTypes.fulfill,
+          type: ActionTypes.fulfill,
           payload: data,
           meta: getMeta(),
         })
@@ -103,7 +103,7 @@ function useAsync<T extends {}>(
     (error, callback = noop) => {
       if (isMounted.current) {
         dispatch({
-          type: actionTypes.reject,
+          type: ActionTypes.reject,
           payload: error,
           error: true,
           meta: getMeta(),
@@ -138,7 +138,7 @@ function useAsync<T extends {}>(
         if (!isMounted.current) return
         const executor = () => promiseFn().then(resolve, reject)
         dispatch({
-          type: actionTypes.start,
+          type: ActionTypes.start,
           payload: executor,
           meta: getMeta(),
         })
@@ -185,7 +185,7 @@ function useAsync<T extends {}>(
     abortController.current.abort()
     isMounted.current &&
       dispatch({
-        type: actionTypes.cancel,
+        type: ActionTypes.cancel,
         meta: getMeta(),
       })
   }, [onCancel, dispatch, getMeta])

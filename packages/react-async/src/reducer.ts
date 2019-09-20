@@ -1,4 +1,4 @@
-import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
+import { getInitialStatus, getIdleStatus, getStatusProps, StatusTypes } from "./status"
 import {
   PromiseFn,
   AsyncAction,
@@ -18,7 +18,7 @@ import {
  */
 declare type ImportWorkaround<T> = AbstractState<T>
 
-export enum actionTypes {
+export enum ActionTypes {
   start = "start",
   cancel = "cancel",
   fulfill = "fulfill",
@@ -48,16 +48,16 @@ export const init = <T>({
 
 export const reducer = <T>(state: ReducerAsyncState<T>, action: AsyncAction<T>) => {
   switch (action.type) {
-    case actionTypes.start:
+    case ActionTypes.start:
       return {
         ...state,
         startedAt: new Date(),
         finishedAt: undefined,
-        ...getStatusProps(statusTypes.pending),
+        ...getStatusProps(StatusTypes.pending),
         counter: action.meta.counter,
         promise: action.meta.promise,
       } as AsyncPending<T, ReducerBaseState<T>>
-    case actionTypes.cancel:
+    case ActionTypes.cancel:
       return {
         ...state,
         startedAt: undefined,
@@ -69,23 +69,23 @@ export const reducer = <T>(state: ReducerAsyncState<T>, action: AsyncAction<T>) 
         | AsyncInitial<T, ReducerBaseState<T>>
         | AsyncFulfilled<T, ReducerBaseState<T>>
         | AsyncRejected<T, ReducerBaseState<T>>
-    case actionTypes.fulfill:
+    case ActionTypes.fulfill:
       return {
         ...state,
         data: action.payload,
         value: action.payload,
         error: undefined,
         finishedAt: new Date(),
-        ...getStatusProps(statusTypes.fulfilled),
+        ...getStatusProps(StatusTypes.fulfilled),
         promise: action.meta.promise,
       } as AsyncFulfilled<T, ReducerBaseState<T>>
-    case actionTypes.reject:
+    case ActionTypes.reject:
       return {
         ...state,
         error: action.payload,
         value: action.payload,
         finishedAt: new Date(),
-        ...getStatusProps(statusTypes.rejected),
+        ...getStatusProps(StatusTypes.rejected),
         promise: action.meta.promise,
       } as AsyncRejected<T, ReducerBaseState<T>>
     default:
@@ -97,7 +97,7 @@ export const dispatchMiddleware = <T>(
   dispatch: (action: AsyncAction<T>, ...args: any[]) => void
 ) => (action: AsyncAction<T>, ...args: unknown[]) => {
   dispatch(action, ...args)
-  if (action.type === actionTypes.start && typeof action.payload === "function") {
+  if (action.type === ActionTypes.start && typeof action.payload === "function") {
     action.payload()
   }
 }

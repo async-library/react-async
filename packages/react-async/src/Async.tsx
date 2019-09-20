@@ -3,7 +3,7 @@ import React from "react"
 import globalScope from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
 import propTypes from "./propTypes"
-import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import { ActionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 import {
   AsyncProps,
   AsyncState,
@@ -176,7 +176,7 @@ export const createInstance = <T extends {}>(
       return (this.promise = new Promise((resolve, reject) => {
         if (!this.mounted) return
         const executor = () => promiseFn().then(resolve, reject)
-        this.dispatch({ type: actionTypes.start, payload: executor, meta: this.getMeta() })
+        this.dispatch({ type: ActionTypes.start, payload: executor, meta: this.getMeta() })
       }))
     }
 
@@ -212,7 +212,7 @@ export const createInstance = <T extends {}>(
       onCancel && onCancel()
       this.counter++
       this.abortController.abort()
-      this.mounted && this.dispatch({ type: actionTypes.cancel, meta: this.getMeta() })
+      this.mounted && this.dispatch({ type: ActionTypes.cancel, meta: this.getMeta() })
     }
 
     onResolve(counter: Number) {
@@ -237,14 +237,14 @@ export const createInstance = <T extends {}>(
 
     setData(data: T, callback?: () => void) {
       this.mounted &&
-        this.dispatch({ type: actionTypes.fulfill, payload: data, meta: this.getMeta() }, callback)
+        this.dispatch({ type: ActionTypes.fulfill, payload: data, meta: this.getMeta() }, callback)
       return data
     }
 
     setError(error: Error, callback?: () => void) {
       this.mounted &&
         this.dispatch(
-          { type: actionTypes.reject, payload: error, error: true, meta: this.getMeta() },
+          { type: ActionTypes.reject, payload: error, error: true, meta: this.getMeta() },
           callback
         )
       return error
