@@ -1,6 +1,7 @@
 {
   "name": "with-react-native-example",
   "version": "8.0.0",
+  "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "postinstall": "relative-deps",
@@ -28,5 +29,7 @@
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg"
   },
-  "private": true
+  "engines": {
+    "node": ">=8"
+  }
 }

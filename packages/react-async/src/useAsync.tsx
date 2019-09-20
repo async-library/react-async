@@ -228,10 +228,18 @@ function useAsync<T extends {}>(
   )
 }
 
+export class FetchError extends Error {
+  public response: Response
+  constructor(response: Response) {
+    super(`${response.status} ${response.statusText}`)
+    this.response = response
+  }
+}
+
 const parseResponse = (accept: undefined | string, json: undefined | boolean) => (
   res: Response
 ) => {
-  if (!res.ok) return Promise.reject(res)
+  if (!res.ok) return Promise.reject(new FetchError(res))
   if (typeof json === "boolean") return json ? res.json() : res
   return accept === "application/json" ? res.json() : res
 }

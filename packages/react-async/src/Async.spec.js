@@ -302,4 +302,15 @@ describe("createInstance", () => {
       abortCtrl
     )
   })
+
+  test("allows setting displayName", () => {
+    const promiseFn = () => resolveTo("done")
+    const CustomAsync = createInstance({ promiseFn }, "CustomAsync")
+    expect(CustomAsync.displayName).toBe("CustomAsync")
+    expect(CustomAsync.Initial.displayName).toBe("CustomAsync.Initial")
+    expect(CustomAsync.Pending.displayName).toBe("CustomAsync.Pending")
+    expect(CustomAsync.Fulfilled.displayName).toBe("CustomAsync.Fulfilled")
+    expect(CustomAsync.Rejected.displayName).toBe("CustomAsync.Rejected")
+    expect(CustomAsync.Settled.displayName).toBe("CustomAsync.Settled")
+  })
 })

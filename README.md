@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/ghengeveld/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
+  <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/async-library/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
   Handle promises with ease.
 </p>
 <br/>
@@ -18,45 +18,49 @@
     <img src="https://badgen.net/npm/license/react-async" alt="license">
   </a>
   <br/>
-  <a href="https://github.com/ghengeveld/react-async/issues">
-    <img src="https://badgen.net/github/open-issues/ghengeveld/react-async?icon=github" alt="issues">
+  <a href="https://github.com/async-library/react-async/issues">
+    <img src="https://badgen.net/github/open-issues/async-library/react-async?icon=github" alt="issues">
   </a>
-  <a href="https://github.com/ghengeveld/react-async/pulls">
-    <img src="https://badgen.net/github/open-prs/ghengeveld/react-async?icon=github" alt="pull requests">
+  <a href="https://github.com/async-library/react-async/pulls">
+    <img src="https://badgen.net/github/open-prs/async-library/react-async?icon=github" alt="pull requests">
   </a>
-  <a href="https://github.com/ghengeveld/react-async/releases">
-    <img src="https://badgen.net/github/releases/ghengeveld/react-async?icon=github" alt="releases">
+  <a href="https://github.com/async-library/react-async/releases">
+    <img src="https://badgen.net/github/releases/async-library/react-async?icon=github" alt="releases">
   </a>
-  <a href="https://github.com/ghengeveld/react-async/graphs/contributors">
-    <img src="https://badgen.net/github/contributors/ghengeveld/react-async?icon=github" alt="contributors">
+  <a href="https://github.com/async-library/react-async/graphs/contributors">
+    <img src="https://badgen.net/github/contributors/async-library/react-async?icon=github" alt="contributors">
   </a>
   <br/>
-  <a href="https://circleci.com/gh/ghengeveld/react-async">
-    <img src="https://badgen.net/circleci/github/ghengeveld/react-async/master?icon=circleci" alt="circleci status">
+  <a href="https://circleci.com/gh/async-library/react-async">
+    <img src="https://badgen.net/circleci/github/async-library/react-async/master?icon=circleci" alt="circleci status">
   </a>
-  <a href="https://travis-ci.com/ghengeveld/react-async">
-    <img src="https://badgen.net/travis/ghengeveld/react-async?icon=travis" alt="travis status">
+  <a href="https://travis-ci.com/async-library/react-async">
+    <img src="https://badgen.net/travis/async-library/react-async?icon=travis" alt="travis status">
   </a>
-  <a href="https://codecov.io/gh/ghengeveld/react-async">
-    <img src="https://badgen.net/codecov/c/github/ghengeveld/react-async/master?icon=codecov" alt="code coverage">
+  <a href="https://codecov.io/gh/async-library/react-async">
+    <img src="https://badgen.net/codecov/c/github/async-library/react-async/master?icon=codecov" alt="code coverage">
   </a>
-  <a href="https://www.codefactor.io/repository/github/ghengeveld/react-async">
-    <img src="https://www.codefactor.io/repository/github/ghengeveld/react-async/badge" alt="code quality">
+  <a href="https://www.codefactor.io/repository/github/async-library/react-async">
+    <img src="https://www.codefactor.io/repository/github/async-library/react-async/badge" alt="code quality">
   </a>
   <a href="https://deepscan.io/dashboard#view=project&tid=5147&pid=6925&bid=61474">
     <img src="https://deepscan.io/api/teams/5147/projects/6925/branches/61474/badge/grade.svg" alt="DeepScan grade">
   </a>
   <br/>
-  <img src="https://badgen.net/david/dep/ghengeveld/react-async/packages/react-async" alt="dependencies">
-  <img src="https://badgen.net/david/dev/ghengeveld/react-async" alt="devDependencies">
-  <img src="https://badgen.net/david/peer/ghengeveld/react-async/packages/react-async" alt="peerDependencies">
+  <img src="https://badgen.net/david/dep/async-library/react-async/packages/react-async" alt="dependencies">
+  <img src="https://badgen.net/david/dev/async-library/react-async" alt="devDependencies">
+  <img src="https://badgen.net/david/peer/async-library/react-async/packages/react-async" alt="peerDependencies">
   <br/>
   <a href="https://discord.gg/CAYQ6mU">
     <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
   </a>
-  <a href="https://react-async.ghengeveld.now.sh/examples/">
+  <a href="https://react-async.now.sh/examples/">
     <img src="https://badgen.net/badge/live%20examples/available/pink?icon=now" alt="live examples">
   </a>
+  <a href="https://www.chromaticqa.com/builds?appId=5d7fff2b307e4b0020ae1be4">
+    <img src="https://badgen.net/badge/tested%20with/chromatic/fc521f" alt="Chromatic">
+  </a>
+  <a href="#contributors"><img src="https://badgen.net/badge/all%20contributors/21/6d60e6" alt="All Contributors"></a>
 </p>
 
 React component and hook for declarative promise resolution and data fetching. Makes it easy to handle every
@@ -67,7 +71,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 - Works with promises, async/await and the Fetch API
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
 - Debug and develop every part of the loading sequence with the [DevTools](#devtools)
-- Provides convenient `isLoading`, `startedAt`, `finishedAt`, et al metadata
+- Provides convenient `isPending`, `startedAt`, `finishedAt`, et al metadata
 - Provides `cancel` and `reload` actions
 - Automatic re-run using `watch` or `watchFn` prop
 - Accepts `onResolve`, `onReject` and `onCancel` callbacks
@@ -82,7 +86,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 > ## Upgrading to v8
 >
 > Version 8 comes with breaking changes. See [Upgrading](#upgrading) for details.
-> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available.
+> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available.
 
 # Table of Contents
 
@@ -107,6 +111,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
   - [Optimistic updates](#optimistic-updates)
   - [Server-side rendering](#server-side-rendering)
 - [Who's using React Async?](#whos-using-react-async)
+- [Contributors](#contributors)
 - [Acknowledgements](#acknowledgements)
 
 ## Rationale
@@ -127,7 +132,7 @@ React Async is promise-based, so you can resolve anything you want, not just `fe
 
 The React team is currently working on a large rewrite called [Concurrent React], previously known as "Async React".
 Part of this rewrite is Suspense, which is a generic way for components to suspend rendering while they load data from
-a cache. It can render a fallback UI while loading data, much like `<Async.Loading>`.
+a cache. It can render a fallback UI while loading data, much like `<Async.Pending>`.
 
 React Async has no direct relation to Concurrent React. They are conceptually close, but not the same. React Async is
 meant to make dealing with asynchronous business logic easier. Concurrent React will make those features have less
@@ -191,7 +196,7 @@ All standalone helper components were renamed to avoid import naming collision.
 - `<Rejected>` was renamed to `<IfRejected`.
 - `<Settled>` was renamed to `<IfSettled>`.
 
-> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
+> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available to automate the upgrade.
 
 The return type for `run` was changed from `Promise` to `undefined`. You should now use the `promise` prop instead. This
 is a manual upgrade. See [`promise`](#promise-1) for details.
@@ -202,7 +207,7 @@ is a manual upgrade. See [`promise`](#promise-1) for details.
 - Some of the other helpers were also renamed, but the old ones remain as alias.
 - Don't forget to deal with any custom instances of `<Async>` when upgrading.
 
-> A [codemod](https://github.com/ghengeveld/react-async/tree/master/codemods) is available to automate the upgrade.
+> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available to automate the upgrade.
 
 #### Upgrade to v4
 
@@ -232,8 +237,8 @@ const loadCustomer = async ({ customerId }, { signal }) => {
 }
 
 const MyComponent = () => {
-  const { data, error, isLoading } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
-  if (isLoading) return "Loading..."
+  const { data, error, isPending } = useAsync({ promiseFn: loadCustomer, customerId: 1 })
+  if (isPending) return "Loading..."
   if (error) return `Something went wrong: ${error.message}`
   if (data)
     return (
@@ -253,7 +258,7 @@ Or using the shorthand version:
 
 ```jsx
 const MyComponent = () => {
-  const { data, error, isLoading } = useAsync(loadCustomer, options)
+  const { data, error, isPending } = useAsync(loadCustomer, options)
   // ...
 }
 ```
@@ -267,7 +272,7 @@ import { useFetch } from "react-async"
 
 const MyComponent = () => {
   const headers = { Accept: "application/json" }
-  const { data, error, isLoading, run } = useFetch("/api/example", { headers }, options)
+  const { data, error, isPending, run } = useFetch("/api/example", { headers }, options)
   // This will setup a promiseFn with a fetch request and JSON deserialization.
 
   // you can later call `run` with an optional callback argument to
@@ -315,8 +320,8 @@ const loadCustomer = ({ customerId }, { signal }) =>
 
 const MyComponent = () => (
   <Async promiseFn={loadCustomer} customerId={1}>
-    {({ data, error, isLoading }) => {
-      if (isLoading) return "Loading..."
+    {({ data, error, isPending }) => {
+      if (isPending) return "Loading..."
       if (error) return `Something went wrong: ${error.message}`
       if (data)
         return (
@@ -404,7 +409,7 @@ const loadCustomer = ({ customerId }, { signal }) =>
 
 const MyComponent = () => (
   <Async promiseFn={loadCustomer} customerId={1}>
-    <Async.Loading>Loading...</Async.Loading>
+    <Async.Pending>Loading...</Async.Pending>
     <Async.Fulfilled>
       {data => (
         <div>
@@ -531,7 +536,7 @@ state, the dispatched action and the internal reducer. You probably want to invo
 > This is a power feature which loosely follows the [state reducer pattern]. It allows you to control state changes by
 > intercepting actions before they are handled, or by overriding or enhancing the reducer itself.
 
-[internal reducer]: https://github.com/ghengeveld/react-async/blob/master/src/reducer.js
+[internal reducer]: https://github.com/async-library/react-async/blob/master/src/reducer.js
 [state reducer pattern]: https://kentcdodds.com/blog/the-state-reducer-pattern
 
 #### `dispatcher`
@@ -881,7 +886,7 @@ return <IfSettled state={state}>{state => `Finished at ${state.finishedAt.toISOS
 ## Usage examples
 
 Here's several examples to give you an idea of what's possible with React Async. For fully working examples, please
-check out the [`examples` directory](https://github.com/ghengeveld/react-async/tree/master/examples).
+check out the [`examples` directory](https://github.com/async-library/react-async/tree/master/examples).
 
 ### Data fetching
 
@@ -895,8 +900,8 @@ class App extends Component {
     // The promiseFn should be defined outside of render()
     return (
       <Async promiseFn={this.getSession} sessionId={123}>
-        {({ data, error, isLoading, reload }) => {
-          if (isLoading) {
+        {({ data, error, isPending, reload }) => {
+          if (isPending) {
             return <div>Loading...</div>
           }
           if (error) {
@@ -926,10 +931,10 @@ This uses `deferFn` to trigger an update (e.g. POST / PUT request) after a form 
 const subscribeToNewsletter = (args, props, controller) => fetch(...)
 
 <Async deferFn={subscribeToNewsletter}>
-  {({ error, isLoading, run }) => (
+  {({ error, isPending, run }) => (
     <form onSubmit={run}>
       <input type="email" name="email" />
-      <button type="submit" disabled={isLoading}>
+      <button type="submit" disabled={isPending}>
         Subscribe
       </button>
       {error && <p>{error.toString()}</p>}
@@ -946,14 +951,14 @@ This uses both `promiseFn` and `deferFn` along with `setData` to implement optim
 const updateAttendance = ([attend]) => fetch(...).then(() => attend, () => !attend)
 
 <Async promiseFn={getAttendance} deferFn={updateAttendance}>
-  {({ data: isAttending, isLoading, run, setData }) => (
+  {({ data: isAttending, isPending, run, setData }) => (
     <Toggle
       on={isAttending}
       onClick={() => {
         setData(!isAttending)
         run(!isAttending)
       }}
-      disabled={isLoading}
+      disabled={isPending}
     />
   )}
 </Async>
@@ -974,8 +979,8 @@ render() {
   const { customers } = this.props // injected by getInitialProps
   return (
     <Async promiseFn={loadCustomers} initialValue={customers}>
-      {({ data, error, isLoading, initialValue }) => { // initialValue is passed along for convenience
-        if (isLoading) {
+      {({ data, error, isPending, initialValue }) => { // initialValue is passed along for convenience
+        if (isPending) {
           return <div>Loading...</div>
         }
         if (error) {
@@ -995,7 +1000,50 @@ render() {
 
 <a href="https://xebia.com"><img src="https://user-images.githubusercontent.com/321738/52999660-a9949780-3426-11e9-9a7e-42b400f4ccbe.png" height="40" alt="Xebia" /></a> <a href="https://intergamma.nl"><img src="https://user-images.githubusercontent.com/321738/52999676-b5805980-3426-11e9-899e-6c9669176df4.png" height="40" alt="Intergamma" /></a> <a href="https://www.bol.com"><img src="https://user-images.githubusercontent.com/321738/57380602-8ff32880-71a9-11e9-9936-a8bc77f2518b.png" height="40" alt="bol.com" /></a>
 
-Your organization here? [Let us know](https://github.com/ghengeveld/react-async/issues/22) you're using React Async!
+Your organization here? [Let us know](https://github.com/async-library/react-async/issues/22) you're using React Async!
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://medium.com/@ghengeveld"><img src="https://avatars1.githubusercontent.com/u/321738?v=4" width="75px;" alt="Gert Hengeveld"/><br /><sub><b>Gert Hengeveld</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=ghengeveld" title="Code">💻</a> <a href="#review-ghengeveld" title="Reviewed Pull Requests">👀</a> <a href="#question-ghengeveld" title="Answering Questions">💬</a></td>
+    <td align="center"><a href="https://github.com/Khartir"><img src="https://avatars3.githubusercontent.com/u/5592420?v=4" width="75px;" alt="Khartir"/><br /><sub><b>Khartir</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=Khartir" title="Code">💻</a> <a href="#platform-Khartir" title="Packaging/porting to new platform">📦</a></td>
+    <td align="center"><a href="https://twitter.com/phry"><img src="https://avatars1.githubusercontent.com/u/4282439?v=4" width="75px;" alt="Lenz Weber"/><br /><sub><b>Lenz Weber</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=phryneas" title="Code">💻</a> <a href="#platform-phryneas" title="Packaging/porting to new platform">📦</a> <a href="#ideas-phryneas" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Avi98"><img src="https://avatars1.githubusercontent.com/u/26133749?v=4" width="75px;" alt="Avinash"/><br /><sub><b>Avinash</b></sub></a><br /><a href="#review-Avi98" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/async-library/react-async/commits?author=Avi98" title="Documentation">📖</a></td>
+    <td align="center"><a href="http://www.fredkschott.com"><img src="https://avatars1.githubusercontent.com/u/622227?v=4" width="75px;" alt="Fred K. Schott"/><br /><sub><b>Fred K. Schott</b></sub></a><br /><a href="#tool-FredKSchott" title="Tools">🔧</a></td>
+    <td align="center"><a href="https://bycedric.com"><img src="https://avatars2.githubusercontent.com/u/1203991?v=4" width="75px;" alt="Cedric van Putten"/><br /><sub><b>Cedric van Putten</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=byCedric" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/tomshane"><img src="https://avatars1.githubusercontent.com/u/11005356?v=4" width="75px;" alt="Tom Shane"/><br /><sub><b>Tom Shane</b></sub></a><br /><a href="#review-tomshane" title="Reviewed Pull Requests">👀</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="http://philippeterson.com/"><img src="https://avatars1.githubusercontent.com/u/1326208?v=4" width="75px;" alt="Philip Peterson"/><br /><sub><b>Philip Peterson</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=philip-peterson" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitter.com/sseraphini"><img src="https://avatars3.githubusercontent.com/u/2005841?v=4" width="75px;" alt="Sibelius Seraphini"/><br /><sub><b>Sibelius Seraphini</b></sub></a><br /><a href="#review-sibelius" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="https://jimthedev.com"><img src="https://avatars0.githubusercontent.com/u/108938?v=4" width="75px;" alt="Jim Cummins"/><br /><sub><b>Jim Cummins</b></sub></a><br /><a href="#review-jimthedev" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="http://mihkel.sokk.ee"><img src="https://avatars3.githubusercontent.com/u/231978?v=4" width="75px;" alt="Mihkel Sokk"/><br /><sub><b>Mihkel Sokk</b></sub></a><br /><a href="#review-msokk" title="Reviewed Pull Requests">👀</a></td>
+    <td align="center"><a href="https://github.com/brabeji"><img src="https://avatars3.githubusercontent.com/u/2237954?v=4" width="75px;" alt="Jiří Brabec"/><br /><sub><b>Jiří Brabec</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=brabeji" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/unorsk"><img src="https://avatars0.githubusercontent.com/u/25188?v=4" width="75px;" alt="Andrii U"/><br /><sub><b>Andrii U</b></sub></a><br /><a href="#example-unorsk" title="Examples">💡</a></td>
+    <td align="center"><a href="http://matthisk.nl"><img src="https://avatars0.githubusercontent.com/u/602837?v=4" width="75px;" alt="Matthisk Heimensen"/><br /><sub><b>Matthisk Heimensen</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=matthisk" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/dhurlburtusa"><img src="https://avatars3.githubusercontent.com/u/4006431?v=4" width="75px;" alt="Danny Hurlburt"/><br /><sub><b>Danny Hurlburt</b></sub></a><br /><a href="#ideas-dhurlburtusa" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/async-library/react-async/commits?author=dhurlburtusa" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://noelyoo.github.io/resume"><img src="https://avatars2.githubusercontent.com/u/25740248?v=4" width="75px;" alt="Noel Yoo"/><br /><sub><b>Noel Yoo</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=noelyoo" title="Tests">⚠️</a> <a href="https://github.com/async-library/react-async/commits?author=noelyoo" title="Code">💻</a> <a href="#ideas-noelyoo" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/aratcliffe"><img src="https://avatars3.githubusercontent.com/u/491126?v=4" width="75px;" alt="Adam Ratcliffe"/><br /><sub><b>Adam Ratcliffe</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=aratcliffe" title="Code">💻</a></td>
+    <td align="center"><a href="https://kentcdodds.com"><img src="https://avatars0.githubusercontent.com/u/1500684?v=4" width="75px;" alt="Kent C. Dodds"/><br /><sub><b>Kent C. Dodds</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=kentcdodds" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/walter-ind"><img src="https://avatars2.githubusercontent.com/u/52423075?v=4" width="75px;" alt="walter-ind"/><br /><sub><b>walter-ind</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=walter-ind" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://twitter.com/arthurdenture"><img src="https://avatars3.githubusercontent.com/u/80536?v=4" width="75px;" alt="Jacob Lee"/><br /><sub><b>Jacob Lee</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=artdent" title="Code">💻</a></td>
+    <td align="center"><a href="http://rokoroku.github.io"><img src="https://avatars1.githubusercontent.com/u/5208632?v=4" width="75px;" alt="Youngrok Kim"/><br /><sub><b>Youngrok Kim</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=rokoroku" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://munir.dev"><img src="https://avatars3.githubusercontent.com/u/5339664?v=4" width="75px;" alt="Munir Ahmed Elsangedy"/><br /><sub><b>Munir Ahmed Elsangedy</b></sub></a><br /><a href="#ideas-elsangedy" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
 
 ## Acknowledgements
 

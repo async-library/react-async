@@ -1,0 +1,9 @@
+{
+  "buildCommand": "build:packages",
+  "packages": ["packages/react-async", "packages/react-async-devtools"],
+  "publishDirectory": {
+    "react-async": "packages/react-async/pkg",
+    "react-async-devtools": "packages/react-async-devtools/pkg"
+  },
+  "sandboxes": ["new"]
+}

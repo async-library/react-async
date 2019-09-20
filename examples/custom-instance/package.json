@@ -2,7 +2,7 @@
   "name": "custom-instance-example",
   "version": "8.0.0",
   "private": true,
-  "homepage": "https://react-async.ghengeveld.now.sh/examples/custom-instance",
+  "homepage": "https://react-async.async-library.now.sh/examples/custom-instance",
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
@@ -35,5 +35,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "engines": {
+    "node": ">=8"
+  }
 }

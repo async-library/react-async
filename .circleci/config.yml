@@ -83,7 +83,7 @@ jobs:
           name: Deploy examples
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              yarn deploy:examples --token $NOW_API_TOKEN
+              yarn deploy:examples
             fi
           no_output_timeout: 30m
   chromatic:
