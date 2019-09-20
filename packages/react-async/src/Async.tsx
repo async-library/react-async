@@ -264,29 +264,19 @@ export const createInstance = <T extends {}>(
   if (propTypes) (Async as React.ComponentClass).propTypes = propTypes.Async
 
   const AsyncInitial: AsyncConstructor<T>["Initial"] = props => (
-    <Consumer>
-      {(st: AsyncState<T, AbstractState<T>>) => <IfInitial {...props} state={st} />}
-    </Consumer>
+    <Consumer>{(st: AsyncState<T>) => <IfInitial {...props} state={st} />}</Consumer>
   )
   const AsyncPending: AsyncConstructor<T>["Pending"] = props => (
-    <Consumer>
-      {(st: AsyncState<T, AbstractState<T>>) => <IfPending {...props} state={st} />}
-    </Consumer>
+    <Consumer>{(st: AsyncState<T>) => <IfPending {...props} state={st} />}</Consumer>
   )
   const AsyncFulfilled: AsyncConstructor<T>["Fulfilled"] = props => (
-    <Consumer>
-      {(st: AsyncState<T, AbstractState<T>>) => <IfFulfilled {...props} state={st} />}
-    </Consumer>
+    <Consumer>{(st: AsyncState<T>) => <IfFulfilled {...props} state={st} />}</Consumer>
   )
   const AsyncRejected: AsyncConstructor<T>["Rejected"] = props => (
-    <Consumer>
-      {(st: AsyncState<T, AbstractState<T>>) => <IfRejected {...props} state={st} />}
-    </Consumer>
+    <Consumer>{(st: AsyncState<T>) => <IfRejected {...props} state={st} />}</Consumer>
   )
   const AsyncSettled: AsyncConstructor<T>["Settled"] = props => (
-    <Consumer>
-      {(st: AsyncState<T, AbstractState<T>>) => <IfSettled {...props} state={st} />}
-    </Consumer>
+    <Consumer>{(st: AsyncState<T>) => <IfSettled {...props} state={st} />}</Consumer>
   )
 
   AsyncInitial.displayName = `${displayName}.Initial`
