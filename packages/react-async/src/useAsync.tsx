@@ -281,32 +281,40 @@ const useAsyncFetch = <T extends {}>(
     init,
     isDefer,
   })
-  const state = useAsync({
-    ...options,
-    [fn]: useCallback(
-      // TODO
-      (arg1: any, arg2: any, arg3: any) => {
-        const [override, signal] = arg3 ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
-        if (typeof override === "object" && "preventDefault" in override) {
-          // Don't spread Events or SyntheticEvents
-          return doFetch(input, {
+  const promiseFn = useCallback(
+    (_: AsyncOptions<T>, { signal }: AbortController) => {
+      return doFetch(input, {
+        signal,
+        ...init,
+      })
+    },
+    [identity] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+  const deferFn = useCallback(
+    ([override]: any[], _: AsyncOptions<T>, { signal }: AbortController) => {
+      if (typeof override === "object" && "preventDefault" in override) {
+        // Don't spread Events or SyntheticEvents
+        return doFetch(input, {
+          signal,
+          ...init,
+        })
+      }
+      return typeof override === "function"
+        ? doFetch(input, {
+            signal,
+            ...override(init),
+          })
+        : doFetch(input, {
             signal,
             ...init,
+            ...override,
           })
-        }
-        return typeof override === "function"
-          ? doFetch(input, {
-              signal,
-              ...override(init),
-            })
-          : doFetch(input, {
-              signal,
-              ...init,
-              ...override,
-            })
-      },
-      [identity] // eslint-disable-line react-hooks/exhaustive-deps
-    ),
+    },
+    [identity] // eslint-disable-line react-hooks/exhaustive-deps
+  )
+  const state = useAsync({
+    ...options,
+    [fn]: isDefer ? deferFn : promiseFn,
   })
   useDebugValue(state, ({ counter, status }) => `[${counter}] ${status}`)
   return state
