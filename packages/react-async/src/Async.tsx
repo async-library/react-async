@@ -222,11 +222,8 @@ export const createInstance = <T extends {}>(
     render() {
       const { children } = this.props
       if (typeof children === "function") {
-        return (
-          <Provider value={this.state}>
-            {(children as ((state: AsyncState<T>) => React.ReactNode))(this.state)}
-          </Provider>
-        )
+        const render = children as (state: AsyncState<T>) => React.ReactNode
+        return <Provider value={this.state}>{render(this.state)}</Provider>
       }
       if (children !== undefined && children !== null) {
         return <Provider value={this.state}>{children}</Provider>
