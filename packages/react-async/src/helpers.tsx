@@ -18,13 +18,14 @@ import {
  */
 declare type ImportWorkaround<T> = AbstractState<T>
 
-const nullify = <T extends {}>(children: T | undefined): T | null =>
-  children === undefined ? null : children
-
-const renderFn = (
-  children: React.ReactNode | ((...args: any[]) => React.ReactNode),
-  ...args: any[]
-) => nullify(typeof children === "function" ? (children as any)(...args) : children)
+type ChildrenFn = (...args: any[]) => React.ReactNode
+const renderFn = (children: React.ReactNode | ChildrenFn, ...args: any[]) => {
+  if (typeof children === "function") {
+    const render = children as ChildrenFn
+    return render(...args)
+  }
+  return children === undefined ? null : children
+}
 
 /**
  * Renders only when no promise has started or completed yet.
@@ -76,8 +77,8 @@ export const IfFulfilled = <T extends {}>({
   persist?: boolean
   state: AsyncState<T>
 }) => (
-    <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
-  )
+  <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
+)
 
 /**
  * Renders only when promise is rejected.
@@ -95,10 +96,10 @@ export const IfRejected = <T extends {}>({
   persist?: boolean
   state: AsyncState<T>
 }) => (
-    <>
-      {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
-    </>
-  )
+  <>
+    {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
+  </>
+)
 
 /**
  * Renders only when promise is fulfilled or rejected.
