@@ -40,9 +40,9 @@ export interface AsyncOptions<T> {
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
   reducer?: (
-    state: AsyncState<T>,
+    state: ReducerAsyncState<T>,
     action: AsyncAction<T>,
-    internalReducer: (state: AsyncState<T>, action: AsyncAction<T>) => AsyncState<T>
+    internalReducer: (state: ReducerAsyncState<T>, action: AsyncAction<T>) => ReducerAsyncState<T>
   ) => AsyncState<T>
   dispatcher?: (
     action: AsyncAction<T>,
@@ -60,7 +60,7 @@ export interface AsyncProps<T> extends AsyncOptions<T> {
 export interface AbstractState<T> {
   initialValue?: T | Error
   counter: number
-  promise: Promise<T>
+  promise: Promise<T> | undefined
   run: (...args: any[]) => void
   reload: () => void
   cancel: () => void
@@ -129,8 +129,17 @@ export type AsyncRejected<T, S = AbstractState<T>> = S & {
   isRejected: true
   isSettled: true
 }
-export type AsyncState<T, S extends AbstractState<T> = AbstractState<T>> =
+
+type BaseAsyncState<T, S> =
   | AsyncInitial<T, S>
   | AsyncPending<T, S>
   | AsyncFulfilled<T, S>
   | AsyncRejected<T, S>
+
+export type ReducerBaseState<T> = Omit<
+  AbstractState<T>,
+  "run" | "reload" | "cancel" | "setData" | "setError"
+>
+export type ReducerAsyncState<T> = BaseAsyncState<T, ReducerBaseState<T>>
+
+export type AsyncState<T, S extends AbstractState<T> = AbstractState<T>> = BaseAsyncState<T, S>

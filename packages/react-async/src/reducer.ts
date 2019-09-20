@@ -8,6 +8,8 @@ import {
   AsyncRejected,
   AsyncInitial,
   AbstractState,
+  ReducerAsyncState,
+  ReducerBaseState,
 } from "./types"
 
 /**
@@ -32,20 +34,20 @@ export const init = <T>({
   initialValue?: Error | T
   promise?: Promise<T>
   promiseFn?: PromiseFn<T>
-}): AsyncState<T> => ({
-  initialValue,
-  data: initialValue instanceof Error ? undefined : initialValue,
-  error: initialValue instanceof Error ? initialValue : undefined,
-  value: initialValue,
-  startedAt: promise || promiseFn ? new Date() : undefined,
-  finishedAt: initialValue ? new Date() : undefined,
-  ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
-  counter: 0,
-  // @ts-ignore see #92
-  promise: undefined,
-})
+}) =>
+  ({
+    initialValue,
+    data: initialValue instanceof Error ? undefined : initialValue,
+    error: initialValue instanceof Error ? initialValue : undefined,
+    value: initialValue,
+    startedAt: promise || promiseFn ? new Date() : undefined,
+    finishedAt: initialValue ? new Date() : undefined,
+    ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
+    counter: 0,
+    promise: undefined,
+  } as ReducerAsyncState<T>)
 
-export const reducer = <T>(state: AsyncState<T>, action: AsyncAction<T>) => {
+export const reducer = <T>(state: ReducerAsyncState<T>, action: AsyncAction<T>) => {
   switch (action.type) {
     case actionTypes.start:
       return {
@@ -55,7 +57,7 @@ export const reducer = <T>(state: AsyncState<T>, action: AsyncAction<T>) => {
         ...getStatusProps(statusTypes.pending),
         counter: action.meta.counter,
         promise: action.meta.promise,
-      } as AsyncPending<T>
+      } as AsyncPending<T, ReducerBaseState<T>>
     case actionTypes.cancel:
       return {
         ...state,
@@ -64,7 +66,10 @@ export const reducer = <T>(state: AsyncState<T>, action: AsyncAction<T>) => {
         ...getStatusProps(getIdleStatus(state.error || state.data)),
         counter: action.meta.counter,
         promise: action.meta.promise,
-      } as AsyncInitial<T> | AsyncFulfilled<T> | AsyncRejected<T>
+      } as
+        | AsyncInitial<T, ReducerBaseState<T>>
+        | AsyncFulfilled<T, ReducerBaseState<T>>
+        | AsyncRejected<T, ReducerBaseState<T>>
     case actionTypes.fulfill:
       return {
         ...state,
@@ -74,7 +79,7 @@ export const reducer = <T>(state: AsyncState<T>, action: AsyncAction<T>) => {
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.fulfilled),
         promise: action.meta.promise,
-      } as AsyncFulfilled<T>
+      } as AsyncFulfilled<T, ReducerBaseState<T>>
     case actionTypes.reject:
       return {
         ...state,
@@ -83,7 +88,7 @@ export const reducer = <T>(state: AsyncState<T>, action: AsyncAction<T>) => {
         finishedAt: new Date(),
         ...getStatusProps(statusTypes.rejected),
         promise: action.meta.promise,
-      } as AsyncRejected<T>
+      } as AsyncRejected<T, ReducerBaseState<T>>
     default:
       return state
   }

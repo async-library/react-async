@@ -9,6 +9,10 @@ import {
   SettledChildren,
   AsyncState,
   AbstractState,
+  AsyncInitial,
+  AsyncFulfilled,
+  AsyncPending,
+  AsyncRejected,
 } from "./types"
 
 /**
@@ -16,7 +20,12 @@ import {
  * AbstractState imported in this file, even though it is only used implicitly.
  * This _uses_ AbstractState so it is not accidentally removed by someone.
  */
-declare type ImportWorkaround<T> = AbstractState<T>
+declare type ImportWorkaround<T> =
+  | AbstractState<T>
+  | AsyncInitial<T>
+  | AsyncFulfilled<T>
+  | AsyncPending<T>
+  | AsyncRejected<T>
 
 type ChildrenFn = (...args: any[]) => React.ReactNode
 const renderFn = (children: React.ReactNode | ChildrenFn, ...args: any[]) => {

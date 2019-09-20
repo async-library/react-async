@@ -3,7 +3,29 @@ import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } fr
 import globalScope from "./globalScope"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
-import { AsyncOptions, AsyncState, AbstractState, PromiseFn, Meta } from "./types"
+import {
+  AsyncOptions,
+  AsyncState,
+  AbstractState,
+  PromiseFn,
+  Meta,
+  AsyncInitial,
+  AsyncFulfilled,
+  AsyncPending,
+  AsyncRejected,
+} from "./types"
+
+/**
+ * Due to https://github.com/microsoft/web-build-tools/issues/1050, we need
+ * AbstractState imported in this file, even though it is only used implicitly.
+ * This _uses_ AbstractState so it is not accidentally removed by someone.
+ */
+declare type ImportWorkaround<T> =
+  | AbstractState<T>
+  | AsyncInitial<T>
+  | AsyncFulfilled<T>
+  | AsyncPending<T>
+  | AsyncRejected<T>
 
 export interface FetchOptions<T> extends AsyncOptions<T> {
   defer?: boolean

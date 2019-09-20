@@ -13,8 +13,8 @@ import {
   FulfilledChildren,
   SettledChildren,
   RejectedChildren,
-  AbstractState,
   AsyncAction,
+  ReducerAsyncState,
 } from "./types"
 
 interface InitialProps<T> {
@@ -112,7 +112,10 @@ export const createInstance = <T extends {}>(
       const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
       const _reducer = props.reducer || defaultProps.reducer
       const _dispatcher = props.dispatcher || defaultProps.dispatcher || devToolsDispatcher
-      const reducer: (state: AsyncState<T>, action: AsyncAction<T>) => AsyncState<T> = _reducer
+      const reducer: (
+        state: ReducerAsyncState<T>,
+        action: AsyncAction<T>
+      ) => ReducerAsyncState<T> = _reducer
         ? (state, action) => _reducer(state, action, asyncReducer)
         : asyncReducer
       const dispatch = dispatchMiddleware<T>((action, callback) => {
