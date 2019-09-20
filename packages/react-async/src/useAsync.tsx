@@ -33,6 +33,10 @@ export interface FetchOptions<T> extends AsyncOptions<T> {
 }
 
 const noop = () => {}
+class MockAbortController implements AbortController {
+  public abort = noop
+  readonly signal = {} as AbortSignal
+}
 
 function useAsync<T extends {}>(options: AsyncOptions<T>): AsyncState<T>
 function useAsync<T extends {}>(promiseFn: PromiseFn<T>, options?: AsyncOptions<T>): AsyncState<T>
@@ -54,9 +58,7 @@ function useAsync<T extends {}>(
   const lastArgs = useRef<any[] | undefined>(undefined)
   const lastOptions = useRef<AsyncOptions<T> | undefined>(undefined)
   const lastPromise = useRef<Promise<T> | undefined>(undefined)
-  const abortController = useRef<AbortController>({
-    abort: noop,
-  } as any)
+  const abortController = useRef<AbortController>(new MockAbortController())
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
   const { reducer, dispatcher = devToolsDispatcher } = options
