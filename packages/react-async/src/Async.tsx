@@ -17,17 +17,46 @@ import {
   AsyncAction,
 } from "./types"
 
-export declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+interface InitialProps<T> {
+  children?: InitialChildren<T>
+  persist?: boolean
+}
+interface PendingProps<T> {
+  children?: PendingChildren<T>
+  initial?: boolean
+}
+interface FulfilledProps<T> {
+  children?: FulfilledChildren<T>
+  persist?: boolean
+}
+interface RejectedProps<T> {
+  children?: RejectedChildren<T>
+  persist?: boolean
+}
+interface SettledProps<T> {
+  children?: SettledChildren<T>
+  persist?: boolean
+}
 
-interface AsyncConstructor<T> extends ComponentClass<AsyncProps<T>> {
-  new (): Async<T>
-  Initial: React.FC<{ children?: InitialChildren<T>; persist?: boolean }>
-  Pending: React.FC<{ children?: PendingChildren<T>; initial?: boolean }>
-  Loading: React.FC<{ children?: PendingChildren<T>; initial?: boolean }>
-  Fulfilled: React.FC<{ children?: FulfilledChildren<T>; persist?: boolean }>
-  Resolved: React.FC<{ children?: FulfilledChildren<T>; persist?: boolean }>
-  Rejected: React.FC<{ children?: RejectedChildren<T>; persist?: boolean }>
-  Settled: React.FC<{ children?: SettledChildren<T>; persist?: boolean }>
+class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+type GenericAsync = typeof Async & {
+  Initial<T>(props: InitialProps<T>): JSX.Element
+  Pending<T>(props: PendingProps<T>): JSX.Element
+  Loading<T>(props: PendingProps<T>): JSX.Element
+  Fulfilled<T>(props: FulfilledProps<T>): JSX.Element
+  Resolved<T>(props: FulfilledProps<T>): JSX.Element
+  Rejected<T>(props: RejectedProps<T>): JSX.Element
+  Settled<T>(props: SettledProps<T>): JSX.Element
+}
+
+type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
+  Initial: React.FC<InitialProps<T>>
+  Pending: React.FC<PendingProps<T>>
+  Loading: React.FC<PendingProps<T>>
+  Fulfilled: React.FC<FulfilledProps<T>>
+  Resolved: React.FC<FulfilledProps<T>>
+  Rejected: React.FC<RejectedProps<T>>
+  Settled: React.FC<SettledProps<T>>
 }
 
 /**
@@ -42,7 +71,7 @@ export const createInstance = <T extends {}>(
 
   type Props = AsyncProps<T>
 
-  const Async: AsyncConstructor<T> = class Async extends React.Component<Props, AsyncState<T>> {
+  class Async extends React.Component<Props, AsyncState<T>> {
     private mounted = false
     private counter = 0
     private args: any[] = []
@@ -230,7 +259,7 @@ export const createInstance = <T extends {}>(
       }
       return null
     }
-  } as any
+  }
 
   if (propTypes) (Async as React.ComponentClass).propTypes = propTypes.Async
 
@@ -266,16 +295,16 @@ export const createInstance = <T extends {}>(
   AsyncRejected.displayName = `${displayName}.Rejected`
   AsyncSettled.displayName = `${displayName}.Settled`
 
-  Async.displayName = displayName
-  Async.Initial = AsyncInitial
-  Async.Pending = AsyncPending
-  Async.Loading = AsyncPending // alias
-  Async.Fulfilled = AsyncFulfilled
-  Async.Resolved = AsyncFulfilled // alias
-  Async.Rejected = AsyncRejected
-  Async.Settled = AsyncSettled
-
-  return Async
+  return Object.assign(Async, {
+    displayName: displayName,
+    Initial: AsyncInitial,
+    Pending: AsyncPending,
+    Loading: AsyncPending, // alias
+    Fulfilled: AsyncFulfilled,
+    Resolved: AsyncFulfilled, // alias
+    Rejected: AsyncRejected,
+    Settled: AsyncSettled,
+  })
 }
 
-export default createInstance()
+export default createInstance() as GenericAsync
