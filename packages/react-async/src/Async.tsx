@@ -1,8 +1,7 @@
-import React, { ComponentClass } from "react"
+import React from "react"
 
 import globalScope from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
-// @ts-ignore
 import propTypes from "./propTypes"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 import {

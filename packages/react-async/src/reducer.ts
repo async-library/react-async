@@ -1,7 +1,6 @@
 import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
 import {
   PromiseFn,
-  AsyncState,
   AsyncAction,
   AsyncPending,
   AsyncFulfilled,
