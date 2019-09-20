@@ -38,6 +38,7 @@ describe("Async", () => {
         <Async.Initial>
           {value => {
             one = value
+            return null
           }}
         </Async.Initial>
       </Async>
@@ -47,6 +48,7 @@ describe("Async", () => {
         <Async.Initial>
           {value => {
             two = value
+            return null
           }}
         </Async.Initial>
       </Async>
