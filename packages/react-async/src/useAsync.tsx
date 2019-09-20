@@ -56,7 +56,7 @@ function useAsync<T extends {}>(
   const counter = useRef(0)
   const isMounted = useRef(true)
   const lastArgs = useRef<any[] | undefined>(undefined)
-  const lastOptions = useRef<AsyncOptions<T> | undefined>(undefined)
+  const lastOptions = useRef<AsyncOptions<T>>(options)
   const lastPromise = useRef<Promise<T> | undefined>(undefined)
   const abortController = useRef<AbortController>(new MockAbortController())
 
@@ -157,7 +157,7 @@ function useAsync<T extends {}>(
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     } else if (promiseFn && !isPreInitialized) {
-      start(() => promiseFn(lastOptions.current!, abortController.current))
+      start(() => promiseFn(lastOptions.current, abortController.current))
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     }
@@ -168,7 +168,7 @@ function useAsync<T extends {}>(
     (...args) => {
       if (deferFn) {
         lastArgs.current = args
-        start(() => deferFn(args, lastOptions.current!, abortController.current))
+        start(() => deferFn(args, lastOptions.current, abortController.current))
           .then(handleResolve(counter.current))
           .catch(handleReject(counter.current))
       }
