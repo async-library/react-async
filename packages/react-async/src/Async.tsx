@@ -5,147 +5,17 @@ import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./help
 // @ts-ignore
 import propTypes from "./propTypes"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
-
-export declare type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
-export declare type InitialChildren<T> =
-  | ((state: AsyncInitial<T>) => React.ReactNode)
-  | React.ReactNode
-export declare type PendingChildren<T> =
-  | ((state: AsyncPending<T>) => React.ReactNode)
-  | React.ReactNode
-export declare type FulfilledChildren<T> =
-  | ((data: T, state: AsyncFulfilled<T>) => React.ReactNode)
-  | React.ReactNode
-export declare type RejectedChildren<T> =
-  | ((error: Error, state: AsyncRejected<T>) => React.ReactNode)
-  | React.ReactNode
-export declare type SettledChildren<T> =
-  | ((state: AsyncFulfilled<T> | AsyncRejected<T>) => React.ReactNode)
-  | React.ReactNode
-
-export declare type PromiseFn<T> = (props: AsyncProps<T>, controller: AbortController) => Promise<T>
-export declare type DeferFn<T> = (
-  args: any[],
-  props: AsyncProps<T>,
-  controller: AbortController
-) => Promise<T>
-
-export interface AbstractAction {
-  type: string
-  meta: { counter: number; [meta: string]: any }
-}
-export type Meta = AbstractAction["meta"]
-
-export declare type Start = AbstractAction & { type: "start"; payload: () => Promise<void> }
-export declare type Cancel = AbstractAction & { type: "cancel" }
-export declare type Fulfill<T> = AbstractAction & { type: "fulfill"; payload: T }
-export declare type Reject = AbstractAction & { type: "reject"; payload: Error; error: true }
-export declare type AsyncAction<T> = Start | Cancel | Fulfill<T> | Reject
-
-export declare interface AsyncOptions<T> {
-  promise?: Promise<T>
-  promiseFn?: PromiseFn<T>
-  deferFn?: DeferFn<T>
-  watch?: any
-  watchFn?: (props: AsyncProps<T>, prevProps: AsyncProps<T>) => any
-  initialValue?: T
-  onResolve?: (data: T) => void
-  onReject?: (error: Error) => void
-  reducer?: (
-    state: AsyncState<T>,
-    action: AsyncAction<T>,
-    internalReducer: (state: AsyncState<T>, action: AsyncAction<T>) => AsyncState<T>
-  ) => AsyncState<T>
-  dispatcher?: (
-    action: AsyncAction<T>,
-    internalDispatch: (action: AsyncAction<T>) => void,
-    props: AsyncProps<T>
-  ) => void
-  debugLabel?: string
-  [prop: string]: any
-}
-
-export declare interface AsyncProps<T> extends AsyncOptions<T> {
-  children?: AsyncChildren<T>
-}
-
-export interface AbstractState<T> {
-  initialValue?: T | Error
-  counter: number
-  promise: Promise<T>
-  run: (...args: any[]) => void
-  reload: () => void
-  cancel: () => void
-  setData: (data: T, callback?: () => void) => T
-  setError: (error: Error, callback?: () => void) => Error
-}
-
-export declare type AsyncInitial<T, S = AbstractState<T>> = S & {
-  initialValue?: undefined
-  data: undefined
-  error: undefined
-  value: undefined
-  startedAt: undefined
-  finishedAt: undefined
-  status: "initial"
-  isInitial: false
-  isPending: false
-  isLoading: false
-  isFulfilled: false
-  isResolved: false
-  isRejected: false
-  isSettled: false
-}
-export declare type AsyncPending<T, S = AbstractState<T>> = S & {
-  data: T | undefined
-  error: Error | undefined
-  value: T | Error | undefined
-  startedAt: Date
-  finishedAt: undefined
-  status: "pending"
-  isInitial: false
-  isPending: true
-  isLoading: true
-  isFulfilled: false
-  isResolved: false
-  isRejected: false
-  isSettled: false
-}
-export declare type AsyncFulfilled<T, S = AbstractState<T>> = S & {
-  data: T
-  error: undefined
-  value: T
-  startedAt: Date
-  finishedAt: Date
-  status: "fulfilled"
-  isInitial: false
-  isPending: false
-  isLoading: false
-  isFulfilled: true
-  isResolved: true
-  isRejected: false
-  isSettled: true
-}
-export declare type AsyncRejected<T, S = AbstractState<T>> = S & {
-  data: T | undefined
-  error: Error
-  value: Error
-  startedAt: Date
-  finishedAt: Date
-  status: "rejected"
-  isInitial: false
-  isPending: false
-  isLoading: false
-  isFulfilled: false
-  isResolved: false
-  isRejected: true
-  isSettled: true
-}
-export declare type AsyncState<T, S extends AbstractState<T> = AbstractState<T>> =
-  | AsyncInitial<T, S>
-  | AsyncPending<T, S>
-  | AsyncFulfilled<T, S>
-  | AsyncRejected<T, S>
+import {
+  AsyncProps,
+  AsyncState,
+  InitialChildren,
+  PendingChildren,
+  FulfilledChildren,
+  SettledChildren,
+  RejectedChildren,
+  AbstractState,
+  AsyncAction,
+} from "./types"
 
 export declare class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
 

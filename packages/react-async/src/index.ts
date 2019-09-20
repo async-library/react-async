@@ -1,7 +1,6 @@
 import Async from "./Async"
+export { default as Async, createInstance } from "./Async"
 export {
-  default as Async,
-  createInstance,
   PromiseFn,
   InitialChildren,
   PendingChildren,
@@ -23,24 +22,10 @@ export {
   AsyncOptions,
   AsyncRejected,
   AsyncState,
-} from "./Async"
+} from "./types"
 export { default as useAsync, useFetch, FetchOptions } from "./useAsync"
 export default Async
 export { statusTypes } from "./status"
 export { default as globalScope } from "./globalScope"
 export * from "./helpers"
 export * from "./reducer"
-
-/*
-> RejectedChildren
-> SettledChildren
-> PromiseFn
-> DeferFn
-> Fulfill
-> AsyncAction
-> AbstractState
-> AsyncInitial
-> AsyncPending
-> AsyncFulfilled
-> AsyncInitialWithout
-*/

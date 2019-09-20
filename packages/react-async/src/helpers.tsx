@@ -9,7 +9,7 @@ import {
   SettledChildren,
   AsyncState,
   AbstractState,
-} from "./Async"
+} from "./types"
 
 /**
  * Due to https://github.com/microsoft/web-build-tools/issues/1050, we need

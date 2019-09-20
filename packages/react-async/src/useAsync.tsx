@@ -3,7 +3,7 @@ import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } fr
 import globalScope from "./globalScope"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
-import { AsyncOptions, AsyncState, AbstractState, PromiseFn, Meta } from "./Async"
+import { AsyncOptions, AsyncState, AbstractState, PromiseFn, Meta } from "./types"
 
 export interface FetchOptions<T> extends AsyncOptions<T> {
   defer?: boolean

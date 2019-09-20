@@ -1,4 +1,4 @@
-import { PromiseFn } from "./Async"
+import { PromiseFn } from "./types"
 
 export enum statusTypes {
   initial = "initial",
