@@ -18,18 +18,6 @@ import {
  */
 declare type ImportWorkaround<T> = AbstractState<T>
 
-// these were exported as type, but never existed
-// export declare function IfLoading<T>(props: {
-//   children?: PendingChildren<T>
-//   initial?: boolean
-//   state: AsyncState<T>
-// }): React.ReactNode
-// export declare function IfResolved<T>(props: {
-//   children?: FulfilledChildren<T>
-//   persist?: boolean
-//   state: AsyncState<T>
-// }): React.ReactNode
-
 const nullify = <T extends {}>(children: T | undefined): T | null =>
   children === undefined ? null : children
 
@@ -88,8 +76,8 @@ export const IfFulfilled = <T extends {}>({
   persist?: boolean
   state: AsyncState<T>
 }) => (
-  <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
-)
+    <>{state.isFulfilled || (persist && state.data) ? renderFn(children, state.data, state) : null}</>
+  )
 
 /**
  * Renders only when promise is rejected.
@@ -107,10 +95,10 @@ export const IfRejected = <T extends {}>({
   persist?: boolean
   state: AsyncState<T>
 }) => (
-  <>
-    {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
-  </>
-)
+    <>
+      {state.isRejected || (persist && state.error) ? renderFn(children, state.error, state) : null}
+    </>
+  )
 
 /**
  * Renders only when promise is fulfilled or rejected.
