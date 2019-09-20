@@ -1,4 +1,4 @@
-import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
+import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 
 import globalScope from "./globalScope"
 import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
