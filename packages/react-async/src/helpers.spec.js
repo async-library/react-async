@@ -2,7 +2,7 @@ import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup } from "@testing-library/react"
 import Async, { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./index"
-import { resolveIn, resolveTo, rejectTo } from "./specs"
+import { resolveIn, resolveTo, rejectTo, sleep } from "./specs"
 
 afterEach(cleanup)
 
@@ -83,6 +83,12 @@ describe("IfFulfilled", () => {
     expect(queryByText("outer inner")).toBeNull()
     await findByText("outer inner")
     expect(queryByText("outer inner")).toBeInTheDocument()
+  })
+
+  test("renders without children", async () => {
+    const promiseFn = () => resolveTo("ok")
+    render(<Async promiseFn={promiseFn}>{state => <IfFulfilled state={state} />}</Async>)
+    await sleep(0)
   })
 })
 

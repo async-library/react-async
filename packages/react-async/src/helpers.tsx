@@ -33,7 +33,7 @@ const renderFn = (children: React.ReactNode | ChildrenFn, ...args: any[]) => {
     const render = children as ChildrenFn
     return render(...args)
   }
-  return children === undefined ? null : children
+  return children
 }
 
 /**
