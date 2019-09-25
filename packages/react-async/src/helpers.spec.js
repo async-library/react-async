@@ -84,7 +84,10 @@ describe("IfFulfilled", () => {
     await findByText("outer inner")
     expect(queryByText("outer inner")).toBeInTheDocument()
   })
-
+  test("renders nothing if missing state", () => {
+    const { queryByText } = render(<IfFulfilled>Test</IfFulfilled>)
+    expect(queryByText("Test")).not.toBeInTheDocument()
+  })
   test("renders without children", async () => {
     const promiseFn = () => resolveTo("ok")
     render(<Async promiseFn={promiseFn}>{state => <IfFulfilled state={state} />}</Async>)
@@ -108,6 +111,10 @@ describe("IfPending", () => {
     expect(queryByText("pending")).toBeInTheDocument()
     await findByText("done")
     expect(queryByText("pending")).toBeNull()
+  })
+  test("renders nothing if missing state", () => {
+    const { queryByText } = render(<IfPending>Test</IfPending>)
+    expect(queryByText("Test")).not.toBeInTheDocument()
   })
 })
 
@@ -134,6 +141,10 @@ describe("IfInitial", () => {
     await findByText("done")
     expect(queryByText("pending")).toBeNull()
   })
+  test("renders nothing if missing state", () => {
+    const { queryByText } = render(<IfInitial>Test</IfInitial>)
+    expect(queryByText("Test")).not.toBeInTheDocument()
+  })
 })
 
 describe("IfRejected", () => {
@@ -147,6 +158,10 @@ describe("IfRejected", () => {
     expect(queryByText("err")).toBeNull()
     await findByText("err")
     expect(queryByText("err")).toBeInTheDocument()
+  })
+  test("renders nothing if missing state", () => {
+    const { queryByText } = render(<IfRejected>Test</IfRejected>)
+    expect(queryByText("Test")).not.toBeInTheDocument()
   })
 })
 
@@ -196,5 +211,9 @@ describe("IfSettled", () => {
     expect(queryByText("loading")).toBeNull()
     fireEvent.click(getByText("reload"))
     await findByText("loading")
+  })
+  test("renders nothing if missing state", () => {
+    const { queryByText } = render(<IfSettled>Test</IfSettled>)
+    expect(queryByText("Test")).not.toBeInTheDocument()
   })
 })
