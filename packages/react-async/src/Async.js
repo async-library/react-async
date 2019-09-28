@@ -3,7 +3,13 @@ import React from "react"
 import globalScope from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
 import propTypes from "./propTypes"
-import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import {
+  neverSettle,
+  actionTypes,
+  init,
+  dispatchMiddleware,
+  reducer as asyncReducer,
+} from "./reducer"
 
 /**
  * createInstance allows you to create instances of Async that are bound to a specific promise.
@@ -32,7 +38,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.mounted = false
       this.counter = 0
       this.args = []
-      this.promise = undefined
+      this.promise = neverSettle
       this.abortController = { abort: () => {} }
       this.state = {
         ...init({ initialValue, promise, promiseFn }),

@@ -1,5 +1,7 @@
 import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
 
+export const neverSettle = new Promise(() => {})
+
 export const actionTypes = {
   start: "start",
   cancel: "cancel",
@@ -16,7 +18,7 @@ export const init = ({ initialValue, promise, promiseFn }) => ({
   finishedAt: initialValue ? new Date() : undefined,
   ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
   counter: 0,
-  promise: undefined,
+  promise: neverSettle,
 })
 
 export const reducer = (state, { type, payload, meta }) => {

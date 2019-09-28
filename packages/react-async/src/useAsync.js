@@ -1,7 +1,13 @@
 import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 
 import globalScope from "./globalScope"
-import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import {
+  neverSettle,
+  actionTypes,
+  init,
+  dispatchMiddleware,
+  reducer as asyncReducer,
+} from "./reducer"
 
 const noop = () => {}
 
@@ -12,7 +18,7 @@ const useAsync = (arg1, arg2) => {
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const lastOptions = useRef(undefined)
-  const lastPromise = useRef(undefined)
+  const lastPromise = useRef(neverSettle)
   const abortController = useRef({ abort: noop })
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__

@@ -686,6 +686,9 @@ A reference to the internal wrapper promise created when starting a new promise 
 `run` / `reload`). It fulfills or rejects along with the provided `promise` / `promiseFn` / `deferFn`. Useful as a
 chainable alternative to the `onResolve` / `onReject` callbacks.
 
+Warning! If you chain on `promise`, you MUST provide a rejection handler (e.g. `.catch(...)`). Otherwise React will
+throw an exception and crash if the promise rejects.
+
 #### `run`
 
 > `function(...args: any[]): void`
