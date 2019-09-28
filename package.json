@@ -58,16 +58,16 @@
     "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.14.3",
-    "eslint-plugin-react-hooks": "2.1.0",
+    "eslint-plugin-react-hooks": "2.1.1",
     "jest": "24.9.0",
     "lerna": "3.16.4",
     "now": "16.2.0",
     "npm-run-all": "4.1.5",
     "prettier": "1.18.2",
     "prop-types": "15.7.2",
-    "react": "16.10.0",
+    "react": "16.10.1",
     "react-async": "^8.0.0-alpha.0",
-    "react-dom": "16.10.0",
+    "react-dom": "16.10.1",
     "storybook-chromatic": "2.2.2"
   }
 }
