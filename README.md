@@ -83,10 +83,9 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
 
-> ## Upgrading to v8
+> ## Upgrading to v9
 >
-> Version 8 comes with breaking changes. See [Upgrading](#upgrading) for details.
-> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available.
+> Version 9 comes with a minor breaking change. See [Upgrading](#upgrading) for details.
 
 # Table of Contents
 
@@ -185,6 +184,11 @@ export const Root = () => (
 ```
 
 ### Upgrading
+
+#### Upgrade to v9
+
+The rejection value for failed requests with `useFetch` was changed. Previously it was the Response object. Now it's an
+Error object with `response` property. If you are using `useFetch` and are using the `error` value, expecting it to be of type Response, you must now use `error.response` instead.
 
 #### Upgrade to v8
 
