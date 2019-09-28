@@ -227,6 +227,8 @@ type AsyncInitialWithout<K extends keyof AsyncInitial<T>, T> =
   | Omit<AsyncRejected<T>, K>
 
 type FetchRun<T> = {
+  run(overrideResource: RequestInfo, overrideInit: (init: RequestInit) => RequestInit): void
+  run(overrideResource: RequestInfo, overrideInit: Partial<RequestInit>): void
   run(overrideInit: (init: RequestInit) => RequestInit): void
   run(overrideInit: Partial<RequestInit>): void
   run(ignoredEvent: React.SyntheticEvent): void
