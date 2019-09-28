@@ -2,7 +2,7 @@
 /* eslint-disable react/prop-types */
 
 import "@testing-library/jest-dom/extend-expect"
-import React from "react"
+import React, { Suspense } from "react"
 import { render, fireEvent } from "@testing-library/react"
 
 export const resolveIn = ms => value => new Promise(resolve => setTimeout(resolve, ms, value))
@@ -64,6 +64,19 @@ export const common = Async => () => {
     const { findByText } = render(<Async onCancel={onCancel}>{() => "done"}</Async>)
     await findByText("done")
     expect(onCancel).not.toHaveBeenCalled()
+  })
+
+  test("supports Suspense", async () => {
+    const promiseFn = () => resolveIn(150)("done")
+    const { findByText } = render(
+      <Suspense fallback={<div>fallback</div>}>
+        <Async suspense promiseFn={promiseFn}>
+          {({ data }) => data || null}
+        </Async>
+      </Suspense>
+    )
+    await findByText("fallback")
+    await findByText("done")
   })
 }
 
