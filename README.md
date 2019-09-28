@@ -695,13 +695,20 @@ throw an exception and crash if the promise rejects.
 
 Runs the `deferFn`, passing any arguments provided as an array.
 
-When used with `useFetch`, `run` has a different signature:
+When used with `useFetch`, `run` has several overloaded signatures:
+
+> `function(resource: String | Resource, init: Object | (init: Object) => Object): void`
 
 > `function(init: Object | (init: Object) => Object): void`
 
-This runs the `fetch` request using the provided `init`. If it's an object it will be spread over the default `init`
-(`useFetch`'s 2nd argument). If it's a function it will be invoked with the default `init` and should return a new
-`init` object. This way you can either extend or override the value of `init`, for example to set request headers.
+> `function(event: SyntheticEvent | Event): void`
+
+> `function(): void`
+
+This way you can run the `fetch` request using the provided `resource` and `init`. `resource` can be omitted. If `init`
+is an object it will be spread over the default `init` (`useFetch`'s 2nd argument). If it's a function it will be
+invoked with the default `init` and should return a new `init` object. This way you can either extend or override the
+value of `init`, for example to set request headers.
 
 #### `reload`
 

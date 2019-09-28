@@ -173,27 +173,31 @@ const parseResponse = (accept, json) => res => {
   return accept === "application/json" ? res.json() : res
 }
 
-const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
-  const method = input.method || (init && init.method)
-  const headers = input.headers || (init && init.headers) || {}
+const isResource = value => typeof value === "string" || (typeof value === "object" && value.url)
+
+const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
+  const method = resource.method || (init && init.method)
+  const headers = resource.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
-  const doFetch = (input, init) => globalScope.fetch(input, init).then(parseResponse(accept, json))
+  const doFetch = (resource, init) =>
+    globalScope.fetch(resource, init).then(parseResponse(accept, json))
   const isDefer =
     typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1
   const fn = isDefer ? "deferFn" : "promiseFn"
-  const identity = JSON.stringify({ input, init, isDefer })
+  const identity = JSON.stringify({ resource, init, isDefer })
   const state = useAsync({
     ...options,
     [fn]: useCallback(
       (arg1, arg2, arg3) => {
-        const [override, signal] = arg3 ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
-        if (typeof override === "object" && "preventDefault" in override) {
+        const [runArgs, signal] = isDefer ? [arg1, arg3.signal] : [[], arg2.signal]
+        const [runResource, runInit] = isResource(runArgs[0]) ? runArgs : [, runArgs[0]]
+        if (typeof runInit === "object" && "preventDefault" in runInit) {
           // Don't spread Events or SyntheticEvents
-          return doFetch(input, { signal, ...init })
+          return doFetch(runResource || resource, { signal, ...init })
         }
-        return typeof override === "function"
-          ? doFetch(input, { signal, ...override(init) })
-          : doFetch(input, { signal, ...init, ...override })
+        return typeof runInit === "function"
+          ? doFetch(runResource || resource, { signal, ...runInit(init) })
+          : doFetch(runResource || resource, { signal, ...init, ...runInit })
       },
       [identity] // eslint-disable-line react-hooks/exhaustive-deps
     ),

@@ -203,11 +203,11 @@ describe("useFetch", () => {
     expect(json).toHaveBeenCalled()
   })
 
-  test("calling `run` with a method argument allows to override `init` parameters", () => {
+  test("calling `run` with a callback as argument allows to override `init` parameters", () => {
     const component = (
-      <Fetch input="/test" init={{ method: "POST" }}>
+      <Fetch input="/test" init={{ method: "POST", body: '{"name":"foo"}' }}>
         {({ run }) => (
-          <button onClick={() => run(init => ({ ...init, body: '{"name":"test"}' }))}>run</button>
+          <button onClick={() => run(init => ({ ...init, body: '{"name":"bar"}' }))}>run</button>
         )}
       </Fetch>
     )
@@ -216,14 +216,14 @@ describe("useFetch", () => {
     fireEvent.click(getByText("run"))
     expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
-      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"bar"}' })
     )
   })
 
   test("calling `run` with an object as argument allows to override `init` parameters", () => {
     const component = (
-      <Fetch input="/test" init={{ method: "POST" }}>
-        {({ run }) => <button onClick={() => run({ body: '{"name":"test"}' })}>run</button>}
+      <Fetch input="/test" init={{ method: "POST", body: '{"name":"foo"}' }}>
+        {({ run }) => <button onClick={() => run({ body: '{"name":"bar"}' })}>run</button>}
       </Fetch>
     )
     const { getByText } = render(component)
@@ -231,7 +231,41 @@ describe("useFetch", () => {
     fireEvent.click(getByText("run"))
     expect(globalScope.fetch).toHaveBeenCalledWith(
       "/test",
-      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"bar"}' })
+    )
+  })
+
+  test("calling `run` with a url allows to override fetch's `resource` parameter", () => {
+    const component = (
+      <Fetch input="/foo" options={{ defer: true }}>
+        {({ run }) => <button onClick={() => run("/bar")}>run</button>}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(globalScope.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(globalScope.fetch).toHaveBeenCalledWith(
+      "/bar",
+      expect.objectContaining({ signal: abortCtrl.signal })
+    )
+  })
+
+  test("overriding the `resource` can be combined with overriding `init`", () => {
+    const component = (
+      <Fetch input="/foo" init={{ method: "POST", body: '{"name":"foo"}' }}>
+        {({ run }) => (
+          <button onClick={() => run("/bar", init => ({ ...init, body: '{"name":"bar"}' }))}>
+            run
+          </button>
+        )}
+      </Fetch>
+    )
+    const { getByText } = render(component)
+    expect(globalScope.fetch).not.toHaveBeenCalled()
+    fireEvent.click(getByText("run"))
+    expect(globalScope.fetch).toHaveBeenCalledWith(
+      "/bar",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"bar"}' })
     )
   })
 
