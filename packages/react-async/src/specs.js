@@ -175,7 +175,7 @@ export const withPromise = Async => () => {
     const { findByText } = render(
       <Async promise={resolveTo("done")}>
         {({ data, promise }) => {
-          promise.then(onFulfilled, onRejected)
+          promise.then(onFulfilled).catch(onRejected)
           return data || null
         }}
       </Async>
@@ -191,7 +191,7 @@ export const withPromise = Async => () => {
     const { findByText } = render(
       <Async promise={rejectTo("err")}>
         {({ error, promise }) => {
-          promise.then(onFulfilled, onRejected)
+          promise.then(onFulfilled).catch(onRejected)
           return error ? error.message : null
         }}
       </Async>
