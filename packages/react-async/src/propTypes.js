@@ -44,6 +44,7 @@ export default PropTypes && {
     reducer: PropTypes.func,
     dispatcher: PropTypes.func,
     debugLabel: PropTypes.string,
+    suspense: PropTypes.bool,
   },
   Initial: {
     children: childrenFn.isRequired,

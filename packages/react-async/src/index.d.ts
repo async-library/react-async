@@ -50,6 +50,7 @@ export interface AsyncOptions<T> {
     props: AsyncProps<T>
   ) => void
   debugLabel?: string
+  suspense?: boolean
   [prop: string]: any
 }
 
