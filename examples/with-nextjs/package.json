@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "isomorphic-fetch": "2.2.1",
-    "next": "9.0.6",
-    "react": "16.10.0",
+    "next": "9.0.7",
+    "react": "16.10.1",
     "react-async": "8.0.0",
     "react-async-devtools": "8.0.0",
-    "react-dom": "16.10.0"
+    "react-dom": "16.10.1"
   },
   "devDependencies": {
     "relative-deps": "0.1.2"
