@@ -12,7 +12,7 @@
   },
   "plugins": ["jest", "promise", "react", "react-hooks"],
   "rules": {
-    "react/prop-types": "none",
+    "react/prop-types": "off",
     "react-hooks/rules-of-hooks": "error"
   },
   "settings": {
