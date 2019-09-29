@@ -78,7 +78,7 @@ jobs:
           command: yarn build:examples
       - run:
           name: Test examples
-          command: yarn test:examples
+          command: yarn test:examples --maxWorkers=2
       - run:
           name: Deploy examples
           command: |
