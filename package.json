@@ -66,7 +66,7 @@
     "prettier": "1.18.2",
     "prop-types": "15.7.2",
     "react": "16.10.0",
-    "react-async": "^8.0.0-alpha.0",
+    "react-async": "8.0.0-alpha.0",
     "react-dom": "16.10.0",
     "storybook-chromatic": "2.2.2"
   }
