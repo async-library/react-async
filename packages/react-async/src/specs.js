@@ -66,7 +66,9 @@ export const common = Async => () => {
     expect(onCancel).not.toHaveBeenCalled()
   })
 
-  test("supports Suspense", async () => {
+  // Skip when testing for backwards-compatibility with React 16.3
+  const testSuspense = Suspense ? test : test.skip
+  testSuspense("supports Suspense", async () => {
     const promiseFn = () => resolveIn(150)("done")
     const { findByText } = render(
       <Suspense fallback={<div>fallback</div>}>
