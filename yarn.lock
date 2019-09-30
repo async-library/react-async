@@ -12658,10 +12658,10 @@ normalize-url@^4.1.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-4.5.0.tgz#453354087e6ca96957bd8f5baf753f5982142129"
   integrity sha512-2s47yzUxdexf1OhyRi4Em83iQk0aPvwTddtFz4hnSSw9dCEsLEGf6SwIO8ss/19S9iBb5sJaOuTvTGDeZI00BQ==
 
-now@16.2.0:
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/now/-/now-16.2.0.tgz#5f778a335e4da2ffa1f0e3754cc6c765b6685a99"
-  integrity sha512-yzPtLJj7O1ngH3uNqEN6Eq3pR4rfBvq9qYRzG+whfhhQ8NA8molLwLVTPIlCLJuPu8zQnv48bJs2+EYs+n1NOA==
+now@16.3.0:
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/now/-/now-16.3.0.tgz#4670df5944789b861f76792b06d8aebaa0185b97"
+  integrity sha512-ScqqwSpV0ddpUAx+H3c8W1WwVEC9dskqJ7ZuTiPxtj2iORkSd+21TXQF6PfChSjbVgpnne+Z8qGtKA7BYUrsig==
 
 np@^5.0.2:
   version "5.1.0"
