@@ -147,6 +147,11 @@ const useAsync = (arg1, arg2) => {
 
   useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)
 
+  if (options.suspense && state.isPending && lastPromise.current !== neverSettle) {
+    // Rely on Suspense to handle the loading state
+    throw lastPromise.current
+  }
+
   return useMemo(
     () => ({
       ...state,
