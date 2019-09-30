@@ -43,8 +43,8 @@
   <a href="https://www.codefactor.io/repository/github/async-library/react-async">
     <img src="https://www.codefactor.io/repository/github/async-library/react-async/badge" alt="code quality">
   </a>
-  <a href="https://deepscan.io/dashboard#view=project&tid=5147&pid=6925&bid=61474">
-    <img src="https://deepscan.io/api/teams/5147/projects/6925/branches/61474/badge/grade.svg" alt="DeepScan grade">
+  <a href="https://deepscan.io/dashboard#view=project&tid=5549&pid=7389&bid=73686">
+    <img src="https://deepscan.io/api/teams/5549/projects/7389/branches/73686/badge/grade.svg" alt="DeepScan grade">
   </a>
   <br/>
   <img src="https://badgen.net/david/dep/async-library/react-async/packages/react-async" alt="dependencies">
