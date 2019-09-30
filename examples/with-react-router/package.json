@@ -11,17 +11,17 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "react": "^16.10.0",
-    "react-async": "^8.0.0",
-    "react-async-devtools": "^8.0.0",
-    "react-dom": "^16.10.0",
-    "react-router-dom": "^5.1.1"
+    "react": "16.10.1",
+    "react-async": "8.0.0",
+    "react-async-devtools": "8.0.0",
+    "react-dom": "16.10.1",
+    "react-router-dom": "5.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/preset-react": "^7.0.0",
-    "parcel-bundler": "^1.12.3",
-    "relative-deps": "^0.1.2"
+    "@babel/core": "7.6.2",
+    "@babel/preset-react": "7.0.0",
+    "parcel-bundler": "1.12.3",
+    "relative-deps": "0.1.2"
   },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg",

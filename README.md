@@ -137,6 +137,7 @@ React Async has no direct relation to Concurrent React. They are conceptually cl
 meant to make dealing with asynchronous business logic easier. Concurrent React will make those features have less
 impact on performance and usability. When Suspense lands, React Async will make full use of Suspense features. In fact,
 you can already **start using React Async right now**, and in a later update, you'll **get Suspense features for free**.
+In fact, React Async already has experimental support for Suspense, by passing the `suspense` option.
 
 [concurrent react]: https://github.com/sw-yx/fresh-concurrent-react/blob/master/Intro.md#introduction-what-is-concurrent-react
 
@@ -445,6 +446,7 @@ These can be passed in an object to `useAsync()`, or as props to `<Async>` and c
 - `reducer` State reducer to control internal state updates.
 - `dispatcher` Action dispatcher to control internal action dispatching.
 - `debugLabel` Unique label used in DevTools.
+- `suspense` Enable **experimental** Suspense integration.
 
 `useFetch` additionally takes these options:
 
@@ -560,6 +562,22 @@ dispatcher at some point.
 
 A unique label to describe this React Async instance, used in React DevTools (through `useDebugValue`) and React Async
 DevTools.
+
+#### `suspense`
+
+> `boolean`
+
+Enables **experimental** Suspense integration. This will make React Async throw a promise while loading, so you can use
+Suspense to render a fallback UI, instead of using `<IfPending>`. Suspense differs in 2 main ways:
+
+- `<Suspense>` should be an ancestor of your Async component, instead of a descendant. It can be anywhere up in the
+  component hierarchy.
+- You can have a single `<Suspense>` wrap multiple Async components, in which case it will render the fallback UI until
+  all promises are settled.
+
+> Note that the way Suspense is integrated right now may change. Until Suspense for data fetching is officially
+> released, we may make breaking changes to its integration in React Async in a minor or patch release. Among other
+> things, we'll probably add a cache of sorts.
 
 #### `defer`
 

@@ -1,26 +1,24 @@
 {
-  "name": "with-nextjs-example",
+  "name": "with-suspense-example",
   "version": "8.0.0",
   "private": true,
-  "main": "index.js",
+  "homepage": "https://react-async.async-library.now.sh/examples/with-suspense",
   "scripts": {
     "postinstall": "relative-deps",
-    "predev": "relative-deps",
-    "prebuild": "relative-deps",
     "prestart": "relative-deps",
+    "prebuild": "relative-deps",
     "pretest": "relative-deps",
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
-    "now-build": "next build"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {
-    "isomorphic-fetch": "2.2.1",
-    "next": "9.0.7",
     "react": "16.10.1",
     "react-async": "8.0.0",
     "react-async-devtools": "8.0.0",
-    "react-dom": "16.10.1"
+    "react-dom": "16.10.1",
+    "react-scripts": "3.1.2"
   },
   "devDependencies": {
     "relative-deps": "0.1.2"
@@ -29,6 +27,15 @@
     "react-async": "../../packages/react-async/pkg",
     "react-async-devtools": "../../packages/react-async-devtools/pkg"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "engines": {
     "node": ">=8"
   }

@@ -193,7 +193,11 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     render() {
-      const { children } = this.props
+      const { children, suspense } = this.props
+      if (suspense && this.state.isPending && this.promise !== neverSettle) {
+        // Rely on Suspense to handle the loading state
+        throw this.promise
+      }
       if (typeof children === "function") {
         return <Provider value={this.state}>{children(this.state)}</Provider>
       }

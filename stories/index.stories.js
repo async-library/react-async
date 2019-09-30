@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Suspense } from "react"
 import { storiesOf } from "@storybook/react"
 
 import { useAsync } from "../packages/react-async/src"
@@ -43,9 +43,16 @@ const App = () => {
   return (
     <>
       <DevTools />
-      <Photo photoId={1} />
-      <Photo photoId={2} />
-      <Photo photoId={3} />
+      <div>
+        <Photo photoId={1} />
+        <Photo photoId={2} />
+        <Photo photoId={3} />
+      </div>
+      <Suspense fallback={<>Suspended...</>}>
+        <Photo suspense photoId={4} />
+        <Photo suspense photoId={5} />
+        <Photo suspense photoId={6} />
+      </Suspense>
     </>
   )
 }
