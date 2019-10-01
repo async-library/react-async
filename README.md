@@ -1,6 +1,11 @@
 <p align="center">
   <a href="https://react-async.dev"><img src="https://raw.githubusercontent.com/async-library/react-async/HEAD/react-async.png" width="520" alt="React Async" /></a><br/>
   Handle promises with ease.
+  <br/>
+  <br/>
+  <a href="https://codefund.io/properties/458/visit-sponsor">
+    <img src="https://codefund.io/properties/458/sponsor" />
+  </a>
 </p>
 <br/>
 
