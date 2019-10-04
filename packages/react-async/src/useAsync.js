@@ -1,6 +1,7 @@
-import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
+import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer, useState } from "react"
 
 import globalScope from "./globalScope"
+import loopPreventer from "./loopPreventer"
 import {
   neverSettle,
   actionTypes,
@@ -20,6 +21,9 @@ const useAsync = (arg1, arg2) => {
   const lastOptions = useRef(undefined)
   const lastPromise = useRef(neverSettle)
   const abortController = useRef({ abort: noop })
+  const [preventLoop] = useState(loopPreventer)
+
+  preventLoop()
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
   const { reducer, dispatcher = devToolsDispatcher } = options

@@ -2,6 +2,7 @@ import React from "react"
 
 import globalScope from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
+import loopPreventer from "./loopPreventer"
 import propTypes from "./propTypes"
 import {
   neverSettle,
@@ -52,6 +53,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         setError: this.setError,
       }
       this.debugLabel = props.debugLabel || defaultProps.debugLabel
+      this.preventLoop = loopPreventer()
 
       const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
       const _reducer = props.reducer || defaultProps.reducer
@@ -193,6 +195,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     render() {
+      this.preventLoop()
       const { children, suspense } = this.props
       if (suspense && this.state.isPending && this.promise !== neverSettle) {
         // Rely on Suspense to handle the loading state

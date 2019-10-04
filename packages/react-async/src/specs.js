@@ -80,6 +80,31 @@ export const common = Async => () => {
     await findByText("fallback")
     await findByText("done")
   })
+
+  test("prevents infinite loops", async () => {
+    // Prevent the thrown error from showing up in test output by mocking console.error.
+    jest.spyOn(console, "error")
+    global.console.error.mockImplementation(() => {})
+
+    const { rerender } = render(<Async />)
+    expect(() => {
+      for (let i = 0; i < 500; i++) rerender(<Async />)
+    }).toThrow("Infinite loop detected")
+
+    // Restore the original console.error so other tests will still print errors that occur.
+    global.console.error.mockRestore()
+  })
+
+  test("still allows many renders, if they are at least 100ms apart sometimes", async () => {
+    const { rerender } = render(<Async />)
+    const renderMany = async () => {
+      for (let i = 0; i < 500; i++) {
+        if (i % 100 === 0) await resolveIn(100)() // delay every 100th render
+        rerender(<Async />)
+      }
+    }
+    await expect(renderMany()).resolves.not.toThrow("Infinite loop detected")
+  })
 }
 
 export const withPromise = Async => () => {
