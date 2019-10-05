@@ -1,12 +1,10 @@
 # Usage
 
-React Async offers three primary APIs: the `useAsync` hook, the `<Async>` component and the `createInstance`
-factory function. Each has its unique benefits and downsides.
+React Async offers three primary APIs: the `useAsync` hook, the `<Async>` component and the `createInstance` factory function. Each has its unique benefits and downsides.
 
 ## As a hook
 
-The `useAsync` hook (available [from React v16.8.0](https://reactjs.org/hooks)) offers direct access to React Async's
-core functionality from within your own function components:
+The `useAsync` hook \(available [from React v16.8.0](https://reactjs.org/hooks)\) offers direct access to React Async's core functionality from within your own function components:
 
 ```jsx
 import { useAsync } from "react-async"
@@ -32,8 +30,7 @@ const MyComponent = () => {
 }
 ```
 
-> Using [helper components](#with-helper-components) can greatly improve readability of your render functions by not
-> having to write all those conditional returns.
+> Using [helper components](usage.md#with-helper-components) can greatly improve readability of your render functions by not having to write all those conditional returns.
 
 Or using the shorthand version:
 
@@ -77,18 +74,11 @@ const MyComponent = () => {
 }
 ```
 
-`useFetch` takes the same arguments as [fetch] itself, as well as `options` to the underlying `useAsync` hook. The
-`options` object takes two special boolean properties: `defer` and `json`. These can be used to switch between
-`deferFn` and `promiseFn`, and enable JSON parsing. By default `useFetch` automatically uses `promiseFn` or `deferFn`
-based on the request method (`deferFn` for POST / PUT / PATCH / DELETE) and handles JSON parsing if the `Accept` header
-is set to `"application/json"`.
-
-[fetch]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+`useFetch` takes the same arguments as [fetch](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) itself, as well as `options` to the underlying `useAsync` hook. The `options` object takes two special boolean properties: `defer` and `json`. These can be used to switch between `deferFn` and `promiseFn`, and enable JSON parsing. By default `useFetch` automatically uses `promiseFn` or `deferFn` based on the request method \(`deferFn` for POST / PUT / PATCH / DELETE\) and handles JSON parsing if the `Accept` header is set to `"application/json"`.
 
 ## As a component
 
-The classic interface to React Async. Simply use `<Async>` directly in your JSX component tree, leveraging the render
-props pattern:
+The classic interface to React Async. Simply use `<Async>` directly in your JSX component tree, leveraging the render props pattern:
 
 ```jsx
 import Async from "react-async"
@@ -117,13 +107,11 @@ const MyComponent = () => (
 )
 ```
 
-> Using [helper components](#with-helper-components) can greatly improve readability of your render functions by not
-> having to write all those conditional returns.
+> Using [helper components](usage.md#with-helper-components) can greatly improve readability of your render functions by not having to write all those conditional returns.
 
 ## As a factory
 
-You can also create your own component instances, allowing you to preconfigure them with options such as default
-`onResolve` and `onReject` callbacks.
+You can also create your own component instances, allowing you to preconfigure them with options such as default `onResolve` and `onReject` callbacks.
 
 ```jsx
 import { createInstance } from "react-async"
@@ -145,9 +133,7 @@ const MyComponent = () => (
 
 ## With helper components
 
-Several [helper components](#helper-components) are available to improve legibility. They can be used with `useAsync`
-by passing in the state, or with `<Async>` by using Context. Each of these components simply enables or disables
-rendering of its children based on the current state.
+Several [helper components](usage.md#helper-components) are available to improve legibility. They can be used with `useAsync` by passing in the state, or with `<Async>` by using Context. Each of these components simply enables or disables rendering of its children based on the current state.
 
 ```jsx
 import { useAsync, IfPending, IfFulfilled, IfRejected } from "react-async"
@@ -177,8 +163,7 @@ const MyComponent = () => {
 
 ### As compounds to `<Async>`
 
-Each of the helper components are also available as static properties of `<Async>`. In this case you won't have to pass
-the state object, instead it will be automatically provided through Context.
+Each of the helper components are also available as static properties of `<Async>`. In this case you won't have to pass the state object, instead it will be automatically provided through Context.
 
 ```jsx
 import Async from "react-async"
@@ -203,3 +188,4 @@ const MyComponent = () => (
   </Async>
 )
 ```
+
