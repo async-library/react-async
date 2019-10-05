@@ -1,5 +1,1 @@
 root: ./gitbook/
-
-structure:
-  readme: introduction.md
-  summary: _summary.md
