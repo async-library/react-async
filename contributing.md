@@ -6,16 +6,16 @@ This repo relies on Yarn workspaces, so you should [install](https://yarnpkg.com
 
 ## Development guide
 
-Please have the **_latest_** stable versions of the following on your machine
+Please have the _**latest**_ stable versions of the following on your machine
 
-- node
-- yarn
+* node
+* yarn
 
 ### Initial setup
 
 To start working on React Async, clone the repo and bootstrap the project:
 
-```sh
+```bash
 git clone https://github.com/async-library/react-async.git
 cd react-async
 yarn && yarn bootstrap && yarn test
@@ -25,18 +25,17 @@ yarn && yarn bootstrap && yarn test
 
 We use Storybook as a development environment, particularly for the DevTools. Spin it up using:
 
-```sh
+```bash
 yarn storybook
 ```
 
-This should open up Storybook in a browser at http://localhost:6006/
-Run it side-by-side with `yarn test --watch` during development. See [Testing](#testing).
+This should open up Storybook in a browser at [http://localhost:6006/](http://localhost:6006/) Run it side-by-side with `yarn test --watch` during development. See [Testing](contributing.md#testing).
 
 ### Linting
 
 Use `yarn lint` to verify your code style before committing. It's highly recommended to install the Prettier and ESLint plugins for your IDE. Travis CI will fail your build on lint errors. Configure VS Code with the following settings:
 
-```plaintext
+```text
 "eslint.autoFixOnSave": true,
 "eslint.packageManager": "yarn",
 "eslint.options": {
@@ -59,7 +58,7 @@ This should enable auto-fix for all source files, and give linting warnings and 
 
 Use the following command to test all packages in watch mode. Refer to the [Jest CLI options](https://jestjs.io/docs/en/cli#options) for details.
 
-```sh
+```bash
 yarn test --watch
 ```
 
@@ -67,7 +66,7 @@ In general, this is sufficient during development. Travis CI will apply a more r
 
 #### Testing for compatibility
 
-```sh
+```bash
 yarn test:compat
 ```
 
@@ -79,7 +78,7 @@ In the `examples` folder, you will find sample React applications that use React
 
 To run sample examples on your local environments
 
-```sh
+```bash
 yarn build:examples
 yarn test:examples
 yarn start:examples
@@ -88,3 +87,4 @@ yarn start:examples
 ### Resolving issues
 
 Sometimes your dependencies might end up in a weird state, causing random issues, especially when working with the examples. In this case it often helps to run `yarn clean -y && yarn bootstrap`. This will delete `node_modules` from all packages/examples and do a clean install.
+
