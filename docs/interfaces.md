@@ -7,7 +7,7 @@ backwards compatible to React v16.3. More recent React applications will be usin
 React Async accepts a range of [configuration options](/api/options) and returns a set of [render props](/api/props).
 The way you use these differs slightly between the `useAsync` and `useFetch` hooks, and the `<Async>` component.
 
-## `<Async>`
+## `Async` component
 
 ```jsx
 <Async {...options}>{props => ...}</Async>
@@ -22,7 +22,7 @@ The way you use these differs slightly between the `useAsync` and `useFetch` hoo
 [spread attributes]: https://reactjs.org/docs/jsx-in-depth.html#spread-attributes
 [render props]: https://reactjs.org/docs/render-props.html
 
-## `useAsync`
+## `useAsync` hook
 
 ```js
 const props = useAsync(options)
@@ -36,7 +36,7 @@ const props = useAsync(options)
 
 [destructure]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Object_destructuring
 
-## `useFetch`
+## `useFetch` hook
 
 ```js
 const props = useFetch(resource, init, options)
