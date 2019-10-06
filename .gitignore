@@ -1,7 +1,7 @@
 build/
 coverage/
 dist/
-docs/
+storybook/
 node_modules/
 pkg/
 .cache
