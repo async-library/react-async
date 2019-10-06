@@ -4,11 +4,11 @@ React Async provides several ways to use it. The classic interface is through th
 backwards compatible to React v16.3. More recent React applications will be using hooks, of which two are provided:
 `useAsync` and `useFetch`. Functionally, `<Async>` and `useAsync` are equivalent. `useFetch` is a special type of `useAsync` which is tied to the native `fetch` API.
 
-React Async accepts a wide range of [configuration options] and returns a set of [render props]. The way you use these
-differs slightly between the `useAsync` and `useFetch` hooks, and the `<Async>` component.
+React Async accepts a wide range of [configuration options][options] and returns a set of [render props][props]. The way
+you use these differs slightly between the `useAsync` and `useFetch` hooks, and the `<Async>` component.
 
-[configuration options]: https://docs.react-async.com/api/options
-[render props]: https://docs.react-async.com/api/props
+[options]: https://docs.react-async.com/api/options
+[props]: https://docs.react-async.com/api/props
 
 ## `Async` component
 
@@ -16,8 +16,8 @@ differs slightly between the `useAsync` and `useFetch` hooks, and the `<Async>` 
 <Async {...options}>{props => ...}</Async>
 ```
 
-- [`options`][configuration options] Configuration options
-- [`props`][render props] Render props object
+- [`options`][options] Configuration options
+- [`props`][props] Render props object
 
 > We recommend that you pass the options individually, rather than using JSX [spread attributes]. React Async uses
 > [render props] to return its state back to you, so it can be used by other components further down the tree.
@@ -31,8 +31,8 @@ differs slightly between the `useAsync` and `useFetch` hooks, and the `<Async>` 
 const props = useAsync(options)
 ```
 
-- [`props`][render props] Render props object
-- [`options`][configuration options] Configuration options
+- [`props`][props] Render props object
+- [`options`][options] Configuration options
 
 > We recommend that you pass `options` as an inline object literal, and that you [destructure] the `props` object to
 > extract the properties you need, unless you have multiple instances in the same component.
@@ -45,9 +45,9 @@ const props = useAsync(options)
 const props = useFetch(resource, init, options)
 ```
 
-- [`props`][render props] Render props object
+- [`props`][props] Render props object
 - [`resource`][fetch api] The resource you want to fetch
 - [`init`][fetch api] Custom request options
-- [`options`][configuration options] Configuration options
+- [`options`][options] Configuration options
 
 [fetch api]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Syntax
