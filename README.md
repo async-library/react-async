@@ -39,7 +39,7 @@
   <a href="https://circleci.com/gh/async-library/react-async">
     <img src="https://badgen.net/circleci/github/async-library/react-async/master?icon=circleci" alt="circleci status">
   </a>
-  <a href="https://travis-ci.com/async-library/react-async">
+  <a href="https://travis-ci.org/async-library/react-async">
     <img src="https://badgen.net/travis/async-library/react-async?icon=travis" alt="travis status">
   </a>
   <a href="https://codecov.io/gh/async-library/react-async">
