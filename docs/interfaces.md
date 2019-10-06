@@ -48,3 +48,15 @@ const props = useFetch(resource, init, options)
 - [`options`](options.md) Configuration options
 
 [fetch api]: https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Syntax
+
+## `createInstance`
+
+Besides using the `Async` component directly, you can also create your own instance of it. This allows you to preload it
+with options, e.g. to enable global error handling.
+
+```js
+const CustomAsync = createInstance(defaultProps, displayName)
+```
+
+- [`defaultProps`](props.md) Render props object
+- `displayName` Name for this instance, used by React DevTools
