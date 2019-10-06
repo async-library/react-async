@@ -4,24 +4,24 @@
 
 These can be passed in an object to `useAsync()`, or as props to `<Async>` and custom instances.
 
-* `promise` An already started Promise instance.
-* `promiseFn` Function that returns a Promise, automatically invoked.
-* `deferFn` Function that returns a Promise, manually invoked with `run`.
-* `watch` Watch a value and automatically reload when it changes.
-* `watchFn` Watch this function and automatically reload when it returns truthy.
-* `initialValue` Provide initial data or error for server-side rendering.
-* `onResolve` Callback invoked when Promise resolves.
-* `onReject` Callback invoked when Promise rejects.
-* `onCancel` Callback invoked when a Promise is cancelled.
-* `reducer` State reducer to control internal state updates.
-* `dispatcher` Action dispatcher to control internal action dispatching.
-* `debugLabel` Unique label used in DevTools.
-* `suspense` Enable **experimental** Suspense integration.
+- [`promise`](#promise) An already started Promise instance.
+- [`promiseFn`](#promisefn) Function that returns a Promise, automatically invoked.
+- [`deferFn`](#deferfn) Function that returns a Promise, manually invoked with `run`.
+- [`watch`](#watch) Watch a value and automatically reload when it changes.
+- [`watchFn`](#watchfn) Watch this function and automatically reload when it returns truthy.
+- [`initialValue`](#initialvalue) Provide initial data or error for server-side rendering.
+- [`onResolve`](#onresolve) Callback invoked when Promise resolves.
+- [`onReject`](#onreject) Callback invoked when Promise rejects.
+- [`onCancel`](#oncancel) Callback invoked when a Promise is cancelled.
+- [`reducer`](#reducer) State reducer to control internal state updates.
+- [`dispatcher`](#dispatcher) Action dispatcher to control internal action dispatching.
+- [`debugLabel`](#debuglabel) Unique label used in DevTools.
+- [`suspense`](#suspense) Enable **experimental** Suspense integration.
 
 `useFetch` additionally takes these options:
 
-* `defer` Force the use of `deferFn` or `promiseFn`.
-* `json` Enable JSON parsing of the response.
+- [`defer`](#defer) Force the use of `deferFn` or `promiseFn`.
+- [`json`](#json) Enable JSON parsing of the response.
 
 ### `promise`
 
@@ -113,11 +113,11 @@ A unique label to describe this React Async instance, used in React DevTools \(t
 
 Enables **experimental** Suspense integration. This will make React Async throw a promise while loading, so you can use Suspense to render a fallback UI, instead of using `<IfPending>`. Suspense differs in 2 main ways:
 
-* `<Suspense>` should be an ancestor of your Async component, instead of a descendant. It can be anywhere up in the
+- `<Suspense>` should be an ancestor of your Async component, instead of a descendant. It can be anywhere up in the
 
   component hierarchy.
 
-* You can have a single `<Suspense>` wrap multiple Async components, in which case it will render the fallback UI until
+- You can have a single `<Suspense>` wrap multiple Async components, in which case it will render the fallback UI until
 
   all promises are settled.
 
@@ -139,25 +139,25 @@ Enables or disables JSON parsing of the response body. By default this is automa
 
 `<Async>` provides the following render props to the `children` function:
 
-* `data` Last resolved promise value, maintained when new error arrives.
-* `error` Rejected promise reason, cleared when new data arrives.
-* `value` The value of `data` or `error`, whichever was last updated.
-* `initialValue` The data or error that was provided through the `initialValue` prop.
-* `startedAt` When the current/last promise was started.
-* `finishedAt` When the last promise was fulfilled or rejected.
-* `status` One of: `initial`, `pending`, `fulfilled`, `rejected`.
-* `isInitial` true when no promise has ever started, or one started but was cancelled.
-* `isPending` true when a promise is currently awaiting settlement. Alias: `isLoading`
-* `isFulfilled` true when the last promise was fulfilled. Alias: `isResolved`
-* `isRejected` true when the last promise was rejected.
-* `isSettled` true when the last promise was fulfilled or rejected \(not initial or pending\).
-* `counter` The number of times a promise was started.
-* `promise` A reference to the internal wrapper promise, which can be chained on.
-* `run` Invokes the `deferFn`.
-* `reload` Re-runs the promise when invoked, using any previous arguments.
-* `cancel` Cancel any pending promise.
-* `setData` Sets `data` to the passed value, unsets `error` and cancels any pending promise.
-* `setError` Sets `error` to the passed value and cancels any pending promise.
+- [`data`](#data) Last resolved promise value, maintained when new error arrives.
+- [`error`](#error) Rejected promise reason, cleared when new data arrives.
+- [`value`](#value) The value of `data` or `error`, whichever was last updated.
+- [`initialValue`](#initialvalue-1) The data or error that was provided through the `initialValue` prop.
+- [`startedAt`](#startedat) When the current/last promise was started.
+- [`finishedAt`](#finishedat) When the last promise was fulfilled or rejected.
+- [`status`](#status) One of: `initial`, `pending`, `fulfilled`, `rejected`.
+- [`isInitial`](#isinitial) true when no promise has ever started, or one started but was cancelled.
+- [`isPending`](#ispending) true when a promise is currently awaiting settlement. Alias: `isLoading`
+- [`isFulfilled`](#isfulfilled) true when the last promise was fulfilled. Alias: `isResolved`
+- [`isRejected`](#isrejected) true when the last promise was rejected.
+- [`isSettled`](#issettled) true when the last promise was fulfilled or rejected \(not initial or pending\).
+- [`counter`](#counter) The number of times a promise was started.
+- [`promise`](#promise-1) A reference to the internal wrapper promise, which can be chained on.
+- [`run`](#run) Invokes the `deferFn`.
+- [`reload`](#reload) Re-runs the promise when invoked, using any previous arguments.
+- [`cancel`](#cancel) Cancel any pending promise.
+- [`setData`](#setdata) Sets `data` to the passed value, unsets `error` and cancels any pending promise.
+- [`setError`](#seterror) Sets `error` to the passed value and cancels any pending promise.
 
 ### `data`
 
@@ -290,4 +290,3 @@ Function that sets `data` to the passed value, unsets `error` and cancels any pe
 > `function(error: Error, callback?: () => void): Error`
 
 Function that sets `error` to the passed value and cancels any pending promise. Takes an optional callback which is invoked after the state update is completed. Returns the error to enable chaining.
-
