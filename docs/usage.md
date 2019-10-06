@@ -192,4 +192,3 @@ const MyComponent = () => (
   </Async>
 )
 ```
-

@@ -8,9 +8,9 @@ Renders only while the deferred promise is still waiting to be run, or you have 
 
 ### Props
 
-* `children` `function(state: Object): Node | Node` Render function or React Node.
-* `state` `object` Async state object \(return value of `useAsync()`\).
-* `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon
+- `children` `function(state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object \(return value of `useAsync()`\).
+- `persist` `boolean` Show until we have data, even while loading or when an error occurred. By default it hides as soon
 
   as the promise starts loading.
 
@@ -55,9 +55,9 @@ Alias: `<Async.Loading>`
 
 ### Props
 
-* `children` `function(state: Object): Node | Node` Render function or React Node.
-* `state` `object` Async state object \(return value of `useAsync()`\).
-* `initial` `boolean` Show only on initial load \(when `data` is `undefined`\).
+- `children` `function(state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object \(return value of `useAsync()`\).
+- `initial` `boolean` Show only on initial load \(when `data` is `undefined`\).
 
 ### Examples
 
@@ -88,9 +88,9 @@ Alias: `<Async.Resolved>`
 
 ### Props
 
-* `children` `function(data: any, state: Object): Node | Node` Render function or React Node.
-* `state` `object` Async state object \(return value of `useAsync()`\).
-* `persist` `boolean` Show old data while loading new data. By default it hides as soon as a new promise starts.
+- `children` `function(data: any, state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object \(return value of `useAsync()`\).
+- `persist` `boolean` Show old data while loading new data. By default it hides as soon as a new promise starts.
 
 ### Examples
 
@@ -119,7 +119,6 @@ This component renders only when the promise is rejected.
 
 ### Props
 
-* `children` `function(error: Error, state: Object): Node | Node` Render function or React Node.
-* `state` `object` Async state object \(return value of `useAsync()`\).
-* `persist` `boolean` Show old error while loading new data. By default it hides as soon as a new promise starts.
-
+- `children` `function(error: Error, state: Object): Node | Node` Render function or React Node.
+- `state` `object` Async state object \(return value of `useAsync()`\).
+- `persist` `boolean` Show old error while loading new data. By default it hides as soon as a new promise starts.
