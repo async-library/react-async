@@ -96,7 +96,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 # Documentation
 
-- [Introduction](https://docs.react-async.com/introduction)
+- [Introduction](https://docs.react-async.com/)
 - [Installation](https://docs.react-async.com/installation)
 - [Usage](https://docs.react-async.com/usage)
 - [API](https://docs.react-async.com/api)
