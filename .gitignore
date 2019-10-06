@@ -10,3 +10,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+
+# these cause more harm than good
+# when working with contributors
+package-lock.json
+yarn.lock
