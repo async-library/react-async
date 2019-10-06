@@ -96,12 +96,19 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 # Documentation
 
+## Getting started
+
 - [Introduction](https://docs.react-async.com/)
-- [Installation](https://docs.react-async.com/installation)
-- [Usage](https://docs.react-async.com/usage)
-- [API](https://docs.react-async.com/api)
-- [Helper components](https://docs.react-async.com/helpers)
-- [DevTools](https://docs.react-async.com/devtools)
+- [Installation](https://docs.react-async.com/getting-started/installation)
+- [Usage](https://docs.react-async.com/getting-started/usage)
+- [DevTools](https://docs.react-async.com/getting-started/devtools)
+
+## API
+
+- [Interfaces](https://docs.react-async.com/api/interfaces)
+- [Configuration options](https://docs.react-async.com/api/options)
+- [Render props](https://docs.react-async.com/api/props)
+- [Helper components](https://docs.react-async.com/api/helpers)
 
 # Contributors
 
