@@ -35,7 +35,7 @@ A Promise instance which has already started. It will simply add the necessary r
 
 A function that returns a promise. It is automatically invoked in `componentDidMount` and `componentDidUpdate`. The function receives all component props \(or options\) and an AbortController instance as arguments.
 
-> Be aware that updating `promiseFn` will trigger it to cancel any pending promise and load the new promise. Passing an arrow function will cause it to change and reload on every render of the parent component. You can avoid this by defining the `promiseFn` value **outside** of the render method. If you need to pass variables to the `promiseFn`, pass them as additional props to `<Async>`, as `promiseFn` will be invoked with these props. Alternatively you can use [memoization](https://github.com/alexreardon/memoize-one) to avoid unnecessary updates.
+> Be aware that updating `promiseFn` will trigger it to cancel any pending promise and load the new promise. Passing an inline (arrow) function will cause it to change and reload on every render of the parent component. You can avoid this by defining the `promiseFn` value **outside** of the render method. If you need to pass variables to the `promiseFn`, pass them as additional props to `<Async>`, as `promiseFn` will be invoked with these props. Alternatively you can use `useCallback` or [memoize-one](https://github.com/alexreardon/memoize-one) to avoid unnecessary updates.
 
 ## `deferFn`
 
