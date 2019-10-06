@@ -1,8 +1,9 @@
 # Table of contents
 
+- [Introduction](introduction.md)
+
 ## Getting started
 
-- [Introduction](introduction.md)
 - [Installation](installation.md)
 - [Usage](usage.md)
 - [DevTools](devtools.md)
