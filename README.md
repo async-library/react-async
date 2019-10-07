@@ -108,7 +108,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 - [Interfaces](https://docs.react-async.com/api/interfaces)
 - [Configuration options](https://docs.react-async.com/api/options)
-- [Render props](https://docs.react-async.com/api/props)
+- [State properties](https://docs.react-async.com/api/state)
 - [Helper components](https://docs.react-async.com/api/helpers)
 
 # Contributors
