@@ -194,15 +194,17 @@ const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
     ...options,
     [fn]: useCallback(
       (arg1, arg2, arg3) => {
-        const [runArgs, signal] = isDefer ? [arg1, arg3.signal] : [[], arg2.signal]
-        const [runResource, runInit] = isResource(runArgs[0]) ? runArgs : [, runArgs[0]]
-        if (typeof runInit === "object" && "preventDefault" in runInit) {
-          // Don't spread Events or SyntheticEvents
-          return doFetch(runResource || resource, { signal, ...init })
+        const [override, signal] = isDefer ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
+        const isEvent = typeof override === "object" && "preventDefault" in override
+        if (!override || isEvent) {
+          return doFetch(resource, { signal, ...init })
         }
-        return typeof runInit === "function"
-          ? doFetch(runResource || resource, { signal, ...runInit(init) })
-          : doFetch(runResource || resource, { signal, ...init, ...runInit })
+        if (typeof override === "function") {
+          const { resource: runResource, ...runInit } = override({ resource, signal, ...init })
+          return doFetch(runResource || resource, { signal, ...runInit })
+        }
+        const { resource: runResource, ...runInit } = override
+        return doFetch(runResource || resource, { signal, ...init, ...runInit })
       },
       [identity] // eslint-disable-line react-hooks/exhaustive-deps
     ),
