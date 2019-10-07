@@ -168,6 +168,7 @@ const useAsync = (arg1, arg2) => {
 export class FetchError extends Error {
   constructor(response) {
     super(`${response.status} ${response.statusText}`)
+    /* istanbul ignore next */
     if (Object.setPrototypeOf) {
       // Not available in IE 10, but can be polyfilled
       Object.setPrototypeOf(this, FetchError.prototype)
@@ -215,6 +216,7 @@ const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
   return state
 }
 
+/* istanbul ignore next */
 const unsupported = () => {
   throw new Error(
     "useAsync requires React v16.8 or up. Upgrade your React version or use the <Async> component instead."

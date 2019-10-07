@@ -4,6 +4,7 @@ import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./
 class NeverSettle extends Promise {
   constructor() {
     super(() => {}, () => {})
+    /* istanbul ignore next */
     if (Object.setPrototypeOf) {
       // Not available in IE 10, but can be polyfilled
       Object.setPrototypeOf(this, NeverSettle.prototype)
