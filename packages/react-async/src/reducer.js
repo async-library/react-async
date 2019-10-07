@@ -1,6 +1,16 @@
 import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
 
-export const neverSettle = new Promise(() => {})
+export const neverSettle = {
+  finally() {
+    return this
+  },
+  catch() {
+    return this
+  },
+  then() {
+    return this
+  },
+}
 
 export const actionTypes = {
   start: "start",
