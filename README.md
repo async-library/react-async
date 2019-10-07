@@ -91,7 +91,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 > ## Upgrading to v9
 >
 > Version 9 comes with a minor breaking change.
-> See [Upgrading](https://docs.react-async.com/installation#upgrading) for details.
+> See [Upgrading](https://docs.react-async.com/getting-started/upgrading) for details.
 
 # Documentation
 
