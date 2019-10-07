@@ -12,5 +12,5 @@
 
 - [Interfaces](interfaces.md)
 - [Configuration options](options.md)
-- [Render props](props.md)
+- [State properties](state.md)
 - [Helper components](helpers.md)

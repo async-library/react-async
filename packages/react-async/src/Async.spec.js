@@ -220,7 +220,7 @@ describe("createInstance", () => {
     expect(onResolve).toHaveBeenCalledWith("done")
   })
 
-  test("accepts watchFn from defaultProps and passes the defaultProps along", async () => {
+  test("accepts watchFn from defaultOptions and passes the defaultOptions along", async () => {
     const promiseFn = () => resolveTo("done")
     const watchFn = jest.fn()
     const CustomAsync = createInstance({ promiseFn, watchFn })
@@ -245,7 +245,7 @@ describe("createInstance", () => {
     await findByText("resolved")
   })
 
-  test("custom instance also passes defaultProps to deferFn", async () => {
+  test("custom instance also passes defaultOptions to deferFn", async () => {
     const deferFn = jest.fn().mockReturnValue(resolveTo())
     const CustomAsync = createInstance({ deferFn })
 

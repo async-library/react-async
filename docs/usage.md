@@ -124,7 +124,7 @@ const loadPlayer = async ({ playerId }, { signal }) => {
   return res.json()
 }
 
-// createInstance takes a defaultProps object and a displayName (both optional)
+// createInstance takes a defaultOptions object and a displayName (both optional)
 const AsyncPlayer = createInstance({ promiseFn: loadPlayer }, "AsyncPlayer")
 
 const MyComponent = () => (

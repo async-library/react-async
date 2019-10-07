@@ -1,4 +1,4 @@
-# Render props
+# State properties
 
 These are returned in an object by `useAsync()` or provided by `<Async>` as render props to the `children` function:
 
