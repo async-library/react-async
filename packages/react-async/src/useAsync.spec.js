@@ -3,7 +3,7 @@
 import "@testing-library/jest-dom/extend-expect"
 import React from "react"
 import { render, fireEvent, cleanup } from "@testing-library/react"
-import { useAsync, useFetch, globalScope } from "./index"
+import { useAsync, useFetch, globalScope, FetchError } from "./index"
 import {
   sleep,
   resolveTo,
@@ -20,11 +20,11 @@ const abortCtrl = { abort: jest.fn(), signal: "SIGNAL" }
 globalScope.AbortController = jest.fn(() => abortCtrl)
 
 const json = jest.fn(() => ({}))
-globalScope.fetch = jest.fn(() => Promise.resolve({ ok: true, json }))
+globalScope.fetch = jest.fn()
 
 beforeEach(abortCtrl.abort.mockClear)
-beforeEach(globalScope.fetch.mockClear)
 beforeEach(json.mockClear)
+beforeEach(() => globalScope.fetch.mockReset().mockResolvedValue({ ok: true, json }))
 afterEach(cleanup)
 
 const Async = ({ children = () => null, ...props }) => children(useAsync(props))
@@ -203,35 +203,35 @@ describe("useFetch", () => {
     expect(json).toHaveBeenCalled()
   })
 
-  test("calling `run` with a method argument allows to override `init` parameters", () => {
+  test("calling `run` with a callback as argument allows to override fetch parameters", () => {
+    const override = params => ({ ...params, resource: "/bar", body: '{"name":"bar"}' })
     const component = (
-      <Fetch input="/test" init={{ method: "POST" }}>
-        {({ run }) => (
-          <button onClick={() => run(init => ({ ...init, body: '{"name":"test"}' }))}>run</button>
-        )}
+      <Fetch input="/foo" init={{ method: "POST", body: '{"name":"foo"}' }}>
+        {({ run }) => <button onClick={() => run(override)}>run</button>}
       </Fetch>
     )
     const { getByText } = render(component)
     expect(globalScope.fetch).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
     expect(globalScope.fetch).toHaveBeenCalledWith(
-      "/test",
-      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+      "/bar",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"bar"}' })
     )
   })
 
-  test("calling `run` with an object as argument allows to override `init` parameters", () => {
+  test("calling `run` with an object as argument allows to override fetch parameters", () => {
+    const override = { resource: "/bar", body: '{"name":"bar"}' }
     const component = (
-      <Fetch input="/test" init={{ method: "POST" }}>
-        {({ run }) => <button onClick={() => run({ body: '{"name":"test"}' })}>run</button>}
+      <Fetch input="/foo" init={{ method: "POST", body: '{"name":"foo"}' }}>
+        {({ run }) => <button onClick={() => run(override)}>run</button>}
       </Fetch>
     )
     const { getByText } = render(component)
     expect(globalScope.fetch).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
     expect(globalScope.fetch).toHaveBeenCalledWith(
-      "/test",
-      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"test"}' })
+      "/bar",
+      expect.objectContaining({ method: "POST", signal: abortCtrl.signal, body: '{"name":"bar"}' })
     )
   })
 
@@ -249,5 +249,21 @@ describe("useFetch", () => {
       "/test",
       expect.objectContaining({ preventDefault: expect.any(Function) })
     )
+  })
+
+  test("throws a FetchError for failed requests", async () => {
+    const errorResponse = { ok: false, status: 400, statusText: "Bad Request", json }
+    globalScope.fetch.mockResolvedValue(errorResponse)
+    const onResolve = jest.fn()
+    const onReject = jest.fn()
+    render(<Fetch input="/test" options={{ onResolve, onReject }} />)
+    expect(globalScope.fetch).toHaveBeenCalled()
+    await sleep(10)
+    expect(onResolve).not.toHaveBeenCalled()
+    expect(onReject).toHaveBeenCalled()
+    let [err] = onReject.mock.calls[0]
+    expect(err).toBeInstanceOf(FetchError)
+    expect(err.message).toEqual("400 Bad Request")
+    expect(err.response).toBe(errorResponse)
   })
 })

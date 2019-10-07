@@ -15,15 +15,15 @@
     "now-build": "next build"
   },
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1",
-    "next": "^9.0.3",
-    "react": "^16.9.0",
-    "react-async": "^8.0.0",
-    "react-async-devtools": "^8.0.0",
-    "react-dom": "^16.9.0"
+    "isomorphic-fetch": "2.2.1",
+    "next": "9.0.8",
+    "react": "16.10.2",
+    "react-async": "8.0.0",
+    "react-async-devtools": "8.0.0",
+    "react-dom": "16.10.2"
   },
   "devDependencies": {
-    "relative-deps": "^0.1.2"
+    "relative-deps": "0.1.2"
   },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg",

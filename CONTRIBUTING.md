@@ -21,12 +21,14 @@ cd react-async
 yarn && yarn bootstrap && yarn test
 ```
 
+Note that all work is done against the `next` branch, we only merge to `master` when doing a release.
+
 ### Working with Storybook
 
 We use Storybook as a development environment, particularly for the DevTools. Spin it up using:
 
 ```sh
-yarn storybook
+yarn start:storybook
 ```
 
 This should open up Storybook in a browser at http://localhost:6006/
@@ -60,7 +62,7 @@ This should enable auto-fix for all source files, and give linting warnings and 
 Use the following command to test all packages in watch mode. Refer to the [Jest CLI options](https://jestjs.io/docs/en/cli#options) for details.
 
 ```sh
-yarn test --watch
+yarn test:watch
 ```
 
 In general, this is sufficient during development. Travis CI will apply a more rigorous set of tests.
@@ -71,7 +73,7 @@ In general, this is sufficient during development. Travis CI will apply a more r
 yarn test:compat
 ```
 
-This runs all tests using various versions of `react` and `react-dom`, to check for compatibility with older/newer versions of React. This is what Travis runs.
+This runs all tests using various versions of `react` and `react-dom`, to check for compatibility with older/newer versions of React. This is what CircleCI and Travis run.
 
 ### Working with the examples
 

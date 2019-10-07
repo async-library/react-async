@@ -1,4 +1,4 @@
-import React from "react"
+import * as React from "react"
 
 export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
 export type InitialChildren<T> = ((state: AsyncInitial<T>) => React.ReactNode) | React.ReactNode
@@ -50,6 +50,7 @@ export interface AsyncOptions<T> {
     props: AsyncProps<T>
   ) => void
   debugLabel?: string
+  suspense?: boolean
   [prop: string]: any
 }
 
@@ -165,7 +166,8 @@ export namespace Async {
 }
 
 export function createInstance<T>(
-  defaultProps?: AsyncProps<T>
+  defaultOptions?: AsyncProps<T>,
+  displayName?: string
 ): (new () => Async<T>) & {
   Initial<T>(props: { children?: InitialChildren<T>; persist?: boolean }): JSX.Element
   Pending<T>(props: { children?: PendingChildren<T>; initial?: boolean }): JSX.Element
@@ -186,17 +188,7 @@ export function IfPending<T>(props: {
   initial?: boolean
   state: AsyncState<T>
 }): JSX.Element
-export function IfLoading<T>(props: {
-  children?: PendingChildren<T>
-  initial?: boolean
-  state: AsyncState<T>
-}): JSX.Element
 export function IfFulfilled<T>(props: {
-  children?: FulfilledChildren<T>
-  persist?: boolean
-  state: AsyncState<T>
-}): JSX.Element
-export function IfResolved<T>(props: {
   children?: FulfilledChildren<T>
   persist?: boolean
   state: AsyncState<T>
@@ -235,12 +227,18 @@ type AsyncInitialWithout<K extends keyof AsyncInitial<T>, T> =
   | Omit<AsyncFulfilled<T>, K>
   | Omit<AsyncRejected<T>, K>
 
+type OverrideParams = { resource?: RequestInfo } & Partial<RequestInit>
+
 type FetchRun<T> = {
-  run(overrideInit: (init: RequestInit) => RequestInit): void
-  run(overrideInit: Partial<RequestInit>): void
+  run(overrideParams: (params?: OverrideParams) => OverrideParams): void
+  run(overrideParams: OverrideParams): void
   run(ignoredEvent: React.SyntheticEvent): void
   run(ignoredEvent: Event): void
   run(): void
+}
+
+export class FetchError extends Error {
+  response: Response
 }
 
 export default Async

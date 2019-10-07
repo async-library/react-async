@@ -1,7 +1,13 @@
 import { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 
 import globalScope from "./globalScope"
-import { actionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import {
+  neverSettle,
+  actionTypes,
+  init,
+  dispatchMiddleware,
+  reducer as asyncReducer,
+} from "./reducer"
 
 const noop = () => {}
 
@@ -12,7 +18,7 @@ const useAsync = (arg1, arg2) => {
   const isMounted = useRef(true)
   const lastArgs = useRef(undefined)
   const lastOptions = useRef(undefined)
-  const lastPromise = useRef(undefined)
+  const lastPromise = useRef(neverSettle)
   const abortController = useRef({ abort: noop })
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
@@ -141,6 +147,11 @@ const useAsync = (arg1, arg2) => {
 
   useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)
 
+  if (options.suspense && state.isPending && lastPromise.current !== neverSettle) {
+    // Rely on Suspense to handle the loading state
+    throw lastPromise.current
+  }
+
   return useMemo(
     () => ({
       ...state,
@@ -154,33 +165,49 @@ const useAsync = (arg1, arg2) => {
   )
 }
 
+export class FetchError extends Error {
+  constructor(response) {
+    super(`${response.status} ${response.statusText}`)
+    /* istanbul ignore next */
+    if (Object.setPrototypeOf) {
+      // Not available in IE 10, but can be polyfilled
+      Object.setPrototypeOf(this, FetchError.prototype)
+    }
+    this.response = response
+  }
+}
+
 const parseResponse = (accept, json) => res => {
-  if (!res.ok) return Promise.reject(res)
+  if (!res.ok) return Promise.reject(new FetchError(res))
   if (typeof json === "boolean") return json ? res.json() : res
   return accept === "application/json" ? res.json() : res
 }
 
-const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
-  const method = input.method || (init && init.method)
-  const headers = input.headers || (init && init.headers) || {}
+const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
+  const method = resource.method || (init && init.method)
+  const headers = resource.headers || (init && init.headers) || {}
   const accept = headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
-  const doFetch = (input, init) => globalScope.fetch(input, init).then(parseResponse(accept, json))
+  const doFetch = (resource, init) =>
+    globalScope.fetch(resource, init).then(parseResponse(accept, json))
   const isDefer =
     typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method) !== -1
   const fn = isDefer ? "deferFn" : "promiseFn"
-  const identity = JSON.stringify({ input, init, isDefer })
+  const identity = JSON.stringify({ resource, init, isDefer })
   const state = useAsync({
     ...options,
     [fn]: useCallback(
       (arg1, arg2, arg3) => {
-        const [override, signal] = arg3 ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
-        if (typeof override === "object" && "preventDefault" in override) {
-          // Don't spread Events or SyntheticEvents
-          return doFetch(input, { signal, ...init })
+        const [override, signal] = isDefer ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
+        const isEvent = typeof override === "object" && "preventDefault" in override
+        if (!override || isEvent) {
+          return doFetch(resource, { signal, ...init })
         }
-        return typeof override === "function"
-          ? doFetch(input, { signal, ...override(init) })
-          : doFetch(input, { signal, ...init, ...override })
+        if (typeof override === "function") {
+          const { resource: runResource, ...runInit } = override({ resource, signal, ...init })
+          return doFetch(runResource || resource, { signal, ...runInit })
+        }
+        const { resource: runResource, ...runInit } = override
+        return doFetch(runResource || resource, { signal, ...init, ...runInit })
       },
       [identity] // eslint-disable-line react-hooks/exhaustive-deps
     ),
@@ -189,6 +216,7 @@ const useAsyncFetch = (input, init, { defer, json, ...options } = {}) => {
   return state
 }
 
+/* istanbul ignore next */
 const unsupported = () => {
   throw new Error(
     "useAsync requires React v16.8 or up. Upgrade your React version or use the <Async> component instead."
