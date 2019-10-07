@@ -168,6 +168,10 @@ const useAsync = (arg1, arg2) => {
 export class FetchError extends Error {
   constructor(response) {
     super(`${response.status} ${response.statusText}`)
+    if (Object.setPrototypeOf) {
+      // Not available in IE 10, but can be polyfilled
+      Object.setPrototypeOf(this, FetchError.prototype)
+    }
     this.response = response
   }
 }
@@ -177,8 +181,6 @@ const parseResponse = (accept, json) => res => {
   if (typeof json === "boolean") return json ? res.json() : res
   return accept === "application/json" ? res.json() : res
 }
-
-const isResource = value => typeof value === "string" || (typeof value === "object" && value.url)
 
 const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
   const method = resource.method || (init && init.method)
