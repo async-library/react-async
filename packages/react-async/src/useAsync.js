@@ -168,6 +168,11 @@ const useAsync = (arg1, arg2) => {
 export class FetchError extends Error {
   constructor(response) {
     super(`${response.status} ${response.statusText}`)
+    /* istanbul ignore next */
+    if (Object.setPrototypeOf) {
+      // Not available in IE 10, but can be polyfilled
+      Object.setPrototypeOf(this, FetchError.prototype)
+    }
     this.response = response
   }
 }
@@ -177,8 +182,6 @@ const parseResponse = (accept, json) => res => {
   if (typeof json === "boolean") return json ? res.json() : res
   return accept === "application/json" ? res.json() : res
 }
-
-const isResource = value => typeof value === "string" || (typeof value === "object" && value.url)
 
 const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
   const method = resource.method || (init && init.method)
@@ -194,15 +197,17 @@ const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
     ...options,
     [fn]: useCallback(
       (arg1, arg2, arg3) => {
-        const [runArgs, signal] = isDefer ? [arg1, arg3.signal] : [[], arg2.signal]
-        const [runResource, runInit] = isResource(runArgs[0]) ? runArgs : [, runArgs[0]]
-        if (typeof runInit === "object" && "preventDefault" in runInit) {
-          // Don't spread Events or SyntheticEvents
-          return doFetch(runResource || resource, { signal, ...init })
+        const [override, signal] = isDefer ? [arg1[0], arg3.signal] : [undefined, arg2.signal]
+        const isEvent = typeof override === "object" && "preventDefault" in override
+        if (!override || isEvent) {
+          return doFetch(resource, { signal, ...init })
         }
-        return typeof runInit === "function"
-          ? doFetch(runResource || resource, { signal, ...runInit(init) })
-          : doFetch(runResource || resource, { signal, ...init, ...runInit })
+        if (typeof override === "function") {
+          const { resource: runResource, ...runInit } = override({ resource, signal, ...init })
+          return doFetch(runResource || resource, { signal, ...runInit })
+        }
+        const { resource: runResource, ...runInit } = override
+        return doFetch(runResource || resource, { signal, ...init, ...runInit })
       },
       [identity] // eslint-disable-line react-hooks/exhaustive-deps
     ),
@@ -211,6 +216,7 @@ const useAsyncFetch = (resource, init, { defer, json, ...options } = {}) => {
   return state
 }
 
+/* istanbul ignore next */
 const unsupported = () => {
   throw new Error(
     "useAsync requires React v16.8 or up. Upgrade your React version or use the <Async> component instead."

@@ -1,6 +1,27 @@
 import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
 
-export const neverSettle = new Promise(() => {})
+// This exists to make sure we don't hold any references to user-provided functions
+class NeverSettle extends Promise {
+  constructor() {
+    super(() => {}, () => {})
+    /* istanbul ignore next */
+    if (Object.setPrototypeOf) {
+      // Not available in IE 10, but can be polyfilled
+      Object.setPrototypeOf(this, NeverSettle.prototype)
+    }
+  }
+  finally() {
+    return this
+  }
+  catch() {
+    return this
+  }
+  then() {
+    return this
+  }
+}
+
+export const neverSettle = new NeverSettle()
 
 export const actionTypes = {
   start: "start",

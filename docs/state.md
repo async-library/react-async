@@ -108,9 +108,12 @@ The number of times a promise was started.
 
 > `Promise`
 
-A reference to the internal wrapper promise created when starting a new promise \(either automatically or by invoking `run` / `reload`\). It fulfills or rejects along with the provided `promise` / `promiseFn` / `deferFn`. Useful as a chainable alternative to the `onResolve` / `onReject` callbacks.
+A reference to the internal wrapper promise created when starting a new promise \(either automatically or by invoking
+`run` / `reload`\). It fulfills or rejects along with the provided `promise` / `promiseFn` / `deferFn`. Useful as a
+chainable alternative to the `onResolve` / `onReject` callbacks.
 
-Warning! If you chain on `promise`, you MUST provide a rejection handler \(e.g. `.catch(...)`\). Otherwise React will throw an exception and crash if the promise rejects.
+Warning! If you chain on `promise`, you MUST provide a rejection handler \(e.g. `.catch(...)`\). Otherwise React will
+throw an exception and crash if the promise rejects.
 
 ## `run`
 
@@ -120,15 +123,18 @@ Runs the `deferFn`, passing any arguments provided as an array.
 
 When used with `useFetch`, `run` has several overloaded signatures:
 
-> `function(resource: String | Resource, init: Object | (init: Object) => Object): void`
->
-> `function(init: Object | (init: Object) => Object): void`
+> `function(override: OverrideParams | (params: OverrideParams) => OverrideParams): void`
 >
 > `function(event: SyntheticEvent | Event): void`
 >
 > `function(): void`
 
-This way you can run the `fetch` request using the provided `resource` and `init`. `resource` can be omitted. If `init` is an object it will be spread over the default `init` \(`useFetch`'s 2nd argument\). If it's a function it will be invoked with the default `init` and should return a new `init` object. This way you can either extend or override the value of `init`, for example to set request headers.
+Where `type OverrideParams = { resource?: RequestInfo } & Partial<RequestInit>`.
+
+This way you can run the `fetch` request with custom `resource` and `init`. If `override` is an object it will be spread
+over the default `resource` and `init` for `fetch`. If it's a function it will be invoked with the params defined with
+`useFetch`, and should return an `override` object. This way you can either extend or override the value of `resource`
+and `init`, for example to change the URL or set custom request headers.
 
 ## `reload`
 

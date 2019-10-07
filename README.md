@@ -88,11 +88,10 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
 
-> ## Upgrading to v8
+> ## Upgrading to v9
 >
-> Version 8 comes with breaking changes.
+> Version 9 comes with a minor breaking change.
 > See [Upgrading](https://docs.react-async.com/installation#upgrading) for details.
-> A [codemod](https://github.com/async-library/react-async/tree/master/codemods) is available.
 
 # Documentation
 
