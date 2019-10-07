@@ -100,6 +100,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 ## Getting started
 
 - [Installation](https://docs.react-async.com/getting-started/installation)
+- [Upgrading](https://docs.react-async.com/getting-started/upgrading)
 - [Usage](https://docs.react-async.com/getting-started/usage)
 - [DevTools](https://docs.react-async.com/getting-started/devtools)
 

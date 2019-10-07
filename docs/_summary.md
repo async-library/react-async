@@ -5,6 +5,7 @@
 ## Getting started
 
 - [Installation](installation.md)
+- [Upgrading](upgrading.md)
 - [Usage](usage.md)
 - [DevTools](devtools.md)
 
