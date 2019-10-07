@@ -4,14 +4,14 @@
 
 ## Getting started
 
-- [Installation](installation.md)
-- [Upgrading](upgrading.md)
-- [Usage](usage.md)
-- [DevTools](devtools.md)
+- [Installation](getting-started/installation.md)
+- [Upgrading](getting-started/upgrading.md)
+- [Usage](getting-started/usage.md)
+- [DevTools](getting-started/devtools.md)
 
 ## API
 
-- [Interfaces](interfaces.md)
-- [Configuration options](options.md)
-- [State properties](state.md)
-- [Helper components](helpers.md)
+- [Interfaces](api/interfaces.md)
+- [Configuration options](api/options.md)
+- [State properties](api/state.md)
+- [Helper components](api/helpers.md)
