@@ -45,7 +45,7 @@
     "@pika/plugin-build-types": "0.6.1",
     "@pika/plugin-build-web": "0.6.1",
     "@pika/plugin-standard-pkg": "0.6.1",
-    "@storybook/react": "5.2.2",
+    "@storybook/react": "5.2.3",
     "@testing-library/jest-dom": "4.1.0",
     "@testing-library/react": "9.3.0",
     "babel-eslint": "10.0.3",
