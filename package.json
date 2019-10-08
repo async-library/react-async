@@ -35,11 +35,11 @@
     "postbump": "yarn build:packages"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
+    "@babel/core": "7.6.3",
     "@babel/plugin-proposal-object-rest-spread": "7.6.2",
     "@babel/plugin-transform-runtime": "7.6.2",
-    "@babel/preset-env": "7.6.2",
-    "@babel/preset-react": "7.0.0",
+    "@babel/preset-env": "7.6.3",
+    "@babel/preset-react": "7.6.3",
     "@pika/pack": "0.5.0",
     "@pika/plugin-build-node": "0.6.1",
     "@pika/plugin-build-types": "0.6.1",
