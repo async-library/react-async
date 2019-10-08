@@ -112,6 +112,14 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 - [State properties](https://docs.react-async.com/api/state)
 - [Helper components](https://docs.react-async.com/api/helpers)
 
+## Guide
+
+- [Async components](https://docs.react-async.com/guide/async-components)
+- [Separating view and logic](https://docs.react-async.com/guide/separating-view-logic)
+- [Async actions](https://docs.react-async.com/guide/async-actions)
+- [Optimistic updates](https://docs.react-async.com/guide/optimistic-updates)
+- [Server-side rendering](https://docs.react-async.com/guide/server-side-rendering)
+
 # Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
