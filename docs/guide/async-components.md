@@ -13,7 +13,7 @@ good practice.
 ## Creating an async component with `useFetch`
 
 The easiest way to create an async component for data fetching is through the
-[`useFetch` hook](api/interfaces.md#usefetch-hook):
+[`useFetch` hook](../api/interfaces.md#usefetch-hook):
 
 ```jsx
 import React from "react"
@@ -37,12 +37,12 @@ const App = () => {
 
 For most data fetching needs, `useFetch` is sufficient. However, sometimes you may want to take full control, for
 example if you want to combine multiple requests. In this case you can use the
-[`useAsync` hook](api/interfaces.md#useasync-hook).
+[`useAsync` hook](../api/interfaces.md#useasync-hook).
 
-The core concept of `useAsync` (and React Async in general), is the [`promiseFn`](api/options.md#promisefn): a function
-that returns a `Promise`. It's the fundamental concept for modelling asynchronous operations. It enables React Async to
-take control over scheduling, the Promise lifecycle and things like (re)starting an operation on user action or other
-changes. We've deliberately chosen the `Promise` as our primitive, because it's natively supported and has various
+The core concept of `useAsync` (and React Async in general), is the [`promiseFn`](../api/options.md#promisefn): a
+function that returns a `Promise`. It's the fundamental concept for modelling asynchronous operations. It enables React
+Async to take control over scheduling, the Promise lifecycle and things like (re)starting an operation on user action or
+other changes. We've deliberately chosen the `Promise` as our primitive, because it's natively supported and has various
 utility methods like `Promise.all`. That's also why you'll find our terminology closely follows the Promise [states and
 fates].
 

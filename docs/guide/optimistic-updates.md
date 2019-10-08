@@ -5,7 +5,7 @@ might be able to predict the outcome of the operation. If so, you can implement 
 setting the `data` to the predicted value, when starting the async action. Once the action completes, it will update
 `data` to the actual value, probably the same value as predicted.
 
-The following example uses both `promiseFn` and `deferFn` along with [`setData`](api/state.md#setdata) to implement
+The following example uses both `promiseFn` and `deferFn` along with [`setData`](../api/state.md#setdata) to implement
 optimistic updates.
 
 ```jsx

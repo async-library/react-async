@@ -40,8 +40,8 @@ const App = () => {
 ## Cleaning up the JSX
 
 You'll notice the render props pattern is very powerful, but can also lead to code that's hard to read and understand.
-To make your JSX more declarative and less cluttered, you can use the [`<Async>`](api/interfaces.md#async-component)
-component and its [state helpers](api/helpers.md). These take away the need for `if/else` statements and `return`
+To make your JSX more declarative and less cluttered, you can use the [`<Async>`](../api/interfaces.md#async-component)
+component and its [state helpers](../api/helpers.md). These take away the need for `if/else` statements and `return`
 keywords in your JSX.
 
 ```jsx

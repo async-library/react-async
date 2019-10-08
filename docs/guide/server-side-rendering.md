@@ -2,7 +2,7 @@
 
 There's a good chance you're using React with Server-side rendering (SSR), as many applications require this to be
 successful. If you happen to be using Next.js, it's really easy to integrate React Async. The crux is in setting a
-[`initialValue`](api/options.md#initialvalue), which is fetched server-side for initial page loads and passed along
+[`initialValue`](../api/options.md#initialvalue), which is fetched server-side for initial page loads and passed along
 through rehydration.
 
 ```jsx
