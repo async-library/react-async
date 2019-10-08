@@ -74,6 +74,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 
 - Zero dependencies
 - Works with promises, async/await and the Fetch API
+- Now with experimental Suspense support
 - Choose between Render Props, Context-based helper components or the `useAsync` and `useFetch` hooks
 - Debug and develop every part of the loading sequence with the React Async DevTools
 - Provides convenient `isPending`, `startedAt`, `finishedAt`, et al metadata
