@@ -16,7 +16,7 @@ import {
  * createInstance allows you to create instances of Async that are bound to a specific promise.
  * A unique instance also uses its own React context for better nesting capability.
  */
-export const createInstance = (defaultProps = {}, displayName = "Async") => {
+export const createInstance = (defaultOptions = {}, displayName = "Async") => {
   const { Consumer, Provider } = React.createContext()
 
   class Async extends React.Component {
@@ -33,8 +33,8 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
       this.setError = this.setError.bind(this)
 
       const promise = props.promise
-      const promiseFn = props.promiseFn || defaultProps.promiseFn
-      const initialValue = props.initialValue || defaultProps.initialValue
+      const promiseFn = props.promiseFn || defaultOptions.promiseFn
+      const initialValue = props.initialValue || defaultOptions.initialValue
 
       this.mounted = false
       this.counter = 0
@@ -52,12 +52,12 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
         setData: this.setData,
         setError: this.setError,
       }
-      this.debugLabel = props.debugLabel || defaultProps.debugLabel
+      this.debugLabel = props.debugLabel || defaultOptions.debugLabel
       this.preventLoop = loopPreventer()
 
       const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
-      const _reducer = props.reducer || defaultProps.reducer
-      const _dispatcher = props.dispatcher || defaultProps.dispatcher || devToolsDispatcher
+      const _reducer = props.reducer || defaultOptions.reducer
+      const _dispatcher = props.dispatcher || defaultOptions.dispatcher || devToolsDispatcher
       const reducer = _reducer
         ? (state, action) => _reducer(state, action, asyncReducer)
         : asyncReducer
@@ -75,14 +75,14 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     componentDidUpdate(prevProps) {
-      const { watch, watchFn = defaultProps.watchFn, promise, promiseFn } = this.props
+      const { watch, watchFn = defaultOptions.watchFn, promise, promiseFn } = this.props
       if (watch !== prevProps.watch) {
         if (this.counter) this.cancel()
         return this.load()
       }
       if (
         watchFn &&
-        watchFn({ ...defaultProps, ...this.props }, { ...defaultProps, ...prevProps })
+        watchFn({ ...defaultOptions, ...this.props }, { ...defaultOptions, ...prevProps })
       ) {
         if (this.counter) this.cancel()
         return this.load()
@@ -126,13 +126,13 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
 
     load() {
       const promise = this.props.promise
-      const promiseFn = this.props.promiseFn || defaultProps.promiseFn
+      const promiseFn = this.props.promiseFn || defaultOptions.promiseFn
       if (promise) {
         this.start(() => promise)
           .then(this.onResolve(this.counter))
           .catch(this.onReject(this.counter))
       } else if (promiseFn) {
-        const props = { ...defaultProps, ...this.props }
+        const props = { ...defaultOptions, ...this.props }
         this.start(() => promiseFn(props, this.abortController))
           .then(this.onResolve(this.counter))
           .catch(this.onReject(this.counter))
@@ -140,10 +140,10 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     run(...args) {
-      const deferFn = this.props.deferFn || defaultProps.deferFn
+      const deferFn = this.props.deferFn || defaultOptions.deferFn
       if (deferFn) {
         this.args = args
-        const props = { ...defaultProps, ...this.props }
+        const props = { ...defaultOptions, ...this.props }
         return this.start(() => deferFn(args, props, this.abortController)).then(
           this.onResolve(this.counter),
           this.onReject(this.counter)
@@ -152,7 +152,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     }
 
     cancel() {
-      const onCancel = this.props.onCancel || defaultProps.onCancel
+      const onCancel = this.props.onCancel || defaultOptions.onCancel
       onCancel && onCancel()
       this.counter++
       this.abortController.abort()
@@ -162,7 +162,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     onResolve(counter) {
       return data => {
         if (this.counter === counter) {
-          const onResolve = this.props.onResolve || defaultProps.onResolve
+          const onResolve = this.props.onResolve || defaultOptions.onResolve
           this.setData(data, () => onResolve && onResolve(data))
         }
         return data
@@ -172,7 +172,7 @@ export const createInstance = (defaultProps = {}, displayName = "Async") => {
     onReject(counter) {
       return error => {
         if (this.counter === counter) {
-          const onReject = this.props.onReject || defaultProps.onReject
+          const onReject = this.props.onReject || defaultOptions.onReject
           this.setError(error, () => onReject && onReject(error))
         }
         return error

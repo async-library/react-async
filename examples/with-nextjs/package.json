@@ -1,6 +1,6 @@
 {
   "name": "with-nextjs-example",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "isomorphic-fetch": "2.2.1",
-    "next": "9.0.7",
-    "react": "16.10.1",
-    "react-async": "8.0.0",
-    "react-async-devtools": "8.0.0",
-    "react-dom": "16.10.1"
+    "next": "9.0.8",
+    "react": "16.10.2",
+    "react-async": "^9.0.0",
+    "react-async-devtools": "^9.0.0",
+    "react-dom": "16.10.2"
   },
   "devDependencies": {
     "relative-deps": "0.1.2"

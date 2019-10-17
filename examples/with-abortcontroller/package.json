@@ -1,6 +1,6 @@
 {
   "name": "with-abortcontroller-example",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "private": true,
   "homepage": "https://react-async.async-library.now.sh/examples/with-abortcontroller",
   "scripts": {
@@ -14,11 +14,11 @@
     "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {
-    "react": "16.10.1",
-    "react-async": "8.0.0",
-    "react-async-devtools": "8.0.0",
-    "react-dom": "16.10.1",
-    "react-scripts": "3.1.2"
+    "react": "16.10.2",
+    "react-async": "^9.0.0",
+    "react-async-devtools": "^9.0.0",
+    "react-dom": "16.10.2",
+    "react-scripts": "3.2.0"
   },
   "devDependencies": {
     "relative-deps": "0.1.2"

@@ -166,7 +166,7 @@ export namespace Async {
 }
 
 export function createInstance<T>(
-  defaultProps?: AsyncProps<T>,
+  defaultOptions?: AsyncProps<T>,
   displayName?: string
 ): (new () => Async<T>) & {
   Initial<T>(props: { children?: InitialChildren<T>; persist?: boolean }): JSX.Element
@@ -227,11 +227,11 @@ type AsyncInitialWithout<K extends keyof AsyncInitial<T>, T> =
   | Omit<AsyncFulfilled<T>, K>
   | Omit<AsyncRejected<T>, K>
 
+type OverrideParams = { resource?: RequestInfo } & Partial<RequestInit>
+
 type FetchRun<T> = {
-  run(overrideResource: RequestInfo, overrideInit: (init: RequestInit) => RequestInit): void
-  run(overrideResource: RequestInfo, overrideInit: Partial<RequestInit>): void
-  run(overrideInit: (init: RequestInit) => RequestInit): void
-  run(overrideInit: Partial<RequestInit>): void
+  run(overrideParams: (params?: OverrideParams) => OverrideParams): void
+  run(overrideParams: OverrideParams): void
   run(ignoredEvent: React.SyntheticEvent): void
   run(ignoredEvent: Event): void
   run(): void

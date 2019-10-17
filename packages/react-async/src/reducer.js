@@ -1,6 +1,28 @@
 import { getInitialStatus, getIdleStatus, getStatusProps, statusTypes } from "./status"
 
-export const neverSettle = new Promise(() => {})
+// This exists to make sure we don't hold any references to user-provided functions
+// The way NeverSettle extends from Promise is complicated, but can't be done differently because Babel doesn't support
+// extending built-in classes. See https://babeljs.io/docs/en/caveats/#classes
+function NeverSettle() {}
+/* istanbul ignore next */
+if (Object.setPrototypeOf) {
+  Object.setPrototypeOf(NeverSettle, Promise)
+} else {
+  NeverSettle.__proto__ = Promise
+}
+NeverSettle.prototype = Object.assign(Object.create(Promise.prototype), {
+  finally() {
+    return this
+  },
+  catch() {
+    return this
+  },
+  then() {
+    return this
+  },
+})
+
+export const neverSettle = new NeverSettle()
 
 export const actionTypes = {
   start: "start",
