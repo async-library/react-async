@@ -66,7 +66,23 @@ export const createInstance = <T extends {}>(
   defaultProps: AsyncProps<T> = {},
   displayName = "Async"
 ): AsyncConstructor<T> => {
-  const { Consumer, Provider } = React.createContext<AsyncState<T>>(undefined as any)
+  const { Consumer: UnguardedConsumer, Provider } = React.createContext<AsyncState<T> | undefined>(
+    undefined
+  )
+  function Consumer({ children }: { children: (value: AsyncState<T>) => React.ReactNode }) {
+    return (
+      <UnguardedConsumer>
+        {value => {
+          if (!value) {
+            throw new Error(
+              "this component should only be used within an associated <Async> component!"
+            )
+          }
+          return children(value)
+        }}
+      </UnguardedConsumer>
+    )
+  }
 
   type Props = AsyncProps<T>
 
@@ -266,19 +282,19 @@ export const createInstance = <T extends {}>(
   if (propTypes) (Async as React.ComponentClass).propTypes = propTypes.Async
 
   const AsyncInitial: AsyncConstructor<T>["Initial"] = props => (
-    <Consumer>{(st: AsyncState<T>) => <IfInitial {...props} state={st} />}</Consumer>
+    <Consumer>{st => <IfInitial {...props} state={st} />}</Consumer>
   )
   const AsyncPending: AsyncConstructor<T>["Pending"] = props => (
-    <Consumer>{(st: AsyncState<T>) => <IfPending {...props} state={st} />}</Consumer>
+    <Consumer>{st => <IfPending {...props} state={st} />}</Consumer>
   )
   const AsyncFulfilled: AsyncConstructor<T>["Fulfilled"] = props => (
-    <Consumer>{(st: AsyncState<T>) => <IfFulfilled {...props} state={st} />}</Consumer>
+    <Consumer>{st => <IfFulfilled {...props} state={st} />}</Consumer>
   )
   const AsyncRejected: AsyncConstructor<T>["Rejected"] = props => (
-    <Consumer>{(st: AsyncState<T>) => <IfRejected {...props} state={st} />}</Consumer>
+    <Consumer>{st => <IfRejected {...props} state={st} />}</Consumer>
   )
   const AsyncSettled: AsyncConstructor<T>["Settled"] = props => (
-    <Consumer>{(st: AsyncState<T>) => <IfSettled {...props} state={st} />}</Consumer>
+    <Consumer>{st => <IfSettled {...props} state={st} />}</Consumer>
   )
 
   AsyncInitial.displayName = `${displayName}.Initial`
