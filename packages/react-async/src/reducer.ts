@@ -18,6 +18,30 @@ import {
  */
 declare type ImportWorkaround<T> = AbstractState<T>
 
+// This exists to make sure we don't hold any references to user-provided functions
+// The way NeverSettle extends from Promise is complicated, but can't be done differently because Babel doesn't support
+// extending built-in classes. See https://babeljs.io/docs/en/caveats/#classes
+const NeverSettle = (function() {} as unknown) as { new (): Promise<never> }
+/* istanbul ignore next */
+if (Object.setPrototypeOf) {
+  Object.setPrototypeOf(NeverSettle, Promise)
+} else {
+  ;(NeverSettle as any).__proto__ = Promise
+}
+NeverSettle.prototype = Object.assign(Object.create(Promise.prototype), {
+  finally() {
+    return this
+  },
+  catch() {
+    return this
+  },
+  then() {
+    return this
+  },
+})
+
+export const neverSettle = new NeverSettle()
+
 export enum ActionTypes {
   start = "start",
   cancel = "cancel",
@@ -43,7 +67,7 @@ export const init = <T>({
     finishedAt: initialValue ? new Date() : undefined,
     ...getStatusProps(getInitialStatus(initialValue, promise || promiseFn)),
     counter: 0,
-    promise: undefined,
+    promise: neverSettle,
   } as ReducerAsyncState<T>)
 
 export const reducer = <T>(state: ReducerAsyncState<T>, action: AsyncAction<T>) => {

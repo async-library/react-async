@@ -1,6 +1,6 @@
 {
   "name": "with-react-native-example",
-  "version": "8.0.0",
+  "version": "9.0.0",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -15,16 +15,16 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "^34.0.4",
-    "react": "16.9.0",
-    "react-async": "^8.0.0",
-    "react-dom": "^16.9.0",
+    "expo": "35.0.0",
+    "react": "16.10.2",
+    "react-async": "^9.0.0",
+    "react-dom": "16.10.2",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
-    "react-native-web": "^0.11.6"
+    "react-native-web": "0.11.7"
   },
   "devDependencies": {
-    "babel-preset-expo": "^5.1.1",
-    "relative-deps": "^0.1.2"
+    "babel-preset-expo": "7.0.0",
+    "relative-deps": "0.1.2"
   },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg"

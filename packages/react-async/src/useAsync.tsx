@@ -1,7 +1,13 @@
 import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 
 import globalScope, { MockAbortController, noop } from "./globalScope"
-import { ActionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import {
+  neverSettle,
+  ActionTypes,
+  init,
+  dispatchMiddleware,
+  reducer as asyncReducer,
+} from "./reducer"
 
 import {
   AsyncOptions,
@@ -51,7 +57,7 @@ function useAsync<T extends {}>(
   const isMounted = useRef(true)
   const lastArgs = useRef<any[] | undefined>(undefined)
   const lastOptions = useRef<AsyncOptions<T>>(options)
-  const lastPromise = useRef<Promise<T> | undefined>(undefined)
+  const lastPromise = useRef<Promise<T>>(neverSettle)
   const abortController = useRef<AbortController>(new MockAbortController())
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
@@ -210,6 +216,11 @@ function useAsync<T extends {}>(
 
   useDebugValue(state, ({ status }) => `[${counter.current}] ${status}`)
 
+  if (options.suspense && state.isPending && lastPromise.current !== neverSettle) {
+    // Rely on Suspense to handle the loading state
+    throw lastPromise.current
+  }
+
   return useMemo(
     () =>
       ({
@@ -225,10 +236,13 @@ function useAsync<T extends {}>(
 }
 
 export class FetchError extends Error {
-  public response: Response
-  constructor(response: Response) {
+  constructor(public response: Response) {
     super(`${response.status} ${response.statusText}`)
-    this.response = response
+    /* istanbul ignore next */
+    if (Object.setPrototypeOf) {
+      // Not available in IE 10, but can be polyfilled
+      Object.setPrototypeOf(this, FetchError.prototype)
+    }
   }
 }
 

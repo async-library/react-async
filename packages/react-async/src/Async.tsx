@@ -3,7 +3,13 @@ import React from "react"
 import globalScope, { MockAbortController } from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
 import propTypes from "./propTypes"
-import { ActionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
+import {
+  neverSettle,
+  ActionTypes,
+  init,
+  dispatchMiddleware,
+  reducer as asyncReducer,
+} from "./reducer"
 import {
   AsyncProps,
   AsyncState,
@@ -63,7 +69,7 @@ type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
  * A unique instance also uses its own React context for better nesting capability.
  */
 export const createInstance = <T extends {}>(
-  defaultProps: AsyncProps<T> = {},
+  defaultOptions: AsyncProps<T> = {},
   displayName = "Async"
 ): AsyncConstructor<T> => {
   const { Consumer: UnguardedConsumer, Provider } = React.createContext<AsyncState<T> | undefined>(
@@ -92,7 +98,7 @@ export const createInstance = <T extends {}>(
     private mounted = false
     private counter = 0
     private args: any[] = []
-    private promise?: Promise<T> = undefined
+    private promise?: Promise<T> = neverSettle
     private abortController: AbortController = new MockAbortController()
     private debugLabel?: string
     private dispatch: (action: AsyncAction<T>, ...args: any[]) => void
@@ -110,8 +116,8 @@ export const createInstance = <T extends {}>(
       this.setError = this.setError.bind(this)
 
       const promise = props.promise
-      const promiseFn = props.promiseFn || defaultProps.promiseFConstructorn
-      const initialValue = props.initialValue || defaultProps.initialValue
+      const promiseFn = props.promiseFn || defaultOptions.promiseFConstructorn
+      const initialValue = props.initialValue || defaultOptions.initialValue
 
       this.state = {
         ...init<T>({ initialValue, promise, promiseFn }),
@@ -124,11 +130,11 @@ export const createInstance = <T extends {}>(
         setData: this.setData,
         setError: this.setError,
       }
-      this.debugLabel = props.debugLabel || defaultProps.debugLabel
+      this.debugLabel = props.debugLabel || defaultOptions.debugLabel
 
       const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
-      const _reducer = props.reducer || defaultProps.reducer
-      const _dispatcher = props.dispatcher || defaultProps.dispatcher || devToolsDispatcher
+      const _reducer = props.reducer || defaultOptions.reducer
+      const _dispatcher = props.dispatcher || defaultOptions.dispatcher || devToolsDispatcher
       const reducer: (
         state: ReducerAsyncState<T>,
         action: AsyncAction<T>
@@ -149,14 +155,14 @@ export const createInstance = <T extends {}>(
     }
 
     componentDidUpdate(prevProps: Props) {
-      const { watch, watchFn = defaultProps.watchFn, promise, promiseFn } = this.props
+      const { watch, watchFn = defaultOptions.watchFn, promise, promiseFn } = this.props
       if (watch !== prevProps.watch) {
         if (this.counter) this.cancel()
         return this.load()
       }
       if (
         watchFn &&
-        watchFn({ ...defaultProps, ...this.props }, { ...defaultProps, ...prevProps })
+        watchFn({ ...defaultOptions, ...this.props }, { ...defaultOptions, ...prevProps })
       ) {
         if (this.counter) this.cancel()
         return this.load()
@@ -200,13 +206,13 @@ export const createInstance = <T extends {}>(
 
     load() {
       const promise = this.props.promise
-      const promiseFn = this.props.promiseFn || defaultProps.promiseFn
+      const promiseFn = this.props.promiseFn || defaultOptions.promiseFn
       if (promise) {
         this.start(() => promise)
           .then(this.onResolve(this.counter))
           .catch(this.onReject(this.counter))
       } else if (promiseFn) {
-        const props = { ...defaultProps, ...this.props }
+        const props = { ...defaultOptions, ...this.props }
         this.start(() => promiseFn(props, this.abortController))
           .then(this.onResolve(this.counter))
           .catch(this.onReject(this.counter))
@@ -214,10 +220,10 @@ export const createInstance = <T extends {}>(
     }
 
     run(...args: any[]) {
-      const deferFn = this.props.deferFn || defaultProps.deferFn
+      const deferFn = this.props.deferFn || defaultOptions.deferFn
       if (deferFn) {
         this.args = args
-        const props = { ...defaultProps, ...this.props }
+        const props = { ...defaultOptions, ...this.props }
         return this.start(() => deferFn(args, props, this.abortController)).then(
           this.onResolve(this.counter),
           this.onReject(this.counter)
@@ -226,7 +232,7 @@ export const createInstance = <T extends {}>(
     }
 
     cancel() {
-      const onCancel = this.props.onCancel || defaultProps.onCancel
+      const onCancel = this.props.onCancel || defaultOptions.onCancel
       onCancel && onCancel()
       this.counter++
       this.abortController.abort()
@@ -236,7 +242,7 @@ export const createInstance = <T extends {}>(
     onResolve(counter: Number) {
       return (data: T) => {
         if (this.counter === counter) {
-          const onResolve = this.props.onResolve || defaultProps.onResolve
+          const onResolve = this.props.onResolve || defaultOptions.onResolve
           this.setData(data, () => onResolve && onResolve(data))
         }
         return data
@@ -246,7 +252,7 @@ export const createInstance = <T extends {}>(
     onReject(counter: Number) {
       return (error: Error) => {
         if (this.counter === counter) {
-          const onReject = this.props.onReject || defaultProps.onReject
+          const onReject = this.props.onReject || defaultOptions.onReject
           this.setError(error, () => onReject && onReject(error))
         }
         return error
@@ -269,7 +275,11 @@ export const createInstance = <T extends {}>(
     }
 
     render() {
-      const { children } = this.props
+      const { children, suspense } = this.props
+      if (suspense && this.state.isPending && this.promise !== neverSettle) {
+        // Rely on Suspense to handle the loading state
+        throw this.promise
+      }
       if (typeof children === "function") {
         const render = children as (state: State) => React.ReactNode
         return <Provider value={this.state}>{render(this.state)}</Provider>

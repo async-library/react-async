@@ -62,7 +62,7 @@ export interface AsyncProps<T> extends AsyncOptions<T> {
 export interface AbstractState<T> {
   initialValue?: T | Error
   counter: number
-  promise: Promise<T> | undefined
+  promise: Promise<T>
   run: (...args: any[]) => void
   reload: () => void
   cancel: () => void
