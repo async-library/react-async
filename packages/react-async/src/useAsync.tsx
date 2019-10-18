@@ -254,29 +254,42 @@ const parseResponse = (accept: undefined | string, json: undefined | boolean) =>
   return accept === "application/json" ? res.json() : res
 }
 
+type OverrideParams = { resource?: RequestInfo } & Partial<RequestInit>
+
 interface FetchRun<T> extends Omit<AbstractState<T>, "run"> {
-  run(overrideInit: (init: RequestInit) => RequestInit): void
-  run(overrideInit: Partial<RequestInit>): void
+  run(overrideParams: (params?: OverrideParams) => OverrideParams): void
+  run(overrideParams: OverrideParams): void
   run(ignoredEvent: React.SyntheticEvent): void
   run(ignoredEvent: Event): void
   run(): void
 }
 
+type FetchRunArgs =
+  | [(params?: OverrideParams) => OverrideParams]
+  | [OverrideParams]
+  | [React.SyntheticEvent]
+  | [Event]
+  | []
+
+function isEvent(e: FetchRunArgs[0]): e is Event | React.SyntheticEvent {
+  return typeof e === "object" && "preventDefault" in e
+}
+
 /**
  *
- * @param {RequestInfo} input
+ * @param {RequestInfo} resource
  * @param {RequestInit} init
  * @param {FetchOptions} options
  * @returns {AsyncState<T, FetchRun<T>>}
  */
 const useAsyncFetch = <T extends {}>(
-  input: RequestInfo,
+  resource: RequestInfo,
   init: RequestInit,
   { defer, json, ...options }: FetchOptions<T> = {}
 ): AsyncState<T, FetchRun<T>> => {
-  const method = (input as Request).method || (init && init.method)
+  const method = (resource as Request).method || (init && init.method)
   const headers: Headers & Record<string, any> =
-    (input as Request).headers || (init && init.headers) || {}
+    (resource as Request).headers || (init && init.headers) || {}
   const accept: string | undefined =
     headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input: RequestInfo, init: RequestInit) =>
@@ -285,38 +298,27 @@ const useAsyncFetch = <T extends {}>(
     typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method!) !== -1
   const fn = isDefer ? "deferFn" : "promiseFn"
   const identity = JSON.stringify({
-    input,
+    resource,
     init,
     isDefer,
   })
   const promiseFn = useCallback(
     (_: AsyncOptions<T>, { signal }: AbortController) => {
-      return doFetch(input, {
-        signal,
-        ...init,
-      })
+      return doFetch(resource, { signal, ...init })
     },
     [identity] // eslint-disable-line react-hooks/exhaustive-deps
   )
   const deferFn = useCallback(
-    ([override]: any[], _: AsyncOptions<T>, { signal }: AbortController) => {
-      if (typeof override === "object" && "preventDefault" in override) {
-        // Don't spread Events or SyntheticEvents
-        return doFetch(input, {
-          signal,
-          ...init,
-        })
+    function([override]: FetchRunArgs, _: AsyncOptions<T>, { signal }: AbortController) {
+      if (!override || isEvent(override)) {
+        return doFetch(resource, { signal, ...init })
       }
-      return typeof override === "function"
-        ? doFetch(input, {
-            signal,
-            ...override(init),
-          })
-        : doFetch(input, {
-            signal,
-            ...init,
-            ...override,
-          })
+      if (typeof override === "function") {
+        const { resource: runResource, ...runInit } = override({ resource, signal, ...init })
+        return doFetch(runResource || resource, { signal, ...runInit })
+      }
+      const { resource: runResource, ...runInit } = override
+      return doFetch(runResource || resource, { signal, ...init, ...runInit })
     },
     [identity] // eslint-disable-line react-hooks/exhaustive-deps
   )
