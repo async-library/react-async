@@ -1,6 +1,6 @@
 import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
 
-import globalScope from "./globalScope"
+import globalScope, { MockAbortController, noop } from "./globalScope"
 import { ActionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
 
 import {
@@ -30,12 +30,6 @@ declare type ImportWorkaround<T> =
 export interface FetchOptions<T> extends AsyncOptions<T> {
   defer?: boolean
   json?: boolean
-}
-
-const noop = () => {}
-class MockAbortController implements AbortController {
-  public abort = noop
-  readonly signal = {} as AbortSignal
 }
 
 function useAsync<T extends {}>(options: AsyncOptions<T>): AsyncState<T>

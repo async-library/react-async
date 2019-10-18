@@ -22,4 +22,10 @@ const globalScope = (() => {
  */
 globalScope.__REACT_ASYNC__ = globalScope.__REACT_ASYNC__ || {}
 
+export const noop = () => {}
+export class MockAbortController implements AbortController {
+  public abort = noop
+  readonly signal = {} as AbortSignal
+}
+
 export default globalScope

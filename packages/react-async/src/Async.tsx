@@ -1,6 +1,6 @@
 import React from "react"
 
-import globalScope from "./globalScope"
+import globalScope, { MockAbortController } from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
 import propTypes from "./propTypes"
 import { ActionTypes, init, dispatchMiddleware, reducer as asyncReducer } from "./reducer"
@@ -93,7 +93,7 @@ export const createInstance = <T extends {}>(
     private counter = 0
     private args: any[] = []
     private promise?: Promise<T> = undefined
-    private abortController: AbortController = { abort: () => {} } as any
+    private abortController: AbortController = new MockAbortController()
     private debugLabel?: string
     private dispatch: (action: AsyncAction<T>, ...args: any[]) => void
 
