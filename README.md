@@ -120,6 +120,14 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 - [Optimistic updates](https://docs.react-async.com/guide/optimistic-updates)
 - [Server-side rendering](https://docs.react-async.com/guide/server-side-rendering)
 
+## Contributing
+
+- [Introduction](https://docs.react-async.com/contributing/introduction)
+- [Setting up](https://docs.react-async.com/contributing/setting-up)
+- [Development](https://docs.react-async.com/contributing/development)
+- [Testing](https://docs.react-async.com/contributing/testing)
+- [Releasing](https://docs.react-async.com/contributing/releasing)
+
 # Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
