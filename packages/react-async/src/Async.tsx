@@ -85,8 +85,10 @@ export const createInstance = <T extends {}>(
   }
 
   type Props = AsyncProps<T>
+  type State = AsyncState<T>
+  type Constructor = AsyncConstructor<T>
 
-  class Async extends React.Component<Props, AsyncState<T>> {
+  class Async extends React.Component<Props, State> {
     private mounted = false
     private counter = 0
     private args: any[] = []
@@ -108,7 +110,7 @@ export const createInstance = <T extends {}>(
       this.setError = this.setError.bind(this)
 
       const promise = props.promise
-      const promiseFn = props.promiseFn || defaultProps.promiseFn
+      const promiseFn = props.promiseFn || defaultProps.promiseFConstructorn
       const initialValue = props.initialValue || defaultProps.initialValue
 
       this.state = {
@@ -269,7 +271,7 @@ export const createInstance = <T extends {}>(
     render() {
       const { children } = this.props
       if (typeof children === "function") {
-        const render = children as (state: AsyncState<T>) => React.ReactNode
+        const render = children as (state: State) => React.ReactNode
         return <Provider value={this.state}>{render(this.state)}</Provider>
       }
       if (children !== undefined && children !== null) {
@@ -281,19 +283,19 @@ export const createInstance = <T extends {}>(
 
   if (propTypes) (Async as React.ComponentClass).propTypes = propTypes.Async
 
-  const AsyncInitial: AsyncConstructor<T>["Initial"] = props => (
+  const AsyncInitial: Constructor["Initial"] = props => (
     <Consumer>{st => <IfInitial {...props} state={st} />}</Consumer>
   )
-  const AsyncPending: AsyncConstructor<T>["Pending"] = props => (
+  const AsyncPending: Constructor["Pending"] = props => (
     <Consumer>{st => <IfPending {...props} state={st} />}</Consumer>
   )
-  const AsyncFulfilled: AsyncConstructor<T>["Fulfilled"] = props => (
+  const AsyncFulfilled: Constructor["Fulfilled"] = props => (
     <Consumer>{st => <IfFulfilled {...props} state={st} />}</Consumer>
   )
-  const AsyncRejected: AsyncConstructor<T>["Rejected"] = props => (
+  const AsyncRejected: Constructor["Rejected"] = props => (
     <Consumer>{st => <IfRejected {...props} state={st} />}</Consumer>
   )
-  const AsyncSettled: AsyncConstructor<T>["Settled"] = props => (
+  const AsyncSettled: Constructor["Settled"] = props => (
     <Consumer>{st => <IfSettled {...props} state={st} />}</Consumer>
   )
 
