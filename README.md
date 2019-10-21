@@ -170,3 +170,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Similar projects
+
+- [@slorber/react-async-hook](https://github.com/slorber/react-async-hook)
+- [@dai-shi/react-hooks-async](https://github.com/dai-shi/react-hooks-async)
+- [@cristovao-trevisan/async-resource](https://github.com/cristovao-trevisan/async-resource)
+- [@ilyalesik/react-fetch-hook](https://github.com/ilyalesik/react-fetch-hook)
+- [@marcin-piela/react-fetching-library](https://github.com/marcin-piela/react-fetching-library)
