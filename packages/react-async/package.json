@@ -41,8 +41,5 @@
         "@pika/plugin-bundle-types"
       ]
     ]
-  },
-  "devDependencies": {
-    "typescript": "^3.6.2"
   }
 }
