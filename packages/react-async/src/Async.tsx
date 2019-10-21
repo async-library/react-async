@@ -116,7 +116,7 @@ export const createInstance = <T extends {}>(
       this.setError = this.setError.bind(this)
 
       const promise = props.promise
-      const promiseFn = props.promiseFn || defaultOptions.promiseFConstructorn
+      const promiseFn = props.promiseFn || defaultOptions.promiseFn
       const initialValue = props.initialValue || defaultOptions.initialValue
 
       this.state = {
