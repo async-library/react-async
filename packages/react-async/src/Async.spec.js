@@ -69,7 +69,7 @@ describe("rendering context consumers without provider should throw an error", (
       expect(() =>
         render(
           <Async>
-            <Component>{() => {}}</Component>
+            <Component>{() => null}</Component>
           </Async>
         )
       ).not.toThrowError()
@@ -79,7 +79,7 @@ describe("rendering context consumers without provider should throw an error", (
       jest.spyOn(console, "error")
       global.console.error.mockImplementation(() => {})
 
-      expect(() => render(<Component>{() => {}}</Component>)).toThrowError()
+      expect(() => render(<Component>{() => null}</Component>)).toThrowError()
 
       // Restore the original console.error so other tests will still print errors that occur.
       global.console.error.mockRestore()
