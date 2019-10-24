@@ -44,7 +44,7 @@
     "@pika/plugin-build-node": "0.6.1",
     "@pika/plugin-build-types": "0.6.1",
     "@pika/plugin-build-web": "0.6.1",
-    "@pika/plugin-standard-pkg": "0.6.1",
+    "@pika/plugin-standard-pkg": "0.7.1",
     "@storybook/react": "5.2.4",
     "@testing-library/jest-dom": "4.1.2",
     "@testing-library/react": "9.3.0",
