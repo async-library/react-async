@@ -54,7 +54,7 @@
     "copyfiles": "2.1.1",
     "eslint": "6.5.1",
     "eslint-config-prettier": "6.4.0",
-    "eslint-plugin-jest": "22.19.0",
+    "eslint-plugin-jest": "22.20.1",
     "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.16.0",
