@@ -11,16 +11,16 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "react": "16.10.2",
+    "react": "16.11.0",
     "react-async": "^9.0.0",
     "react-async-devtools": "^9.0.0",
-    "react-dom": "16.10.2",
+    "react-dom": "16.11.0",
     "react-router-dom": "5.1.2"
   },
   "devDependencies": {
-    "@babel/core": "7.6.2",
-    "@babel/preset-react": "7.0.0",
-    "parcel-bundler": "1.12.3",
+    "@babel/core": "7.6.4",
+    "@babel/preset-react": "7.6.3",
+    "parcel-bundler": "1.12.4",
     "relative-deps": "0.1.2"
   },
   "relativeDependencies": {
