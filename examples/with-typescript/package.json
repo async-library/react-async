@@ -14,18 +14,18 @@
     "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {
-    "@types/node": "12.7.11",
-    "@types/react": "16.9.5",
-    "@types/react-dom": "16.9.1",
-    "react": "16.10.2",
+    "@types/node": "12.11.7",
+    "@types/react": "16.9.11",
+    "@types/react-dom": "16.9.3",
+    "react": "16.11.0",
     "react-async": "^9.0.0",
     "react-async-devtools": "^9.0.0",
-    "react-dom": "16.10.2",
+    "react-dom": "16.11.0",
     "react-scripts": "3.2.0",
-    "typescript": "3.6.3"
+    "typescript": "3.6.4"
   },
   "devDependencies": {
-    "@types/jest": "24.0.18",
+    "@types/jest": "24.0.20",
     "relative-deps": "0.1.2"
   },
   "relativeDependencies": {

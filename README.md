@@ -17,23 +17,10 @@
     <img src="https://badgen.net/npm/dm/react-async" alt="montly downloads">
   </a>
   <a href="https://bundlephobia.com/result?p=react-async">
-    <img src="https://badgen.net/bundlephobia/min/react-async" alt="minified size">
+    <img src="https://badgen.net/bundlephobia/minzip/react-async" alt="minzipped size">
   </a>
   <a href="https://opensource.org/licenses/ISC">
     <img src="https://badgen.net/npm/license/react-async" alt="license">
-  </a>
-  <br/>
-  <a href="https://github.com/async-library/react-async/issues">
-    <img src="https://badgen.net/github/open-issues/async-library/react-async?icon=github" alt="issues">
-  </a>
-  <a href="https://github.com/async-library/react-async/pulls">
-    <img src="https://badgen.net/github/open-prs/async-library/react-async?icon=github" alt="pull requests">
-  </a>
-  <a href="https://github.com/async-library/react-async/releases">
-    <img src="https://badgen.net/github/releases/async-library/react-async?icon=github" alt="releases">
-  </a>
-  <a href="https://github.com/async-library/react-async/graphs/contributors">
-    <img src="https://badgen.net/github/contributors/async-library/react-async?icon=github" alt="contributors">
   </a>
   <br/>
   <a href="https://circleci.com/gh/async-library/react-async">
@@ -51,10 +38,6 @@
   <a href="https://deepscan.io/dashboard#view=project&tid=5549&pid=7406&bid=74183">
     <img src="https://deepscan.io/api/teams/5549/projects/7406/branches/74183/badge/grade.svg" alt="DeepScan grade">
   </a>
-  <br/>
-  <img src="https://badgen.net/david/dep/async-library/react-async/packages/react-async" alt="dependencies">
-  <img src="https://badgen.net/david/dev/async-library/react-async" alt="devDependencies">
-  <img src="https://badgen.net/david/peer/async-library/react-async/packages/react-async" alt="peerDependencies">
   <br/>
   <a href="https://discord.gg/CAYQ6mU">
     <img src="https://img.shields.io/badge/discord-join-7289DA.svg?logo=discord&longCache=true&style=flat" />
@@ -120,6 +103,14 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 - [Optimistic updates](https://docs.react-async.com/guide/optimistic-updates)
 - [Server-side rendering](https://docs.react-async.com/guide/server-side-rendering)
 
+## Contributing
+
+- [Introduction](https://docs.react-async.com/contributing/introduction)
+- [Setting up](https://docs.react-async.com/contributing/setting-up)
+- [Development](https://docs.react-async.com/contributing/development)
+- [Testing](https://docs.react-async.com/contributing/testing)
+- [Releasing](https://docs.react-async.com/contributing/releasing)
+
 # Contributors
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -162,3 +153,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+## Similar projects
+
+- [@slorber/react-async-hook](https://github.com/slorber/react-async-hook)
+- [@dai-shi/react-hooks-async](https://github.com/dai-shi/react-hooks-async)
+- [@cristovao-trevisan/async-resource](https://github.com/cristovao-trevisan/async-resource)
+- [@ilyalesik/react-fetch-hook](https://github.com/ilyalesik/react-fetch-hook)
+- [@marcin-piela/react-fetching-library](https://github.com/marcin-piela/react-fetching-library)
