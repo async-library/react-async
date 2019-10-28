@@ -35,7 +35,17 @@
         "@pika/plugin-build-node"
       ],
       [
-        "@pika/plugin-build-web"
+        "@pika/plugin-build-web",
+        {
+          "entrypoint": [
+            "module",
+            "unpkg",
+            "jsdelivr"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-umd"
       ],
       [
         "@pika/plugin-bundle-types"
