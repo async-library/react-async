@@ -147,6 +147,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://munir.dev"><img src="https://avatars3.githubusercontent.com/u/5339664?v=4" width="75px;" alt="Munir Ahmed Elsangedy"/><br /><sub><b>Munir Ahmed Elsangedy</b></sub></a><br /><a href="#ideas-elsangedy" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/AlixWang"><img src="https://avatars0.githubusercontent.com/u/5417459?v=4" width="75px;" alt="AlixWang"/><br /><sub><b>AlixWang</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=AlixWang" title="Documentation">📖</a></td>
   </tr>
 </table>
 
