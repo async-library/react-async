@@ -97,11 +97,11 @@ const useAsync = (arg1, arg2) => {
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     } else if (promiseFn && !isPreInitialized) {
-      start(() => promiseFn(options, abortController.current))
+      start(() => promiseFn(lastOptions.current, abortController.current))
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     }
-  }, [initialValue, promise, promiseFn, start, handleResolve, handleReject, options])
+  }, [start, promise, promiseFn, initialValue, handleResolve, handleReject])
 
   const { deferFn } = options
   const run = useCallback(
@@ -132,7 +132,10 @@ const useAsync = (arg1, arg2) => {
   /* eslint-disable react-hooks/exhaustive-deps */
   const { watch, watchFn } = options
   useEffect(() => {
-    if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) load()
+    if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) {
+      lastOptions.current = options
+      load()
+    }
   })
   useEffect(() => {
     lastOptions.current = options
