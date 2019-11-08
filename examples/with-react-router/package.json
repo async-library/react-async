@@ -18,10 +18,10 @@
     "react-router-dom": "5.1.2"
   },
   "devDependencies": {
-    "@babel/core": "7.6.4",
-    "@babel/preset-react": "7.6.3",
+    "@babel/core": "7.7.2",
+    "@babel/preset-react": "7.7.0",
     "parcel-bundler": "1.12.4",
-    "relative-deps": "0.1.2"
+    "relative-deps": "0.2.0"
   },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg",

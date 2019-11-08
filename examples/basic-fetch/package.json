@@ -21,7 +21,7 @@
     "react-scripts": "3.2.0"
   },
   "devDependencies": {
-    "relative-deps": "0.1.2"
+    "relative-deps": "0.2.0"
   },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg",
