@@ -15,7 +15,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "35.0.0",
+    "expo": "35.0.1",
     "react": "16.11.0",
     "react-async": "^9.0.0",
     "react-dom": "16.11.0",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "babel-preset-expo": "7.1.0",
-    "relative-deps": "0.1.2"
+    "relative-deps": "0.2.0"
   },
   "relativeDependencies": {
     "react-async": "../../packages/react-async/pkg"
