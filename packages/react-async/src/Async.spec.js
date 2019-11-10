@@ -38,6 +38,7 @@ describe("Async", () => {
         <Async.Initial>
           {value => {
             one = value
+            return null
           }}
         </Async.Initial>
       </Async>
@@ -47,12 +48,43 @@ describe("Async", () => {
         <Async.Initial>
           {value => {
             two = value
+            return null
           }}
         </Async.Initial>
       </Async>
     )
     expect(one).toBe(two)
   })
+})
+
+describe("rendering context consumers without provider should throw an error", () => {
+  for (const Component of [
+    Async.Initial,
+    Async.Pending,
+    Async.Fulfilled,
+    Async.Rejected,
+    Async.Settled,
+  ]) {
+    test("does not throw an error when rendered within <Async>", () => {
+      expect(() =>
+        render(
+          <Async>
+            <Component>{() => null}</Component>
+          </Async>
+        )
+      ).not.toThrowError()
+    })
+    test("does throw an error when not rendered within <Async>", () => {
+      // Prevent the thrown error from showing up in test output by mocking console.error.
+      jest.spyOn(console, "error")
+      global.console.error.mockImplementation(() => {})
+
+      expect(() => render(<Component>{() => null}</Component>)).toThrowError()
+
+      // Restore the original console.error so other tests will still print errors that occur.
+      global.console.error.mockRestore()
+    })
+  }
 })
 
 describe("Async.Fulfilled", () => {

@@ -1,25 +1,109 @@
 import React from "react"
 
-import globalScope from "./globalScope"
+import globalScope, { MockAbortController } from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
 import propTypes from "./propTypes"
 import {
   neverSettle,
-  actionTypes,
+  ActionTypes,
   init,
   dispatchMiddleware,
   reducer as asyncReducer,
 } from "./reducer"
+import {
+  AsyncProps,
+  AsyncState,
+  InitialChildren,
+  PendingChildren,
+  FulfilledChildren,
+  SettledChildren,
+  RejectedChildren,
+  AsyncAction,
+  ReducerAsyncState,
+} from "./types"
+
+interface InitialProps<T> {
+  children?: InitialChildren<T>
+  persist?: boolean
+}
+interface PendingProps<T> {
+  children?: PendingChildren<T>
+  initial?: boolean
+}
+interface FulfilledProps<T> {
+  children?: FulfilledChildren<T>
+  persist?: boolean
+}
+interface RejectedProps<T> {
+  children?: RejectedChildren<T>
+  persist?: boolean
+}
+interface SettledProps<T> {
+  children?: SettledChildren<T>
+  persist?: boolean
+}
+
+class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+type GenericAsync = typeof Async & {
+  Initial<T>(props: InitialProps<T>): JSX.Element
+  Pending<T>(props: PendingProps<T>): JSX.Element
+  Loading<T>(props: PendingProps<T>): JSX.Element
+  Fulfilled<T>(props: FulfilledProps<T>): JSX.Element
+  Resolved<T>(props: FulfilledProps<T>): JSX.Element
+  Rejected<T>(props: RejectedProps<T>): JSX.Element
+  Settled<T>(props: SettledProps<T>): JSX.Element
+}
+
+type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
+  Initial: React.FC<InitialProps<T>>
+  Pending: React.FC<PendingProps<T>>
+  Loading: React.FC<PendingProps<T>>
+  Fulfilled: React.FC<FulfilledProps<T>>
+  Resolved: React.FC<FulfilledProps<T>>
+  Rejected: React.FC<RejectedProps<T>>
+  Settled: React.FC<SettledProps<T>>
+}
 
 /**
  * createInstance allows you to create instances of Async that are bound to a specific promise.
  * A unique instance also uses its own React context for better nesting capability.
  */
-export const createInstance = (defaultOptions = {}, displayName = "Async") => {
-  const { Consumer, Provider } = React.createContext()
+export const createInstance = <T extends {}>(
+  defaultOptions: AsyncProps<T> = {},
+  displayName = "Async"
+): AsyncConstructor<T> => {
+  const { Consumer: UnguardedConsumer, Provider } = React.createContext<AsyncState<T> | undefined>(
+    undefined
+  )
+  function Consumer({ children }: { children: (value: AsyncState<T>) => React.ReactNode }) {
+    return (
+      <UnguardedConsumer>
+        {value => {
+          if (!value) {
+            throw new Error(
+              "this component should only be used within an associated <Async> component!"
+            )
+          }
+          return children(value)
+        }}
+      </UnguardedConsumer>
+    )
+  }
 
-  class Async extends React.Component {
-    constructor(props) {
+  type Props = AsyncProps<T>
+  type State = AsyncState<T>
+  type Constructor = AsyncConstructor<T>
+
+  class Async extends React.Component<Props, State> {
+    private mounted = false
+    private counter = 0
+    private args: any[] = []
+    private promise?: Promise<T> = neverSettle
+    private abortController: AbortController = new MockAbortController()
+    private debugLabel?: string
+    private dispatch: (action: AsyncAction<T>, ...args: any[]) => void
+
+    constructor(props: Props) {
       super(props)
 
       this.start = this.start.bind(this)
@@ -35,13 +119,8 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       const promiseFn = props.promiseFn || defaultOptions.promiseFn
       const initialValue = props.initialValue || defaultOptions.initialValue
 
-      this.mounted = false
-      this.counter = 0
-      this.args = []
-      this.promise = neverSettle
-      this.abortController = { abort: () => {} }
       this.state = {
-        ...init({ initialValue, promise, promiseFn }),
+        ...init<T>({ initialValue, promise, promiseFn }),
         cancel: this.cancel,
         run: this.run,
         reload: () => {
@@ -56,10 +135,13 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
       const _reducer = props.reducer || defaultOptions.reducer
       const _dispatcher = props.dispatcher || defaultOptions.dispatcher || devToolsDispatcher
-      const reducer = _reducer
+      const reducer: (
+        state: ReducerAsyncState<T>,
+        action: AsyncAction<T>
+      ) => ReducerAsyncState<T> = _reducer
         ? (state, action) => _reducer(state, action, asyncReducer)
         : asyncReducer
-      const dispatch = dispatchMiddleware((action, callback) => {
+      const dispatch = dispatchMiddleware<T>((action, callback) => {
         this.setState(state => reducer(state, action), callback)
       })
       this.dispatch = _dispatcher ? action => _dispatcher(action, dispatch, props) : dispatch
@@ -72,7 +154,7 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       }
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: Props) {
       const { watch, watchFn = defaultOptions.watchFn, promise, promiseFn } = this.props
       if (watch !== prevProps.watch) {
         if (this.counter) this.cancel()
@@ -100,7 +182,7 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       this.mounted = false
     }
 
-    getMeta(meta) {
+    getMeta<M>(meta?: M) {
       return {
         counter: this.counter,
         promise: this.promise,
@@ -109,16 +191,16 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       }
     }
 
-    start(promiseFn) {
+    start(promiseFn: () => Promise<T>) {
       if ("AbortController" in globalScope) {
         this.abortController.abort()
-        this.abortController = new globalScope.AbortController()
+        this.abortController = new globalScope.AbortController!()
       }
       this.counter++
       return (this.promise = new Promise((resolve, reject) => {
         if (!this.mounted) return
         const executor = () => promiseFn().then(resolve, reject)
-        this.dispatch({ type: actionTypes.start, payload: executor, meta: this.getMeta() })
+        this.dispatch({ type: ActionTypes.start, payload: executor, meta: this.getMeta() })
       }))
     }
 
@@ -137,7 +219,7 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       }
     }
 
-    run(...args) {
+    run(...args: any[]) {
       const deferFn = this.props.deferFn || defaultOptions.deferFn
       if (deferFn) {
         this.args = args
@@ -154,11 +236,11 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       onCancel && onCancel()
       this.counter++
       this.abortController.abort()
-      this.mounted && this.dispatch({ type: actionTypes.cancel, meta: this.getMeta() })
+      this.mounted && this.dispatch({ type: ActionTypes.cancel, meta: this.getMeta() })
     }
 
-    onResolve(counter) {
-      return data => {
+    onResolve(counter: Number) {
+      return (data: T) => {
         if (this.counter === counter) {
           const onResolve = this.props.onResolve || defaultOptions.onResolve
           this.setData(data, () => onResolve && onResolve(data))
@@ -167,8 +249,8 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       }
     }
 
-    onReject(counter) {
-      return error => {
+    onReject(counter: Number) {
+      return (error: Error) => {
         if (this.counter === counter) {
           const onReject = this.props.onReject || defaultOptions.onReject
           this.setError(error, () => onReject && onReject(error))
@@ -177,16 +259,16 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
       }
     }
 
-    setData(data, callback) {
+    setData(data: T, callback?: () => void) {
       this.mounted &&
-        this.dispatch({ type: actionTypes.fulfill, payload: data, meta: this.getMeta() }, callback)
+        this.dispatch({ type: ActionTypes.fulfill, payload: data, meta: this.getMeta() }, callback)
       return data
     }
 
-    setError(error, callback) {
+    setError(error: Error, callback?: () => void) {
       this.mounted &&
         this.dispatch(
-          { type: actionTypes.reject, payload: error, error: true, meta: this.getMeta() },
+          { type: ActionTypes.reject, payload: error, error: true, meta: this.getMeta() },
           callback
         )
       return error
@@ -199,7 +281,8 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
         throw this.promise
       }
       if (typeof children === "function") {
-        return <Provider value={this.state}>{children(this.state)}</Provider>
+        const render = children as (state: State) => React.ReactNode
+        return <Provider value={this.state}>{render(this.state)}</Provider>
       }
       if (children !== undefined && children !== null) {
         return <Provider value={this.state}>{children}</Provider>
@@ -208,13 +291,23 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
     }
   }
 
-  if (propTypes) Async.propTypes = propTypes.Async
+  if (propTypes) (Async as React.ComponentClass).propTypes = propTypes.Async
 
-  const AsyncInitial = props => <Consumer>{st => <IfInitial {...props} state={st} />}</Consumer>
-  const AsyncPending = props => <Consumer>{st => <IfPending {...props} state={st} />}</Consumer>
-  const AsyncFulfilled = props => <Consumer>{st => <IfFulfilled {...props} state={st} />}</Consumer>
-  const AsyncRejected = props => <Consumer>{st => <IfRejected {...props} state={st} />}</Consumer>
-  const AsyncSettled = props => <Consumer>{st => <IfSettled {...props} state={st} />}</Consumer>
+  const AsyncInitial: Constructor["Initial"] = props => (
+    <Consumer>{st => <IfInitial {...props} state={st} />}</Consumer>
+  )
+  const AsyncPending: Constructor["Pending"] = props => (
+    <Consumer>{st => <IfPending {...props} state={st} />}</Consumer>
+  )
+  const AsyncFulfilled: Constructor["Fulfilled"] = props => (
+    <Consumer>{st => <IfFulfilled {...props} state={st} />}</Consumer>
+  )
+  const AsyncRejected: Constructor["Rejected"] = props => (
+    <Consumer>{st => <IfRejected {...props} state={st} />}</Consumer>
+  )
+  const AsyncSettled: Constructor["Settled"] = props => (
+    <Consumer>{st => <IfSettled {...props} state={st} />}</Consumer>
+  )
 
   AsyncInitial.displayName = `${displayName}.Initial`
   AsyncPending.displayName = `${displayName}.Pending`
@@ -222,16 +315,16 @@ export const createInstance = (defaultOptions = {}, displayName = "Async") => {
   AsyncRejected.displayName = `${displayName}.Rejected`
   AsyncSettled.displayName = `${displayName}.Settled`
 
-  Async.displayName = displayName
-  Async.Initial = AsyncInitial
-  Async.Pending = AsyncPending
-  Async.Loading = AsyncPending // alias
-  Async.Fulfilled = AsyncFulfilled
-  Async.Resolved = AsyncFulfilled // alias
-  Async.Rejected = AsyncRejected
-  Async.Settled = AsyncSettled
-
-  return Async
+  return Object.assign(Async, {
+    displayName: displayName,
+    Initial: AsyncInitial,
+    Pending: AsyncPending,
+    Loading: AsyncPending, // alias
+    Fulfilled: AsyncFulfilled,
+    Resolved: AsyncFulfilled, // alias
+    Rejected: AsyncRejected,
+    Settled: AsyncSettled,
+  })
 }
 
-export default createInstance()
+export default createInstance() as GenericAsync
