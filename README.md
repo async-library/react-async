@@ -67,7 +67,7 @@ Use it with `fetch`, Axios or other data fetching libraries, even GraphQL.
 - Supports [abortable fetch] by providing an AbortController
 - Supports optimistic updates using `setData`
 - Supports server-side rendering through `initialValue`
-- Comes with type definitions for TypeScript
+- Written in TypeScript, ships with type definitions
 - Works well in React Native too!
 
 [abortable fetch]: https://developers.google.com/web/updates/2017/09/abortable-fetch
