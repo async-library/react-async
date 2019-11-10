@@ -29,6 +29,11 @@
       "config": { "distDir": "build" }
     },
     {
+      "src": "examples/with-graphql/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    },
+    {
       "src": "examples/with-typescript/package.json",
       "use": "@now/static-build",
       "config": { "distDir": "build" }
