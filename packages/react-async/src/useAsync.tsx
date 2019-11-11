@@ -196,7 +196,10 @@ function useAsync<T extends {}>(
   /* eslint-disable react-hooks/exhaustive-deps */
   const { watch, watchFn } = options
   useEffect(() => {
-    if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) load()
+    if (watchFn && lastOptions.current && watchFn(options, lastOptions.current)) {
+      lastOptions.current = options
+      load()
+    }
   })
   useEffect(() => {
     lastOptions.current = options
