@@ -6,6 +6,10 @@ jobs:
   build:
     name: Build on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [10]
     steps:
       - uses: actions/setup-node@v1
         with:
