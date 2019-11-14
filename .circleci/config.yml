@@ -35,7 +35,6 @@ jobs:
           root: .
           paths:
             - node_modules
-            - examples
             - packages
   lint:
     <<: *defaults
@@ -64,28 +63,6 @@ jobs:
       - attach_workspace:
           at: .
       - run: bash <(curl -s https://codecov.io/bash)
-  examples:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Bootstrap
-          command: yarn bootstrap
-      - run:
-          name: Build examples
-          command: yarn build:examples
-      - run:
-          name: Test examples
-          command: yarn test:examples --maxWorkers=2
-      - run:
-          name: Deploy examples
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              yarn deploy:examples
-            fi
-          no_output_timeout: 30m
   chromatic:
     <<: *defaults
     steps:
@@ -108,9 +85,6 @@ workflows:
       - coverage:
           requires:
             - test
-      - examples:
-          requires:
-            - build
       - chromatic:
           requires:
             - build
