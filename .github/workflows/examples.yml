@@ -16,6 +16,7 @@ jobs:
           node-version: "10.x"
       - uses: actions/checkout@v1
       - name: Cache node modules
+        id: cache-modules
         uses: actions/cache@v1
         with:
           path: node_modules
@@ -24,6 +25,9 @@ jobs:
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-
             ${{ runner.OS }}-
+      - name: Install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn install
       - name: Bootstrap
         run: yarn bootstrap
       - name: Build examples
