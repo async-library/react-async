@@ -1,19 +1,17 @@
 import React from "react"
 
-export type AsyncChildren<T> = (state: AsyncState<T>) => React.ReactNode | React.ReactNode
-export type InitialChildren<T> = (state: AsyncInitial<T>) => React.ReactNode | React.ReactNode
-export type PendingChildren<T> = (state: AsyncPending<T>) => React.ReactNode | React.ReactNode
-export type FulfilledChildren<T> = (
-  data: T,
-  state: AsyncFulfilled<T>
-) => React.ReactNode | React.ReactNode
-export type RejectedChildren<T> = (
-  error: Error,
-  state: AsyncRejected<T>
-) => React.ReactNode | React.ReactNode
-export type SettledChildren<T> = (
-  state: AsyncFulfilled<T> | AsyncRejected<T>
-) => React.ReactNode | React.ReactNode
+export type AsyncChildren<T> = ((state: AsyncState<T>) => React.ReactNode) | React.ReactNode
+export type InitialChildren<T> = ((state: AsyncInitial<T>) => React.ReactNode) | React.ReactNode
+export type PendingChildren<T> = ((state: AsyncPending<T>) => React.ReactNode) | React.ReactNode
+export type FulfilledChildren<T> =
+  | ((data: T, state: AsyncFulfilled<T>) => React.ReactNode)
+  | React.ReactNode
+export type RejectedChildren<T> =
+  | ((error: Error, state: AsyncRejected<T>) => React.ReactNode)
+  | React.ReactNode
+export type SettledChildren<T> =
+  | ((state: AsyncFulfilled<T> | AsyncRejected<T>) => React.ReactNode)
+  | React.ReactNode
 
 export type PromiseFn<T> = (props: AsyncProps<T>, controller: AbortController) => Promise<T>
 export type DeferFn<T> = (
