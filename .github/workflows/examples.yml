@@ -1,0 +1,31 @@
+name: Build, test and deploy examples
+
+on: [push]
+
+jobs:
+  build:
+    name: Build on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+      - name: Bootstrap
+        run: yarn bootstrap
+      - name: Build examples
+        run: yarn build:examples
+      - name: Test examples
+        run: yarn test:examples --maxWorkers=2
+      - name: Deploy examples
+        if: github.ref == 'master'
+        run: yarn deploy:examples
