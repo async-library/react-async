@@ -16,6 +16,7 @@ Release management is currently a manual process, to be performed by core team m
 9. Create a new release on GitHub and copy the release notes there.
 
 ```
+yarn build:packages
 cd packages/react-async
 npm publish pkg
 cd ../react-async-devtools
