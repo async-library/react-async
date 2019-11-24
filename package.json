@@ -26,7 +26,7 @@
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "test:examples": "CI=1 lerna run --scope '*-example' test -- --passWithNoTests --watchAll=false",
     "test:chromatic": "chromatic --app-code iiua39bmt0j --build-script-name build:storybook",
-    "resolutions:fix-react": "jq '.resolutions.react = .devDependencies.react|.resolutions.\"react-dom\"=.devDependencies.react' package.json > package.json.new; mv package.json.new package.json; yarn install",
+    "resolutions:fix-react": "jq '.resolutions.react = .devDependencies.react|.resolutions.\"react-dom\"=.devDependencies.react' package.json > package.json.new && mv package.json.new package.json && yarn install",
     "ci": "yarn lint && yarn test:compat && yarn test:examples",
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
