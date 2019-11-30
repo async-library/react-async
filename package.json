@@ -22,7 +22,7 @@
     "test:components": "jest src/Async.spec.js --collectCoverageFrom=src/Async.js",
     "test:examples": "CI=1 lerna run --scope '*-example' test -- --passWithNoTests --watchAll=false",
     "test:chromatic": "chromatic --app-code iiua39bmt0j --build-script-name build:storybook --exit-zero-on-changes",
-    "ci": "yarn lint && yarn test:compat && yarn test:examples",
+    "ci": "yarn lint && yarn test && yarn test:examples",
     "build:packages": "lerna run --scope 'react-async*' build",
     "build:examples": "lerna run --scope '*-example' build",
     "build:storybook": "build-storybook -o storybook",
