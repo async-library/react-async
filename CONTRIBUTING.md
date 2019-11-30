@@ -65,15 +65,7 @@ Use the following command to test all packages in watch mode. Refer to the [Jest
 yarn test:watch
 ```
 
-In general, this is sufficient during development. Travis CI will apply a more rigorous set of tests.
-
-#### Testing for compatibility
-
-```sh
-yarn test:compat
-```
-
-This runs all tests using various versions of `react` and `react-dom`, to check for compatibility with older/newer versions of React. This is what CircleCI and Travis run.
+In general, this is sufficient during development. The CI will apply a more rigorous set of tests.
 
 ### Working with the examples
 
