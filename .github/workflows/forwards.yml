@@ -3,8 +3,8 @@ name: Test compatiblity with react@next
 on: [push]
 
 jobs:
-  build:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+  test_forwards:
+    name: Test forwards on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

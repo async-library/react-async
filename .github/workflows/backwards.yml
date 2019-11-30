@@ -3,8 +3,8 @@ name: Test backwards compatiblity
 on: [push]
 
 jobs:
-  build:
-    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+  test_backwards:
+    name: Test backwards on node ${{ matrix.node_version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
