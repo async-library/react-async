@@ -38,13 +38,10 @@ export interface FetchOptions<T> extends AsyncOptions<T> {
   json?: boolean
 }
 
-function useAsync<T extends {}>(options: AsyncOptions<T>): AsyncState<T>
-function useAsync<T extends {}>(promiseFn: PromiseFn<T>, options?: AsyncOptions<T>): AsyncState<T>
+function useAsync<T>(options: AsyncOptions<T>): AsyncState<T>
+function useAsync<T>(promiseFn: PromiseFn<T>, options?: AsyncOptions<T>): AsyncState<T>
 
-function useAsync<T extends {}>(
-  arg1: AsyncOptions<T> | PromiseFn<T>,
-  arg2?: AsyncOptions<T>
-): AsyncState<T> {
+function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T>): AsyncState<T> {
   const options: AsyncOptions<T> =
     typeof arg1 === "function"
       ? {
@@ -285,11 +282,11 @@ function isEvent(e: FetchRunArgs[0]): e is Event | React.SyntheticEvent {
  * @param {FetchOptions} options
  * @returns {AsyncState<T, FetchRun<T>>}
  */
-const useAsyncFetch = <T extends {}>(
+function useAsyncFetch<T>(
   resource: RequestInfo,
   init: RequestInit,
   { defer, json, ...options }: FetchOptions<T> = {}
-): AsyncState<T, FetchRun<T>> => {
+): AsyncState<T, FetchRun<T>> {
   const method = (resource as Request).method || (init && init.method)
   const headers: Headers & Record<string, any> =
     (resource as Request).headers || (init && init.headers) || {}

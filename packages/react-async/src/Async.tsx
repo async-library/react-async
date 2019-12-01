@@ -68,10 +68,10 @@ type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
  * createInstance allows you to create instances of Async that are bound to a specific promise.
  * A unique instance also uses its own React context for better nesting capability.
  */
-export const createInstance = <T extends {}>(
+export function createInstance<T>(
   defaultOptions: AsyncProps<T> = {},
   displayName = "Async"
-): AsyncConstructor<T> => {
+): AsyncConstructor<T> {
   const { Consumer: UnguardedConsumer, Provider } = React.createContext<AsyncState<T> | undefined>(
     undefined
   )
