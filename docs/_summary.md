@@ -23,3 +23,11 @@
 - [Async actions](guide/async-actions.md)
 - [Optimistic updates](guide/optimistic-updates.md)
 - [Server-side rendering](guide/server-side-rendering.md)
+
+## Contributing
+
+- [Introduction](contributing/introduction.md)
+- [Setting up](contributing/setting-up.md)
+- [Development](contributing/development.md)
+- [Testing](contributing/testing.md)
+- [Releasing](contributing/releasing.md)

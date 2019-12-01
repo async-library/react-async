@@ -1,8 +1,8 @@
 {
-  "name": "movie-app-example",
+  "name": "with-graphql-example",
   "version": "9.0.0",
   "private": true,
-  "homepage": "https://react-async.async-library.now.sh/examples/movie-app",
+  "homepage": "https://react-async.async-library.now.sh/examples/with-graphql",
   "scripts": {
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
@@ -14,6 +14,7 @@
     "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {
+    "graphql-request": "1.8.2",
     "react": "16.11.0",
     "react-async": "^9.0.0",
     "react-async-devtools": "^9.0.0",

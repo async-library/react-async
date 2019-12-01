@@ -311,7 +311,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
   })
 
-  test("re-runs the promise when the value of `watch` changes", () => {
+  test("re-runs the promise with new props when the value of `watch` changes", () => {
     class Counter extends React.Component {
       constructor(props) {
         super(props)
@@ -329,19 +329,31 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     }
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
     const { getByText } = render(
-      <Counter>{count => <Async promiseFn={promiseFn} watch={count} />}</Counter>
+      <Counter>{count => <Async promiseFn={promiseFn} watch={count} count={count} />}</Counter>
     )
     expect(promiseFn).toHaveBeenCalledTimes(1)
+    expect(promiseFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 0 }),
+      expect.any(Object)
+    )
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
+    expect(promiseFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 1 }),
+      expect.any(Object)
+    )
     expect(abortCtrl.abort).toHaveBeenCalled()
     abortCtrl.abort.mockClear()
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(3)
+    expect(promiseFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 2 }),
+      expect.any(Object)
+    )
     expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
-  test("re-runs the promise when `watchFn` returns truthy", () => {
+  test("re-runs the promise with new props when `watchFn` returns truthy", () => {
     class Counter extends React.Component {
       constructor(props) {
         super(props)
@@ -363,11 +375,23 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
       <Counter>{count => <Async promiseFn={promiseFn} watchFn={watchFn} count={count} />}</Counter>
     )
     expect(promiseFn).toHaveBeenCalledTimes(1)
+    expect(promiseFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 0 }),
+      expect.any(Object)
+    )
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(1)
+    expect(promiseFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 0 }),
+      expect.any(Object)
+    )
     expect(abortCtrl.abort).not.toHaveBeenCalled()
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
+    expect(promiseFn).toHaveBeenLastCalledWith(
+      expect.objectContaining({ count: 2 }),
+      expect.any(Object)
+    )
     expect(abortCtrl.abort).toHaveBeenCalled()
   })
 

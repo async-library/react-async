@@ -1,5 +1,5 @@
 import React from "react"
-import { actionTypes, reducer, globalScope } from "react-async"
+import { ActionTypes, reducer, globalScope } from "react-async"
 
 import { Root, Range, Checkbox, Label, Small, Ol, Li, Button } from "./components"
 
@@ -17,14 +17,14 @@ globalScope.__REACT_ASYNC__.devToolsDispatcher = (action, dispatch) => {
     state.update(action)
   }
   switch (action.type) {
-    case actionTypes.start:
+    case ActionTypes.start:
       if (state.intercept) {
         dispatch({ ...action, payload: undefined })
         state.update(action, run)
       } else run()
       break
-    case actionTypes.fulfill:
-    case actionTypes.reject:
+    case ActionTypes.fulfill:
+    case ActionTypes.reject:
       setTimeout(run, state.latency * 1000)
       break
     default:
