@@ -1,6 +1,6 @@
 {
   "name": "movie-app-example",
-  "version": "10.0.0-alpha.0",
+  "version": "10.0.0",
   "private": true,
   "homepage": "https://react-async.async-library.now.sh/examples/movie-app",
   "scripts": {
@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "react": "16.11.0",
-    "react-async": "^10.0.0-alpha.0",
-    "react-async-devtools": "^10.0.0-alpha.0",
+    "react-async": "^10.0.0",
+    "react-async-devtools": "^10.0.0",
     "react-dom": "16.11.0",
     "react-scripts": "3.2.0"
   },
