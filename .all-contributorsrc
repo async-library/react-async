@@ -212,6 +212,25 @@
       "contributions": [
         "ideas"
       ]
+    },
+    {
+      "login": "AlixWang",
+      "name": "AlixWang",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5417459?v=4",
+      "profile": "https://github.com/AlixWang",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "salolivares",
+      "name": "Sal Olivares",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/1812749?v=4",
+      "profile": "http://salolivares.com",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,

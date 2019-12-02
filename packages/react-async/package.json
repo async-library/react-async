@@ -1,6 +1,6 @@
 {
   "name": "react-async",
-  "version": "9.0.0",
+  "version": "10.0.0-alpha.0",
   "description": "React component for declarative promise resolution and data fetching",
   "keywords": [
     "react",
@@ -11,7 +11,7 @@
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
-  "homepage": "https://async-library.com",
+  "homepage": "https://react-async.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/async-library/react-async.git",
@@ -29,22 +29,26 @@
   "@pika/pack": {
     "pipeline": [
       [
-        "@pika/plugin-standard-pkg",
-        {
-          "exclude": [
-            "specs.js",
-            "*.spec.js"
-          ]
-        }
+        "@pika/plugin-ts-standard-pkg"
       ],
       [
         "@pika/plugin-build-node"
       ],
       [
-        "@pika/plugin-build-web"
+        "@pika/plugin-build-web",
+        {
+          "entrypoint": [
+            "module",
+            "unpkg",
+            "jsdelivr"
+          ]
+        }
       ],
       [
-        "@pika/plugin-build-types"
+        "@pika/plugin-build-umd"
+      ],
+      [
+        "@pika/plugin-bundle-types"
       ]
     ]
   }

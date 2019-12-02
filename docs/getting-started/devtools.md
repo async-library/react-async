@@ -1,6 +1,7 @@
 # DevTools
 
-React Async comes with a separate DevTools package which helps you Debug and develop your asynchronous application states. You can install it from npm:
+React Async comes with a separate DevTools package which helps you Debug and develop your asynchronous application
+states. You can install it from npm:
 
 ```text
 npm install --save react-async-devtools

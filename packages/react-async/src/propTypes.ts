@@ -47,27 +47,27 @@ export default PropTypes && {
     suspense: PropTypes.bool,
   },
   Initial: {
-    children: childrenFn.isRequired,
+    children: childrenFn,
     state: stateObject.isRequired,
     persist: PropTypes.bool,
   },
   Pending: {
-    children: childrenFn.isRequired,
+    children: childrenFn,
     state: stateObject.isRequired,
     initial: PropTypes.bool,
   },
   Fulfilled: {
-    children: childrenFn.isRequired,
+    children: childrenFn,
     state: stateObject.isRequired,
     persist: PropTypes.bool,
   },
   Rejected: {
-    children: childrenFn.isRequired,
+    children: childrenFn,
     state: stateObject.isRequired,
     persist: PropTypes.bool,
   },
   Settled: {
-    children: childrenFn.isRequired,
+    children: childrenFn,
     state: stateObject.isRequired,
     persist: PropTypes.bool,
   },

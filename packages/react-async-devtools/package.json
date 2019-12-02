@@ -1,6 +1,6 @@
 {
   "name": "react-async-devtools",
-  "version": "9.0.0",
+  "version": "10.0.0-alpha.0",
   "description": "DevTools for React Async",
   "keywords": [
     "react",
@@ -9,7 +9,7 @@
   ],
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
-  "homepage": "https://async-library.com",
+  "homepage": "https://react-async.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/async-library/react-async.git",

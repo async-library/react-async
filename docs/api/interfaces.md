@@ -2,7 +2,8 @@
 
 React Async provides several ways to use it. The classic interface is through the `<Async>` component, which is
 backwards compatible to React v16.3. More recent React applications will be using hooks, of which two are provided:
-`useAsync` and `useFetch`. Functionally, `<Async>` and `useAsync` are equivalent. `useFetch` is a special type of `useAsync` which is tied to the native `fetch` API.
+`useAsync` and `useFetch`. Functionally, `<Async>` and `useAsync` are equivalent. `useFetch` is a special version of
+`useAsync` which is tied to the native `fetch` API.
 
 React Async accepts a wide range of [configuration options](options.md) and returns a set of [state props](state.md).
 The way you use these differs slightly between the `useAsync` and `useFetch` hooks, and the `<Async>` component.

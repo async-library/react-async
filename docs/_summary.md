@@ -4,14 +4,30 @@
 
 ## Getting started
 
-- [Installation](installation.md)
-- [Upgrading](upgrading.md)
-- [Usage](usage.md)
-- [DevTools](devtools.md)
+- [Installation](getting-started/installation.md)
+- [Upgrading](getting-started/upgrading.md)
+- [Usage](getting-started/usage.md)
+- [DevTools](getting-started/devtools.md)
 
 ## API
 
-- [Interfaces](interfaces.md)
-- [Configuration options](options.md)
-- [State properties](state.md)
-- [Helper components](helpers.md)
+- [Interfaces](api/interfaces.md)
+- [Configuration options](api/options.md)
+- [State properties](api/state.md)
+- [Helper components](api/helpers.md)
+
+## Guide
+
+- [Async components](guide/async-components.md)
+- [Separating view and logic](guide/separating-view-logic.md)
+- [Async actions](guide/async-actions.md)
+- [Optimistic updates](guide/optimistic-updates.md)
+- [Server-side rendering](guide/server-side-rendering.md)
+
+## Contributing
+
+- [Introduction](contributing/introduction.md)
+- [Setting up](contributing/setting-up.md)
+- [Development](contributing/development.md)
+- [Testing](contributing/testing.md)
+- [Releasing](contributing/releasing.md)

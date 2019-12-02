@@ -20,5 +20,17 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "overrides": [{
+    "files": "packages/**/*.{ts,tsx}",
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "modules": true
+      }
+    }
+  }]
 }
