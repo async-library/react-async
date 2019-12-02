@@ -45,7 +45,7 @@
     "@babel/preset-typescript": "7.7.4",
     "@pika/pack": "0.5.0",
     "@pika/plugin-build-node": "0.8.1",
-    "@pika/plugin-build-types": "0.7.1",
+    "@pika/plugin-build-types": "0.8.1",
     "@pika/plugin-build-umd": "0.7.1",
     "@pika/plugin-build-web": "0.7.1",
     "@pika/plugin-bundle-types": "0.7.1",
