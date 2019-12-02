@@ -5,6 +5,6 @@ cache:
   yarn: true
   directories:
     - node_modules
-script: yarn ci
+script: yarn && yarn ci
 after_success:
   - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
