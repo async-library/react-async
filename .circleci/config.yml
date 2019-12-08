@@ -69,7 +69,14 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run: yarn test:chromatic
+      - run: |
+          if [[ "${CIRCLE_BRANCH}" == renovate/* ]]; then
+            echo "Skipping Chromatic"
+          elif [ "${CIRCLE_BRANCH}" == "master" ]; then
+            yarn test:chromatic --auto-accept-changes
+          else
+            yarn test:chromatic
+          fi
 
 workflows:
   version: 2
