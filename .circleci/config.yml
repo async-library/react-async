@@ -50,8 +50,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Test with compatibility checks
-          command: yarn test:compat
+          command: yarn test
       - persist_to_workspace:
           root: .
           paths:

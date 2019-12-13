@@ -1,0 +1,31 @@
+name: Test compatiblity with react@latest
+
+on: [push]
+
+jobs:
+  test_latest:
+    name: Test latest on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [10]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: Cache node modules
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-buildLatest-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-buildLatest-${{ env.cache-name }}-
+            ${{ runner.OS }}-buildLatest-
+      - name: Install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn add -D -W react@latest react-dom@latest
+      - name: Test
+        run: yarn test

@@ -1,0 +1,31 @@
+name: Test backwards compatiblity
+
+on: [push]
+
+jobs:
+  test_backwards:
+    name: Test backwards on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [10]
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: Cache node modules
+        id: cache-modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-buildBackwards-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-buildBackwards-${{ env.cache-name }}-
+            ${{ runner.OS }}-buildBackwards-
+      - name: Install
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        run: yarn add -D -W react@16.3.1 react-dom@16.3.1
+      - name: Test
+        run: yarn test:components
