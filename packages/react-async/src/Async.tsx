@@ -54,7 +54,7 @@ type GenericAsync = typeof Async & {
   Settled<T>(props: SettledProps<T>): JSX.Element
 }
 
-type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
+export type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
   Initial: React.FC<InitialProps<T>>
   Pending: React.FC<PendingProps<T>>
   Loading: React.FC<PendingProps<T>>
