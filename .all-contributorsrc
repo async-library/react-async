@@ -231,11 +231,21 @@
         "code",
         "bug"
       ]
+    },
+    {
+      "login": "nealeu",
+      "name": "Neale Upstone",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/264594?v=4",
+      "profile": "https://github.com/nealeu",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "projectName": "react-async",
   "projectOwner": "async-library",
   "repoType": "github",
-  "repoHost": "https://github.com"
+  "repoHost": "https://github.com",
+  "skipCi": true
 }
