@@ -22,23 +22,23 @@ import {
   ReducerAsyncState,
 } from "./types"
 
-interface InitialProps<T> {
+export interface InitialProps<T> {
   children?: InitialChildren<T>
   persist?: boolean
 }
-interface PendingProps<T> {
+export interface PendingProps<T> {
   children?: PendingChildren<T>
   initial?: boolean
 }
-interface FulfilledProps<T> {
+export interface FulfilledProps<T> {
   children?: FulfilledChildren<T>
   persist?: boolean
 }
-interface RejectedProps<T> {
+export interface RejectedProps<T> {
   children?: RejectedChildren<T>
   persist?: boolean
 }
-interface SettledProps<T> {
+export interface SettledProps<T> {
   children?: SettledChildren<T>
   persist?: boolean
 }
