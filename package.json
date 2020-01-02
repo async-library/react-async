@@ -68,7 +68,7 @@
     "eslint-plugin-react": "7.17.0",
     "eslint-plugin-react-hooks": "2.3.0",
     "jest": "24.9.0",
-    "lerna": "3.20.1",
+    "lerna": "3.20.2",
     "node-jq": "1.11.0",
     "now": "16.7.0",
     "npm-run-all": "4.1.5",
