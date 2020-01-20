@@ -12,7 +12,7 @@ automatically invoked by React Async when rendering the component. Instead it wi
 import React, { useState } from "react"
 import { useAsync } from "react-async"
 
-const subscribe = ([email], props, { signal }) =>
+const subscribe = ({email}, options, { signal }) =>
   fetch("/newsletter", { method: "POST", body: JSON.stringify({ email }), signal })
 
 const NewsletterForm = () => {
@@ -21,7 +21,7 @@ const NewsletterForm = () => {
 
   const handleSubmit = event => {
     event.preventDefault()
-    run(email)
+    run({email})
   }
 
   return (
@@ -36,11 +36,11 @@ const NewsletterForm = () => {
 }
 ```
 
-As you can see, the `deferFn` is invoked with 3 arguments: `args`, `props` and the AbortController. `args` is an array
+As you can see, the `deferFn` is invoked with 3 arguments: `context`, `props` and the AbortController. `context` is an object
 representing the arguments that were passed to `run`. In this case we passed the `email`, so we can extract that from
-the `args` array at the first index using [array destructuring] and pass it along to our `fetch` request.
+the `context` prop using [object destructuring] and pass it along to our `fetch` request.
 
-[array destructuring]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Array_destructuring
+[object destructuring]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Object_destructuring
 
 ## Sending data with `useFetch`
 

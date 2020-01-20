@@ -30,7 +30,7 @@ const UserDetails = ({ data }) => (
 export const App = () => (
   <>
     <DevTools />
-    <AsyncUser userId={1} debugLabel="User 1">
+    <AsyncUser context={{ userId: 1 }} debugLabel="User 1">
       {({ data, error, isPending }) => {
         if (isPending) return <UserPlaceholder />
         if (error) return <p>{error.message}</p>
@@ -38,7 +38,7 @@ export const App = () => (
         return null
       }}
     </AsyncUser>
-    <AsyncUser userId={2} debugLabel="User 2">
+    <AsyncUser context={{ userId: 2 }} debugLabel="User 2">
       <AsyncUser.Pending>
         <UserPlaceholder />
       </AsyncUser.Pending>

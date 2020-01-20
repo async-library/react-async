@@ -10,14 +10,14 @@ The `useAsync` hook \(available [from React v16.8.0](https://reactjs.org/hooks)\
 import { useAsync } from "react-async"
 
 // You can use async/await or any function that returns a Promise
-const loadPlayer = async ({ playerId }, { signal }) => {
+const loadPlayer = async ({ playerId }, options, { signal }) => {
   const res = await fetch(`/api/players/${playerId}`, { signal })
   if (!res.ok) throw new Error(res.statusText)
   return res.json()
 }
 
 const MyComponent = () => {
-  const { data, error, isPending } = useAsync({ promiseFn: loadPlayer, playerId: 1 })
+  const { data, error, isPending } = useAsync({ promiseFn: loadPlayer, context: { playerId: 1 } })
   if (isPending) return "Loading..."
   if (error) return `Something went wrong: ${error.message}`
   if (data)
@@ -37,7 +37,7 @@ Or using the shorthand version:
 
 ```jsx
 const MyComponent = () => {
-  const { data, error, isPending } = useAsync(loadPlayer, options)
+  const { data, error, isPending } = useAsync({ promiseFn: loadPlayer, context: { playerId: 1 } })
   // ...
 }
 ```
@@ -85,14 +85,14 @@ The classic interface to React Async. Simply use `<Async>` directly in your JSX 
 import Async from "react-async"
 
 // Your promiseFn receives all props from Async and an AbortController instance
-const loadPlayer = async ({ playerId }, { signal }) => {
+const loadPlayer = async ({ playerId }, options, { signal }) => {
   const res = await fetch(`/api/players/${playerId}`, { signal })
   if (!res.ok) throw new Error(res.statusText)
   return res.json()
 }
 
 const MyComponent = () => (
-  <Async promiseFn={loadPlayer} playerId={1}>
+  <Async promiseFn={loadPlayer} context={{ playerId: 1}}>
     {({ data, error, isPending }) => {
       if (isPending) return "Loading..."
       if (error) return `Something went wrong: ${error.message}`
@@ -118,7 +118,7 @@ You can also create your own component instances, allowing you to preconfigure t
 ```jsx
 import { createInstance } from "react-async"
 
-const loadPlayer = async ({ playerId }, { signal }) => {
+const loadPlayer = async ({ playerId }, options, { signal }) => {
   const res = await fetch(`/api/players/${playerId}`, { signal })
   if (!res.ok) throw new Error(res.statusText)
   return res.json()
@@ -128,7 +128,7 @@ const loadPlayer = async ({ playerId }, { signal }) => {
 const AsyncPlayer = createInstance({ promiseFn: loadPlayer }, "AsyncPlayer")
 
 const MyComponent = () => (
-  <AsyncPlayer playerId={1}>
+  <AsyncPlayer context={{playerId: 1}}>
     <AsyncPlayer.Fulfilled>{player => `Hello ${player.name}`}</AsyncPlayer.Fulfilled>
   </AsyncPlayer>
 )
@@ -141,12 +141,12 @@ Several [helper components](usage.md#helper-components) are available to improve
 ```jsx
 import { useAsync, IfPending, IfFulfilled, IfRejected } from "react-async"
 
-const loadPlayer = async ({ playerId }, { signal }) => {
+const loadPlayer = async ({ playerId }, options, { signal }) => {
   // ...
 }
 
 const MyComponent = () => {
-  const state = useAsync({ promiseFn: loadPlayer, playerId: 1 })
+  const state = useAsync({ promiseFn: loadPlayer, context: { playerId: 1 } })
   return (
     <>
       <IfPending state={state}>Loading...</IfPending>
@@ -171,14 +171,14 @@ Each of the helper components are also available as static properties of `<Async
 ```jsx
 import Async from "react-async"
 
-const loadPlayer = async ({ playerId }, { signal }) => {
+const loadPlayer = async ({ playerId }, options, { signal }) => {
   const res = await fetch(`/api/players/${playerId}`, { signal })
   if (!res.ok) throw new Error(res.statusText)
   return res.json()
 }
 
 const MyComponent = () => (
-  <Async promiseFn={loadPlayer} playerId={1}>
+  <Async promiseFn={loadPlayer} context={{playerId: 1 }}>
     <Async.Pending>Loading...</Async.Pending>
     <Async.Fulfilled>
       {data => (

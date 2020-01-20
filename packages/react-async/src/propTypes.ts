@@ -45,6 +45,7 @@ export default PropTypes && {
     dispatcher: PropTypes.func,
     debugLabel: PropTypes.string,
     suspense: PropTypes.bool,
+    context: PropTypes.any,
   },
   Initial: {
     children: childrenFn,

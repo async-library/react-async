@@ -27,7 +27,7 @@ const UserDetails = ({ data }) => (
 )
 
 const User = ({ userId }) => {
-  const state = useAsync({ promiseFn: loadUser, debugLabel: `User ${userId}`, userId })
+  const state = useAsync({ promiseFn: loadUser, debugLabel: `User ${userId}`, context: { userId } })
   return (
     <>
       <IfPending state={state}>

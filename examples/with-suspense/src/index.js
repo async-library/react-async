@@ -31,7 +31,7 @@ const User = ({ userId }) => {
     suspense: true,
     promiseFn: loadUser,
     debugLabel: `User ${userId}`,
-    userId,
+    context: { userId }
   })
   return (
     <>
