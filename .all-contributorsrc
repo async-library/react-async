@@ -240,6 +240,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mbark",
+      "name": "Martin Barksten",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/1579384?v=4",
+      "profile": "https://github.com/mbark",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
