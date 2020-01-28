@@ -146,6 +146,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/AlixWang"><img src="https://avatars0.githubusercontent.com/u/5417459?v=4" width="75px;" alt=""/><br /><sub><b>AlixWang</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=AlixWang" title="Documentation">📖</a></td>
     <td align="center"><a href="http://salolivares.com"><img src="https://avatars0.githubusercontent.com/u/1812749?v=4" width="75px;" alt=""/><br /><sub><b>Sal Olivares</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=salolivares" title="Code">💻</a> <a href="https://github.com/async-library/react-async/issues?q=author%3Asalolivares" title="Bug reports">🐛</a></td>
     <td align="center"><a href="https://github.com/nealeu"><img src="https://avatars1.githubusercontent.com/u/264594?v=4" width="75px;" alt=""/><br /><sub><b>Neale Upstone</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=nealeu" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mbark"><img src="https://avatars1.githubusercontent.com/u/1579384?v=4" width="75px;" alt=""/><br /><sub><b>Martin Barksten</b></sub></a><br /><a href="https://github.com/async-library/react-async/commits?author=mbark" title="Documentation">📖</a></td>
   </tr>
 </table>
 
