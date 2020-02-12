@@ -51,7 +51,7 @@
     "@pika/plugin-bundle-types": "0.8.1",
     "@pika/plugin-standard-pkg": "0.8.1",
     "@pika/plugin-ts-standard-pkg": "0.8.1",
-    "@storybook/react": "5.3.12",
+    "@storybook/react": "5.3.13",
     "@testing-library/jest-dom": "4.2.4",
     "@testing-library/react": "9.4.0",
     "@typescript-eslint/eslint-plugin": "2.19.2",
