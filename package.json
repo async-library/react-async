@@ -78,7 +78,7 @@
     "react-async": "10.0.0-alpha.0",
     "react-dom": "16.13.0",
     "storybook-chromatic": "3.5.2",
-    "typescript": "3.8.2"
+    "typescript": "3.8.3"
   },
   "resolutions": {
     "@types/react": "16.9.13"
