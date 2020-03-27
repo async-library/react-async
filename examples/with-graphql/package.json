@@ -19,7 +19,7 @@
     "react-async": "^10.0.0",
     "react-async-devtools": "^10.0.0",
     "react-dom": "16.11.0",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.4.1"
   },
   "devDependencies": {
     "relative-deps": "0.2.0"
