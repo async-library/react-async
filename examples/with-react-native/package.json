@@ -4,6 +4,7 @@
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "bootstrap": "yarn install",
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
     "preandroid": "relative-deps",

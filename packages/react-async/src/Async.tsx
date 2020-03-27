@@ -22,23 +22,23 @@ import {
   ReducerAsyncState,
 } from "./types"
 
-interface InitialProps<T> {
+export interface InitialProps<T> {
   children?: InitialChildren<T>
   persist?: boolean
 }
-interface PendingProps<T> {
+export interface PendingProps<T> {
   children?: PendingChildren<T>
   initial?: boolean
 }
-interface FulfilledProps<T> {
+export interface FulfilledProps<T> {
   children?: FulfilledChildren<T>
   persist?: boolean
 }
-interface RejectedProps<T> {
+export interface RejectedProps<T> {
   children?: RejectedChildren<T>
   persist?: boolean
 }
-interface SettledProps<T> {
+export interface SettledProps<T> {
   children?: SettledChildren<T>
   persist?: boolean
 }
@@ -54,7 +54,7 @@ type GenericAsync = typeof Async & {
   Settled<T>(props: SettledProps<T>): JSX.Element
 }
 
-type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
+export type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
   Initial: React.FC<InitialProps<T>>
   Pending: React.FC<PendingProps<T>>
   Loading: React.FC<PendingProps<T>>

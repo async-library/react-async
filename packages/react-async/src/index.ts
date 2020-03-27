@@ -1,5 +1,14 @@
 import Async from "./Async"
-export { default as Async, createInstance } from "./Async"
+export {
+  default as Async,
+  createInstance,
+  AsyncConstructor,
+  FulfilledProps,
+  InitialProps,
+  PendingProps,
+  RejectedProps,
+  SettledProps,
+} from "./Async"
 export * from "./types"
 export { default as useAsync, useFetch, FetchOptions, FetchError } from "./useAsync"
 export default Async

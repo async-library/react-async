@@ -17,6 +17,7 @@
   },
   "main": "src",
   "scripts": {
+    "bootstrap": "yarn install",
     "build": "pika build",
     "postbuild": "copyfiles -f ../../LICENSE ../../README.md pkg",
     "publish": "npm publish pkg"
