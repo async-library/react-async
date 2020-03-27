@@ -4,6 +4,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "bootstrap": "yarn install",
     "postinstall": "relative-deps",
     "prestart": "relative-deps",
     "prebuild": "relative-deps",
