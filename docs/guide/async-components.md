@@ -52,14 +52,14 @@ The above example, written with `useAsync`, would look like this:
 import React from "react"
 import { useAsync } from "react-async"
 
-const fetchPerson = async ({ id }, { signal }) => {
+const fetchPerson = async ({ id }, options, { signal }) => {
   const response = await fetch(`https://swapi.co/api/people/${id}/`, { signal })
   if (!response.ok) throw new Error(response.status)
   return response.json()
 }
 
 const Person = ({ id }) => {
-  const { data, error } = useAsync({ promiseFn: fetchPerson, id })
+  const { data, error } = useAsync({ promiseFn: fetchPerson, {context:  id }})
   if (error) return error.message
   if (data) return `Hi, my name is ${data.name}!`
   return null
@@ -70,9 +70,9 @@ const App = () => {
 }
 ```
 
-Notice the incoming parameters to `fetchPerson`. The `promiseFn` will be invoked with a `props` object and an
-`AbortController`. `props` are the options you passed to `useAsync`, which is why you can access the `id` property
-using [object destructuring]. The `AbortController` is created by React Async to enable [abortable fetch], so the
+Notice the incoming parameters to `fetchPerson`. The `promiseFn` will be invoked with a `context`, `props` object and an
+`AbortController`. The `context` contains the `id` property which you can access
+using [object destructuring]. `props` are the options you passed to `useAsync`. The `AbortController` is created by React Async to enable [abortable fetch], so the
 underlying request will be aborted when the promise is cancelled (e.g. when a new one starts or we leave the page). We
 have to pass its `AbortSignal` down to `fetch` in order to wire this up.
 

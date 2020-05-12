@@ -38,7 +38,7 @@ const MovieDetails = ({ data }) => (
 )
 
 const Movie = ({ slug }) => {
-  const state = useAsync({ promiseFn: loadMovie, debugLabel: slug, slug })
+  const state = useAsync({ promiseFn: loadMovie, debugLabel: slug, context: { slug } })
   return (
     <>
       <IfPending state={state}>

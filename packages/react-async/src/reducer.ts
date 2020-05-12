@@ -1,6 +1,6 @@
 import { getInitialStatus, getIdleStatus, getStatusProps, StatusTypes } from "./status"
 import {
-  PromiseFn,
+  AsyncFn,
   AsyncAction,
   AsyncPending,
   AsyncFulfilled,
@@ -49,14 +49,14 @@ export enum ActionTypes {
   reject = "reject",
 }
 
-export const init = <T>({
+export const init = <T, C>({
   initialValue,
   promise,
   promiseFn,
 }: {
   initialValue?: Error | T
   promise?: Promise<T>
-  promiseFn?: PromiseFn<T>
+  promiseFn?: AsyncFn<T, C>
 }) =>
   ({
     initialValue,

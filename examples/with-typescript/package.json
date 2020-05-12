@@ -11,7 +11,8 @@
     "pretest": "relative-deps",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "yarn test:typescript && react-scripts test",
+    "test:typescript": "tsc --version && tsc --noEmit",
     "now-build": "SKIP_PREFLIGHT_CHECK=true react-scripts build"
   },
   "dependencies": {

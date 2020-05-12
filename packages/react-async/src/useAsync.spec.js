@@ -39,30 +39,19 @@ describe("useAsync", () => {
   describe("with `reducer`", withReducer(Async))
   describe("with `dispatcher`", withDispatcher(Async))
 
-  test("accepts [promiseFn, options] shorthand, with the former taking precedence", async () => {
-    const promiseFn1 = () => resolveTo("done")
-    const promiseFn2 = () => resolveTo("nope")
-    const Async = ({ children, ...props }) => children(useAsync(promiseFn1, props))
-    const onResolve = jest.fn()
-    const component = (
-      <Async promiseFn={promiseFn2} onResolve={onResolve}>
-        {({ data }) => data || null}
-      </Async>
-    )
-    const { findByText } = render(component)
-    await findByText("done")
-    expect(onResolve).toHaveBeenCalledWith("done")
-  })
-
   test("calling run() will always use the latest onResolve callback", async () => {
     const promiseFn = jest.fn(() => resolveTo())
     const deferFn = () => resolveTo()
     function App() {
       const [count, setCount] = React.useState(0)
+
       const { reload } = useAsync({
         promiseFn,
-        count,
         watch: count,
+        context: {
+          a: 1,
+          count,
+        },
       })
       const { run } = useAsync({
         deferFn,
@@ -76,19 +65,19 @@ describe("useAsync", () => {
       )
     }
     const { getByText } = render(<App />)
-    expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 0 }), abortCtrl)
+    expect(promiseFn).toHaveBeenLastCalledWith({ a: 1, count: 0 }, expect.any(Object), abortCtrl)
     fireEvent.click(getByText("inc"))
     await sleep(10) // resolve promiseFn
-    expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
+    expect(promiseFn).toHaveBeenLastCalledWith({ a: 1, count: 1 }, expect.any(Object), abortCtrl)
     fireEvent.click(getByText("run"))
     await sleep(10) // resolve deferFn
-    expect(promiseFn).toHaveBeenLastCalledWith(expect.objectContaining({ count: 1 }), abortCtrl)
+    expect(promiseFn).toHaveBeenLastCalledWith({ a: 1, count: 1 }, expect.any(Object), abortCtrl)
   })
 
   test("calling run() will always use the latest onReject callback", async () => {
     const onReject1 = jest.fn()
     const onReject2 = jest.fn()
-    const deferFn = ([count]) => Promise.reject(count)
+    const deferFn = count => Promise.reject(count)
     function App() {
       const [count, setCount] = React.useState(0)
       const onReject = count === 0 ? onReject1 : onReject2

@@ -2,7 +2,7 @@ import * as React from "react"
 import { useFetch } from "react-async"
 
 export function FetchHookExample() {
-  const result = useFetch<{ token: string }>("https://reqres.in/api/login", {
+  const result = useFetch<{ token: string }, {}>("https://reqres.in/api/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -43,7 +43,7 @@ export interface SettledProps<T> {
   persist?: boolean
 }
 
-class Async<T> extends React.Component<AsyncProps<T>, AsyncState<T>> {}
+class Async<T, C> extends React.Component<AsyncProps<T, C>, AsyncState<T>> {}
 type GenericAsync = typeof Async & {
   Initial<T>(props: InitialProps<T>): JSX.Element
   Pending<T>(props: PendingProps<T>): JSX.Element
@@ -54,7 +54,7 @@ type GenericAsync = typeof Async & {
   Settled<T>(props: SettledProps<T>): JSX.Element
 }
 
-export type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
+export type AsyncConstructor<T, C> = React.ComponentClass<AsyncProps<T, C>> & {
   Initial: React.FC<InitialProps<T>>
   Pending: React.FC<PendingProps<T>>
   Loading: React.FC<PendingProps<T>>
@@ -68,10 +68,10 @@ export type AsyncConstructor<T> = React.ComponentClass<AsyncProps<T>> & {
  * createInstance allows you to create instances of Async that are bound to a specific promise.
  * A unique instance also uses its own React context for better nesting capability.
  */
-export function createInstance<T>(
-  defaultOptions: AsyncProps<T> = {},
+export function createInstance<T, C>(
+  defaultOptions: AsyncProps<T, C> = {},
   displayName = "Async"
-): AsyncConstructor<T> {
+): AsyncConstructor<T, C> {
   const { Consumer: UnguardedConsumer, Provider } = React.createContext<AsyncState<T> | undefined>(
     undefined
   )
@@ -90,14 +90,18 @@ export function createInstance<T>(
     )
   }
 
-  type Props = AsyncProps<T>
+  type Props = AsyncProps<T, C>
   type State = AsyncState<T>
-  type Constructor = AsyncConstructor<T>
+  type Constructor = AsyncConstructor<T, C>
 
   class Async extends React.Component<Props, State> {
     private mounted = false
     private counter = 0
-    private args: any[] = []
+
+    // Accept that undefined is a perfect C
+    // @ts-ignore
+    private args: C = undefined
+
     private promise?: Promise<T> = neverSettle
     private abortController: AbortController = new MockAbortController()
     private debugLabel?: string
@@ -120,12 +124,12 @@ export function createInstance<T>(
       const initialValue = props.initialValue || defaultOptions.initialValue
 
       this.state = {
-        ...init<T>({ initialValue, promise, promiseFn }),
+        ...init<T, C>({ initialValue, promise, promiseFn }),
         cancel: this.cancel,
         run: this.run,
         reload: () => {
           this.load()
-          this.run(...this.args)
+          this.run(this.args)
         },
         setData: this.setData,
         setError: this.setError,
@@ -213,18 +217,22 @@ export function createInstance<T>(
           .catch(this.onReject(this.counter))
       } else if (promiseFn) {
         const props = { ...defaultOptions, ...this.props }
-        this.start(() => promiseFn(props, this.abortController))
+
+        // Cast to allow undefined
+        const context = props.context as C
+
+        this.start(() => promiseFn(context, props, this.abortController))
           .then(this.onResolve(this.counter))
           .catch(this.onReject(this.counter))
       }
     }
 
-    run(...args: any[]) {
+    run(context: C) {
       const deferFn = this.props.deferFn || defaultOptions.deferFn
       if (deferFn) {
-        this.args = args
+        this.args = context
         const props = { ...defaultOptions, ...this.props }
-        return this.start(() => deferFn(args, props, this.abortController)).then(
+        return this.start(() => deferFn(context, props, this.abortController)).then(
           this.onResolve(this.counter),
           this.onReject(this.counter)
         )

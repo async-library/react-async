@@ -13,10 +13,9 @@ export type SettledChildren<T> =
   | ((state: AsyncFulfilled<T> | AsyncRejected<T>) => React.ReactNode)
   | React.ReactNode
 
-export type PromiseFn<T> = (props: AsyncProps<T>, controller: AbortController) => Promise<T>
-export type DeferFn<T> = (
-  args: any[],
-  props: AsyncProps<T>,
+export type AsyncFn<T, C> = (
+  context: C,
+  props: AsyncProps<T, C>,
   controller: AbortController
 ) => Promise<T>
 
@@ -32,15 +31,16 @@ export type Fulfill<T> = AbstractAction & { type: "fulfill"; payload: T }
 export type Reject = AbstractAction & { type: "reject"; payload: Error; error: true }
 export type AsyncAction<T> = Start | Cancel | Fulfill<T> | Reject
 
-export interface AsyncOptions<T> {
+export interface AsyncOptions<T, C = undefined> {
   promise?: Promise<T>
-  promiseFn?: PromiseFn<T>
-  deferFn?: DeferFn<T>
+  promiseFn?: AsyncFn<T, C>
+  deferFn?: AsyncFn<T, C>
   watch?: any
-  watchFn?: (props: AsyncProps<T>, prevProps: AsyncProps<T>) => any
+  watchFn?: (props: AsyncProps<T, C>, prevProps: AsyncProps<T, C>) => any
   initialValue?: T
   onResolve?: (data: T) => void
   onReject?: (error: Error) => void
+  onCancel?: () => void
   reducer?: (
     state: ReducerAsyncState<T>,
     action: AsyncAction<T>,
@@ -49,13 +49,14 @@ export interface AsyncOptions<T> {
   dispatcher?: (
     action: AsyncAction<T>,
     internalDispatch: (action: AsyncAction<T>) => void,
-    props: AsyncProps<T>
+    props: AsyncProps<T, C>
   ) => void
   debugLabel?: string
-  [prop: string]: any
+  suspense?: boolean
+  context?: C
 }
 
-export interface AsyncProps<T> extends AsyncOptions<T> {
+export interface AsyncProps<T, C> extends AsyncOptions<T, C> {
   children?: AsyncChildren<T>
 }
 

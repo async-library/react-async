@@ -1,4 +1,4 @@
-import { PromiseFn } from "./types"
+import { AsyncFn } from "./types"
 
 export enum StatusTypes {
   initial = "initial",
@@ -7,7 +7,7 @@ export enum StatusTypes {
   rejected = "rejected",
 }
 
-export const getInitialStatus = <T>(value?: T | Error, promise?: Promise<T> | PromiseFn<T>) => {
+export const getInitialStatus = <T, C>(value?: T | Error, promise?: Promise<T> | AsyncFn<T, C>) => {
   if (value instanceof Error) return StatusTypes.rejected
   if (value !== undefined) return StatusTypes.fulfilled
   if (promise) return StatusTypes.pending

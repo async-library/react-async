@@ -15,7 +15,7 @@ const fetchPerson = async ({ id }) => {
 }
 
 const Person = ({ id, person }) => (
-  <Async promiseFn={fetchPerson} initialValue={person} id={id}>
+  <Async promiseFn={fetchPerson} initialValue={person} context={{ id }}>
     <Async.Pending>Loading...</Async.Pending>
     <Async.Rejected>{error => <ErrorMessage {...error} />}</Async.Rejected>
     <Async.Fulfilled>{data => <Greeting {...data} />}</Async.Fulfilled>

@@ -31,7 +31,7 @@ const AttendanceToggle = () => (
 )
 ```
 
-Here we have a switch to toggle attentance for an event. Clicking the toggle will most likely succeed, so we can predict
+Here we have a switch to toggle attendance for an event. Clicking the toggle will most likely succeed, so we can predict
 the value it will have after completion (because we're just flipping a boolean).
 
 Notice that React Async accepts both a `promiseFn` and a `deferFn` at the same time. This allows you to combine data

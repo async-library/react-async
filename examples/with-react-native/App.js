@@ -11,7 +11,7 @@ const loadUser = ({ userId }) =>
 export default function App() {
   return (
     <View style={styles.container}>
-      <Async promiseFn={loadUser} userId={1}>
+      <Async promiseFn={loadUser} context={{ userId: 1}}>
         <Async.Pending>
           <Text>Loading...</Text>
         </Async.Pending>

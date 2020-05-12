@@ -226,8 +226,12 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
 
   test("invokes `promiseFn` with props", () => {
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
-    render(<Async promiseFn={promiseFn} anotherProp="123" />)
-    expect(promiseFn).toHaveBeenCalledWith({ promiseFn, anotherProp: "123" }, abortCtrl)
+    render(<Async promiseFn={promiseFn} context={{ anotherProp: "123" }} />)
+    expect(promiseFn).toHaveBeenCalledWith(
+      { anotherProp: "123" },
+      { promiseFn, context: { anotherProp: "123" } },
+      abortCtrl
+    )
   })
 
   test("sets `startedAt` when the promise starts", async () => {
@@ -304,27 +308,18 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     }
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
     const { getByText } = render(
-      <Counter>{count => <Async promiseFn={promiseFn} watch={count} count={count} />}</Counter>
+      <Counter>{count => <Async promiseFn={promiseFn} watch={count} context={count} />}</Counter>
     )
     expect(promiseFn).toHaveBeenCalledTimes(1)
-    expect(promiseFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({ count: 0 }),
-      expect.any(Object)
-    )
+    expect(promiseFn).toHaveBeenLastCalledWith(0, expect.any(Object), expect.any(Object))
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
-    expect(promiseFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({ count: 1 }),
-      expect.any(Object)
-    )
+    expect(promiseFn).toHaveBeenLastCalledWith(1, expect.any(Object), expect.any(Object))
     expect(abortCtrl.abort).toHaveBeenCalled()
     abortCtrl.abort.mockClear()
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(3)
-    expect(promiseFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({ count: 2 }),
-      expect.any(Object)
-    )
+    expect(promiseFn).toHaveBeenLastCalledWith(2, expect.any(Object), expect.any(Object))
     expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
@@ -345,28 +340,22 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
       }
     }
     const promiseFn = jest.fn().mockReturnValue(resolveTo())
-    const watchFn = ({ count }, prevProps) => count !== prevProps.count && count === 2
+    const watchFn = (props, prevProps) =>
+      props.context.count !== prevProps.context.count && props.context.count === 2
     const { getByText } = render(
-      <Counter>{count => <Async promiseFn={promiseFn} watchFn={watchFn} count={count} />}</Counter>
+      <Counter>
+        {count => <Async promiseFn={promiseFn} watchFn={watchFn} context={{ count }} />}
+      </Counter>
     )
     expect(promiseFn).toHaveBeenCalledTimes(1)
-    expect(promiseFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({ count: 0 }),
-      expect.any(Object)
-    )
+    expect(promiseFn).toHaveBeenLastCalledWith({ count: 0 }, expect.any(Object), expect.any(Object))
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(1)
-    expect(promiseFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({ count: 0 }),
-      expect.any(Object)
-    )
+    expect(promiseFn).toHaveBeenLastCalledWith({ count: 0 }, expect.any(Object), expect.any(Object))
     expect(abortCtrl.abort).not.toHaveBeenCalled()
     fireEvent.click(getByText("increment"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
-    expect(promiseFn).toHaveBeenLastCalledWith(
-      expect.objectContaining({ count: 2 }),
-      expect.any(Object)
-    )
+    expect(promiseFn).toHaveBeenLastCalledWith({ count: 2 }, expect.any(Object), expect.any(Object))
     expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
@@ -458,16 +447,24 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     const { getByText } = render(
       <Async deferFn={deferFn} foo="bar">
         {({ run }) => {
-          return <button onClick={() => run("go", counter++)}>run</button>
+          return <button onClick={() => run({ type: "go", counter: counter++ })}>run</button>
         }}
       </Async>
     )
     const props = { deferFn, foo: "bar" }
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      { type: "go", counter: 1 },
+      expect.objectContaining(props),
+      abortCtrl
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining(props), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      { type: "go", counter: 2 },
+      expect.objectContaining(props),
+      abortCtrl
+    )
   })
 
   test("always passes the latest props", async () => {
@@ -482,21 +479,24 @@ export const withDeferFn = (Async, abortCtrl) => () => {
         )}
       </Async>
     )
+
     class Parent extends React.Component {
       constructor(props) {
         super(props)
         this.state = { count: 0 }
       }
+
       render() {
         const inc = () => this.setState(state => ({ count: state.count + 1 }))
         return (
-          <>
+          <div>
             <button onClick={inc}>inc</button>
             {this.state.count && <Child count={this.state.count} />}
-          </>
+          </div>
         )
       }
     }
+
     const { getByText, getByTestId } = render(<Parent />)
     fireEvent.click(getByText("inc"))
     expect(getByTestId("counter")).toHaveTextContent("1")
@@ -504,7 +504,7 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     expect(getByTestId("counter")).toHaveTextContent("2")
     fireEvent.click(getByText("run"))
     expect(deferFn).toHaveBeenCalledWith(
-      [2],
+      2,
       expect.objectContaining({ count: 2, deferFn }),
       abortCtrl
     )
@@ -518,7 +518,7 @@ export const withDeferFn = (Async, abortCtrl) => () => {
         {({ run, reload }) => {
           return (
             <div>
-              <button onClick={() => run("go", counter++)}>run</button>
+              <button onClick={() => run({ type: "go", counter: counter++ })}>run</button>
               <button onClick={reload}>reload</button>
             </div>
           )
@@ -527,11 +527,23 @@ export const withDeferFn = (Async, abortCtrl) => () => {
     )
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(["go", 1], expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      { type: "go", counter: 1 },
+      expect.objectContaining({ deferFn }),
+      abortCtrl
+    )
     fireEvent.click(getByText("run"))
-    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      { type: "go", counter: 2 },
+      expect.objectContaining({ deferFn }),
+      abortCtrl
+    )
     fireEvent.click(getByText("reload"))
-    expect(deferFn).toHaveBeenCalledWith(["go", 2], expect.objectContaining({ deferFn }), abortCtrl)
+    expect(deferFn).toHaveBeenCalledWith(
+      { type: "go", counter: 2 },
+      expect.objectContaining({ deferFn }),
+      abortCtrl
+    )
   })
 
   test("only accepts the last invocation of the promise", async () => {

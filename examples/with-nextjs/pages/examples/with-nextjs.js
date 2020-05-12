@@ -27,7 +27,7 @@ class Hello extends React.Component {
         <Async
           promiseFn={loadUser}
           debugLabel={`User ${userId}`}
-          userId={userId}
+          context={{ userId }}
           watch={userId}
           initialValue={data}
         >

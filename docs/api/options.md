@@ -5,6 +5,7 @@ These can be passed in an object to `useAsync(options)`, or as props to `<Async 
 - [`promise`](#promise) An already started Promise instance.
 - [`promiseFn`](#promisefn) Function that returns a Promise, automatically invoked.
 - [`deferFn`](#deferfn) Function that returns a Promise, manually invoked with `run`.
+- [`context`](#context) The first argument for the `promise` and `promiseFn` function.
 - [`watch`](#watch) Watch a value and automatically reload when it changes.
 - [`watchFn`](#watchfn) Watch this function and automatically reload when it returns truthy.
 - [`initialValue`](#initialvalue) Provide initial data or error for server-side rendering.
@@ -31,17 +32,17 @@ A Promise instance which has already started. It will simply add the necessary r
 
 ## `promiseFn`
 
-> `function(props: Object, controller: AbortController): Promise`
+> `function(context C, props: AsyncOptions, controller: AbortController): Promise`
 
 A function that returns a promise. It is automatically invoked in `componentDidMount` and `componentDidUpdate`. The function receives all component props \(or options\) and an AbortController instance as arguments.
 
-> Be aware that updating `promiseFn` will trigger it to cancel any pending promise and load the new promise. Passing an inline (arrow) function will cause it to change and reload on every render of the parent component. You can avoid this by defining the `promiseFn` value **outside** of the render method. If you need to pass variables to the `promiseFn`, pass them as additional props to `<Async>`, as `promiseFn` will be invoked with these props. Alternatively you can use `useCallback` or [memoize-one](https://github.com/alexreardon/memoize-one) to avoid unnecessary updates.
+> Be aware that updating `promiseFn` will trigger it to cancel any pending promise and load the new promise. Passing an inline (arrow) function will cause it to change and reload on every render of the parent component. You can avoid this by defining the `promiseFn` value **outside** of the render method. If you need to pass variables to the `promiseFn`, pass them via the `context` props of `<Async>`, as `promiseFn` will be invoked with these props. Alternatively you can use `useCallback` or [memoize-one](https://github.com/alexreardon/memoize-one) to avoid unnecessary updates.
 
 ## `deferFn`
 
-> `function(args: any[], props: Object, controller: AbortController): Promise`
+> `function(context: C, props: AsyncOptions, controller: AbortController): Promise`
 
-A function that returns a promise. This is invoked only by manually calling `run(...args)`. Receives the same arguments as `promiseFn`, as well as any arguments to `run` which are passed through as an array. The `deferFn` is commonly used to send data to the server following a user action, such as submitting a form. You can use this in conjunction with `promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
+A function that returns a promise. This is invoked only by manually calling `run(param)`. Receives the same arguments as `promiseFn`. The `deferFn` is commonly used to send data to the server following a user action, such as submitting a form. You can use this in conjunction with `promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
 
 > Be aware that when using both `promiseFn` and `deferFn`, the shape of their fulfilled value should match, because they both update the same `data`.
 
@@ -132,3 +133,10 @@ Enables the use of `deferFn` if `true`, or enables the use of `promiseFn` if `fa
 > `boolean`
 
 Enables or disables JSON parsing of the response body. By default this is automatically enabled if the `Accept` header is set to `"application/json"`.
+
+
+## `context`
+
+> `C | undefined`
+
+The argument which is passed as the first argument to the `promiseFn` and the `deferFn`.

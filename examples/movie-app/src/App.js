@@ -81,7 +81,7 @@ const Details = ({ onBack, id }) => (
     <Async
       promiseFn={fetchMovieDetails}
       debugLabel={`Details ${id}`}
-      id={id}
+      context={{ id }}
       onResolve={console.log}
     >
       <Async.Pending>
@@ -113,7 +113,7 @@ const Details = ({ onBack, id }) => (
               <Async
                 promiseFn={fetchMovieReviews}
                 debugLabel={`Reviews ${id}`}
-                id={id}
+                context={{ id }}
                 onResolve={console.log}
               >
                 <Async.Pending>

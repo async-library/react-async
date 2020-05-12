@@ -8,14 +8,14 @@ down the async state:
 import React from "react"
 import { useAsync } from "react-async"
 
-const fetchPerson = async ({ id }, { signal }) => {
+const fetchPerson = async ({ id }, option, { signal }) => {
   const response = await fetch(`https://swapi.co/api/people/${id}/`, { signal })
   if (!response.ok) throw new Error(response.statusText)
   return response.json()
 }
 
 const Person = ({ id }) => {
-  const state = useAsync({ promiseFn: fetchPerson, id })
+  const state = useAsync({ promiseFn: fetchPerson, { context:  id }})
   return children(state)
 }
 
@@ -48,7 +48,7 @@ keywords in your JSX.
 import React from "react"
 import Async from "react-async"
 
-const fetchPerson = async ({ id }, { signal }) => {
+const fetchPerson = async ({ id }, options, { signal }) => {
   const response = await fetch(`https://swapi.co/api/people/${id}/`, { signal })
   if (!response.ok) throw new Error(response.statusText)
   return response.json()
@@ -56,7 +56,7 @@ const fetchPerson = async ({ id }, { signal }) => {
 
 const App = () => {
   return (
-    <Async promiseFn={fetchPerson} id={1}>
+    <Async promiseFn={fetchPerson} context={{ id: 1 }}>
       <Async.Pending>Loading...</Async.Pending>
       <Async.Rejected>{error => <ErrorMessage {...error} />}</Async.Rejected>
       <Async.Fulfilled>{data => <Greeting {...data} />}</Async.Fulfilled>

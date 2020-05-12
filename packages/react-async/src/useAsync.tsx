@@ -13,7 +13,6 @@ import {
   AsyncOptions,
   AsyncState,
   AbstractState,
-  PromiseFn,
   Meta,
   AsyncInitial,
   AsyncFulfilled,
@@ -33,27 +32,16 @@ declare type ImportWorkaround<T> =
   | AsyncPending<T>
   | AsyncRejected<T>
 
-export interface FetchOptions<T> extends AsyncOptions<T> {
+export interface FetchOptions<T, C> extends AsyncOptions<T, C> {
   defer?: boolean
   json?: boolean
 }
 
-function useAsync<T>(options: AsyncOptions<T>): AsyncState<T>
-function useAsync<T>(promiseFn: PromiseFn<T>, options?: AsyncOptions<T>): AsyncState<T>
-
-function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T>): AsyncState<T> {
-  const options: AsyncOptions<T> =
-    typeof arg1 === "function"
-      ? {
-          ...arg2,
-          promiseFn: arg1,
-        }
-      : arg1
-
+function useAsync<T, C>(options: AsyncOptions<T, C>): AsyncState<T> {
   const counter = useRef(0)
   const isMounted = useRef(true)
-  const lastArgs = useRef<any[] | undefined>(undefined)
-  const lastOptions = useRef<AsyncOptions<T>>(options)
+  const lastArgs = useRef<C | undefined>(undefined)
+  const lastOptions = useRef<AsyncOptions<T, C>>(options)
   const lastPromise = useRef<Promise<T>>(neverSettle)
   const abortController = useRef<AbortController>(new MockAbortController())
 
@@ -127,7 +115,7 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
   )
 
   const start = useCallback(
-    promiseFn => {
+    execPromiseFn => {
       if ("AbortController" in globalScope) {
         abortController.current.abort()
         abortController.current = new globalScope.AbortController!()
@@ -135,7 +123,7 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
       counter.current++
       return (lastPromise.current = new Promise((resolve, reject) => {
         if (!isMounted.current) return
-        const executor = () => promiseFn().then(resolve, reject)
+        const executor = () => execPromiseFn().then(resolve, reject)
         dispatch({
           type: ActionTypes.start,
           payload: executor,
@@ -154,7 +142,12 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     } else if (promiseFn && !isPreInitialized) {
-      start(() => promiseFn(lastOptions.current, abortController.current))
+      start(() => {
+        // Cast to allow undefined
+        const context = lastOptions.current.context as C
+
+        return promiseFn(context, lastOptions.current, abortController.current)
+      })
         .then(handleResolve(counter.current))
         .catch(handleReject(counter.current))
     }
@@ -162,10 +155,11 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
 
   const { deferFn } = options
   const run = useCallback(
-    (...args) => {
+    (context: C) => {
       if (deferFn) {
-        lastArgs.current = args
-        start(() => deferFn(args, lastOptions.current, abortController.current))
+        lastArgs.current = context
+
+        start(() => deferFn(context, lastOptions.current, abortController.current))
           .then(handleResolve(counter.current))
           .catch(handleReject(counter.current))
       }
@@ -174,7 +168,7 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
   )
 
   const reload = useCallback(() => {
-    lastArgs.current ? run(...lastArgs.current) : load()
+    lastArgs.current ? run(lastArgs.current) : load()
   }, [run, load])
 
   const { onCancel } = options
@@ -264,14 +258,11 @@ interface FetchRun<T> extends Omit<AbstractState<T>, "run"> {
   run(): void
 }
 
-type FetchRunArgs =
-  | [(params?: OverrideParams) => OverrideParams]
-  | [OverrideParams]
-  | [React.SyntheticEvent]
-  | [Event]
-  | []
+type OverrideParamsFn = (params: OverrideParams) => OverrideParams
 
-function isEvent(e: FetchRunArgs[0]): e is Event | React.SyntheticEvent {
+type FetchRunArgs = OverrideParamsFn | OverrideParams | React.SyntheticEvent | Event
+
+function isEvent(e: FetchRunArgs): e is Event | React.SyntheticEvent {
   return typeof e === "object" && "preventDefault" in e
 }
 
@@ -282,10 +273,10 @@ function isEvent(e: FetchRunArgs[0]): e is Event | React.SyntheticEvent {
  * @param {FetchOptions} options
  * @returns {AsyncState<T, FetchRun<T>>}
  */
-function useAsyncFetch<T>(
+function useAsyncFetch<T, C>(
   resource: RequestInfo,
   init: RequestInit,
-  { defer, json, ...options }: FetchOptions<T> = {}
+  { defer, json, ...options }: FetchOptions<T, C> = {}
 ): AsyncState<T, FetchRun<T>> {
   const method = (resource as Request).method || (init && init.method)
   const headers: Headers & Record<string, any> =
@@ -296,20 +287,22 @@ function useAsyncFetch<T>(
     globalScope.fetch(input, init).then(parseResponse(accept, json))
   const isDefer =
     typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method!) !== -1
-  const fn = isDefer ? "deferFn" : "promiseFn"
+
   const identity = JSON.stringify({
     resource,
     init,
     isDefer,
   })
+
   const promiseFn = useCallback(
-    (_: AsyncOptions<T>, { signal }: AbortController) => {
+    (context: C, _: AsyncOptions<T, C>, { signal }: AbortController) => {
       return doFetch(resource, { signal, ...init })
     },
     [identity] // eslint-disable-line react-hooks/exhaustive-deps
   )
+
   const deferFn = useCallback(
-    function([override]: FetchRunArgs, _: AsyncOptions<T>, { signal }: AbortController) {
+    function(override: FetchRunArgs, _: AsyncOptions<T, C>, { signal }: AbortController) {
       if (!override || isEvent(override)) {
         return doFetch(resource, { signal, ...init })
       }
@@ -322,11 +315,16 @@ function useAsyncFetch<T>(
     },
     [identity] // eslint-disable-line react-hooks/exhaustive-deps
   )
+
+  const fn = isDefer ? "deferFn" : "promiseFn"
+
   const state = useAsync({
     ...options,
     [fn]: isDefer ? deferFn : promiseFn,
   })
+
   useDebugValue(state, ({ counter, status }) => `[${counter}] ${status}`)
+
   return state
 }
 

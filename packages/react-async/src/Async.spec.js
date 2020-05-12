@@ -284,20 +284,20 @@ describe("createInstance", () => {
     let counter = 1
     const { getByText } = render(
       <CustomAsync foo="bar">
-        {({ run }) => <button onClick={() => run("go", counter++)}>run</button>}
+        {({ run }) => <button onClick={() => run({ type: "go", counter: counter++ })}>run</button>}
       </CustomAsync>
     )
     const expectedProps = { deferFn, foo: "bar" }
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
     expect(deferFn).toHaveBeenCalledWith(
-      ["go", 1],
+      { type: "go", counter: 1 },
       expect.objectContaining(expectedProps),
       abortCtrl
     )
     fireEvent.click(getByText("run"))
     expect(deferFn).toHaveBeenCalledWith(
-      ["go", 2],
+      { type: "go", counter: 2 },
       expect.objectContaining(expectedProps),
       abortCtrl
     )
@@ -312,7 +312,7 @@ describe("createInstance", () => {
       <CustomAsync foo="bar">
         {({ run, reload }) =>
           counter === 1 ? (
-            <button onClick={() => run("go", counter++)}>run</button>
+            <button onClick={() => run({ type: "go", counter: counter++ })}>run</button>
           ) : (
             <button onClick={reload}>reload</button>
           )
@@ -323,13 +323,13 @@ describe("createInstance", () => {
     expect(deferFn).not.toHaveBeenCalled()
     fireEvent.click(getByText("run"))
     expect(deferFn).toHaveBeenCalledWith(
-      ["go", 1],
+      { type: "go", counter: 1 },
       expect.objectContaining(expectedProps),
       abortCtrl
     )
     fireEvent.click(getByText("reload"))
     expect(deferFn).toHaveBeenCalledWith(
-      ["go", 1],
+      { type: "go", counter: 1 },
       expect.objectContaining(expectedProps),
       abortCtrl
     )
