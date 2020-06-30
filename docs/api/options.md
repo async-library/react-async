@@ -41,7 +41,7 @@ A function that returns a promise. It is automatically invoked in `componentDidM
 
 > `function(args: any[], props: Object, controller: AbortController): Promise`
 
-A function that returns a promise. This is invoked only by manually calling `run(...args)`. Receives the same arguments as `promiseFn`, as well as any arguments to `run` which are passed through as an array. The `deferFn` is commonly used to send data to the server following a user action, such as submitting a form. You can use this in conjunction with `promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
+A function that returns a promise. This is invoked only by manually calling `run(...args)`. Any arguments to `run` are passed-through as an array via `args`, so you can pass data through either `args` or `props`, as needed. The `deferFn` is commonly used to send data to the server following a user action, such as submitting a form. You can use this in conjunction with `promiseFn` to fill the form with existing data, then updating it on submit with `deferFn`.
 
 > Be aware that when using both `promiseFn` and `deferFn`, the shape of their fulfilled value should match, because they both update the same `data`.
 
