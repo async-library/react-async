@@ -4,6 +4,7 @@
   "author": "Gert Hengeveld <info@ghengeveld.nl>",
   "license": "ISC",
   "homepage": "https://async-library.com",
+  "browserslist": "last 2 Firefox versions",
   "repository": "git+https://github.com/async-library/react-async.git",
   "workspaces": [
     "examples/*",
