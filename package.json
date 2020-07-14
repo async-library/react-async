@@ -26,7 +26,7 @@
     "test:latest": "yarn add -D -W react@latest react-dom@latest && yarn resolutions:fix-react && yarn test",
     "test:compat": "yarn test:backwards && yarn test:forwards && yarn test:latest",
     "test:examples": "CI=1 lerna run --scope '*-example' test -- --passWithNoTests --watchAll=false",
-    "test:chromatic": "chromatic --app-code iiua39bmt0j --build-script-name build:storybook --exit-zero-on-changes",
+    "test:chromatic": "chromatic -t iiua39bmt0j -b build:storybook --exit-zero-on-changes",
     "resolutions:fix-react": "jq '.resolutions.react = .devDependencies.react|.resolutions.\"react-dom\"=.devDependencies.react' package.json > package.json.new && mv package.json.new package.json && yarn install",
     "ci": "yarn lint && yarn test:compat && yarn test:examples",
     "build:packages": "lerna run --scope 'react-async*' build",
@@ -60,6 +60,7 @@
     "babel-eslint": "10.1.0",
     "babel-jest": "24.9.0",
     "babel-loader": "8.1.0",
+    "chromatic": "5.2.0",
     "copyfiles": "2.2.0",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.11.0",
@@ -78,7 +79,6 @@
     "react": "16.13.1",
     "react-async": "10.0.0-alpha.0",
     "react-dom": "16.13.1",
-    "storybook-chromatic": "3.5.5",
     "typescript": "3.8.3"
   },
   "resolutions": {
