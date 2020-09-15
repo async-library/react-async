@@ -87,7 +87,7 @@ Callback function invoked when a promise is cancelled, either manually using `ca
 
 > `function(state: any, action: Object, internalReducer: function(state: any, action: Object))`
 
-State reducer to take full control over state updates by wrapping the [internal reducer](https://github.com/async-library/react-async/blob/master/src/reducer.js). It receives the current state, the dispatched action and the internal reducer. You probably want to invoke the internal reducer at some point.
+State reducer to take full control over state updates by wrapping the [internal reducer](https://github.com/async-library/react-async/blob/master/packages/react-async/src/reducer.ts). It receives the current state, the dispatched action and the internal reducer. You probably want to invoke the internal reducer at some point.
 
 > This is a power feature which loosely follows the [state reducer pattern](https://kentcdodds.com/blog/the-state-reducer-pattern). It allows you to control state changes by intercepting actions before they are handled, or by overriding or enhancing the reducer itself.
 
