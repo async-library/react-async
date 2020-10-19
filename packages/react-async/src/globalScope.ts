@@ -13,7 +13,7 @@ declare type GlobalScope = {
 const globalScope = (() => {
   if (typeof self === "object" && self.self === self) return self
   if (typeof global === "object" && global.global === global) return global
-  if (typeof global === "object" && global.GLOBAL === global) return global
+  if (typeof global === "object" && global["GLOBAL"] === global) return global
   return {} // fallback that relies on imported modules to be singletons
 })() as GlobalScope
 
