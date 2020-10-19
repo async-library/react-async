@@ -11,9 +11,10 @@ declare type GlobalScope = {
  * This file is excluded from coverage reporting because these globals are environment-specific so we can't test them all.
  */
 const globalScope = (() => {
+  const glbl = global as any
   if (typeof self === "object" && self.self === self) return self
-  if (typeof global === "object" && global.global === global) return global
-  if (typeof global === "object" && global["GLOBAL"] === global) return global
+  if (typeof glbl === "object" && glbl.global === glbl) return glbl
+  if (typeof glbl === "object" && glbl.GLOBAL === glbl) return glbl
   return {} // fallback that relies on imported modules to be singletons
 })() as GlobalScope
 
