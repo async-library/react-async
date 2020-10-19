@@ -15,3 +15,5 @@ lerna-debug.log*
 # when working with contributors
 package-lock.json
 yarn.lock
+
+.vercel
