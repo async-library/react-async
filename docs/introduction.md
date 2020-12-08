@@ -29,4 +29,4 @@ impact on performance and usability. When Suspense lands, React Async will make 
 you can already **start using React Async right now**, and in a later update, you'll **get Suspense features for free**.
 In fact, React Async already has experimental support for Suspense, by passing the `suspense` option.
 
-[concurrent react]: https://github.com/sw-yx/fresh-concurrent-react/blob/master/Intro.md#introduction-what-is-concurrent-react
+[concurrent react]: https://reactjs.org/docs/concurrent-mode-intro.html
