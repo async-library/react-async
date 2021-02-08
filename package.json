@@ -82,6 +82,6 @@
     "typescript": "3.8.3"
   },
   "resolutions": {
-    "@types/react": "16.9.13"
+    "@types/react": "16.14.3"
   }
 }
