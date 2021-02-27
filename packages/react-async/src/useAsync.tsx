@@ -1,4 +1,4 @@
-import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
+import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer, useState } from "react"
 
 import globalScope, { MockAbortController, noop } from "./globalScope"
 import {
@@ -264,6 +264,10 @@ interface FetchRun<T> extends Omit<AbstractState<T>, "run"> {
   run(): void
 }
 
+type StatusCode<S> = S & {
+  statusCode?: number
+}
+
 type FetchRunArgs =
   | [(params?: OverrideParams) => OverrideParams]
   | [OverrideParams]
@@ -280,20 +284,24 @@ function isEvent(e: FetchRunArgs[0]): e is Event | React.SyntheticEvent {
  * @param {RequestInfo} resource
  * @param {RequestInit} init
  * @param {FetchOptions} options
- * @returns {AsyncState<T, FetchRun<T>>}
+ * @returns {AsyncState<T, StatusCode<T>>}
  */
 function useAsyncFetch<T>(
   resource: RequestInfo,
   init: RequestInit,
   { defer, json, ...options }: FetchOptions<T> = {}
-): AsyncState<T, FetchRun<T>> {
+): AsyncState<T, StatusCode<FetchRun<T>>> {
+  const [statusCode, setStatusCode] = useState<number|undefined>()
   const method = (resource as Request).method || (init && init.method)
   const headers: Headers & Record<string, any> =
     (resource as Request).headers || (init && init.headers) || {}
   const accept: string | undefined =
     headers["Accept"] || headers["accept"] || (headers.get && headers.get("accept"))
   const doFetch = (input: RequestInfo, init: RequestInit) =>
-    globalScope.fetch(input, init).then(parseResponse(accept, json))
+    globalScope.fetch(input, init).then((response) => {
+      setStatusCode(response.status)
+      return parseResponse(accept, json)(response)
+    })
   const isDefer =
     typeof defer === "boolean" ? defer : ["POST", "PUT", "PATCH", "DELETE"].indexOf(method!) !== -1
   const fn = isDefer ? "deferFn" : "promiseFn"
@@ -327,7 +335,7 @@ function useAsyncFetch<T>(
     [fn]: isDefer ? deferFn : promiseFn,
   })
   useDebugValue(state, ({ counter, status }) => `[${counter}] ${status}`)
-  return state
+  return { ...state, statusCode }
 }
 
 const unsupported = () => {

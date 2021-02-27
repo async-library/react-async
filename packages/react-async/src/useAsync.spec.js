@@ -266,4 +266,24 @@ describe("useFetch", () => {
     expect(err.message).toEqual("400 Bad Request")
     expect(err.response).toBe(errorResponse)
   })
+
+  test("statusCode parsing", async () => {
+    const response = { ok: true, status: 205, body: "", json }
+    globalScope.fetch.mockResolvedValue(response)
+    let lastStatus, lastStatusCode
+    const component = (
+      <Fetch input="/test">
+        {({ statusCode, status }) => {
+          lastStatus = status
+          lastStatusCode = statusCode
+
+          return <div />
+        }}
+      </Fetch>
+    )
+    render(component)
+    await sleep(10)
+    expect(lastStatus).toEqual("fulfilled")
+    expect(lastStatusCode).toEqual(205)
+  })
 })
