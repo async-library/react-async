@@ -9,6 +9,7 @@ These are returned in an object by `useAsync()` or provided by `<Async>` as rend
 - [`startedAt`](#startedat) When the current/last promise was started.
 - [`finishedAt`](#finishedat) When the last promise was fulfilled or rejected.
 - [`status`](#status) One of: `initial`, `pending`, `fulfilled`, `rejected`.
+- [`statusCode`](#statusCode) The HTTP response status code (`useAsync` only).
 - [`isInitial`](#isinitial) true when no promise has ever started, or one started but was cancelled.
 - [`isPending`](#ispending) true when a promise is currently awaiting settlement. Alias: `isLoading`
 - [`isFulfilled`](#isfulfilled) true when the last promise was fulfilled. Alias: `isResolved`
@@ -63,6 +64,12 @@ Tracks when the last promise was resolved or rejected.
 > `string`
 
 One of: `initial`, `pending`, `fulfilled`, `rejected`. These are available for import as `statusTypes`.
+
+## `statusCode`
+
+> `number`
+
+The HTTP response status code (`useAsync` only).
 
 ## `isInitial`
 
