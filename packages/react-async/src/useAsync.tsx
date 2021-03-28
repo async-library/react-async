@@ -10,6 +10,7 @@ import {
 } from "./reducer"
 
 import {
+  AsyncAction,
   AsyncOptions,
   AsyncState,
   AbstractState,
@@ -60,7 +61,9 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
   const { reducer, dispatcher = devToolsDispatcher } = options
   const [state, _dispatch] = useReducer(
-    reducer ? (state, action) => reducer(state, action, asyncReducer) : asyncReducer,
+    reducer
+      ? (state: AsyncState<T>, action: AsyncAction<T>) => reducer(state, action, asyncReducer)
+      : asyncReducer,
     options,
     init
   )
@@ -336,5 +339,7 @@ const unsupported = () => {
   )
 }
 
+// @ts-ignore
 export default useEffect ? useAsync : unsupported
+// @ts-ignore
 export const useFetch = useEffect ? useAsyncFetch : unsupported
