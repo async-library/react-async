@@ -283,7 +283,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     expect(promiseFn).toHaveBeenCalledTimes(1)
     fireEvent.click(getByText("reload"))
     expect(promiseFn).toHaveBeenCalledTimes(2)
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
+    expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
   test("re-runs the promise with new props when the value of `watch` changes", () => {
@@ -404,7 +404,7 @@ export const withPromiseFn = (Async, abortCtrl) => () => {
     rerender(<Async onResolve={onResolve} />)
     await sleep(10)
     expect(onResolve).not.toHaveBeenCalled()
-    expect(abortCtrl.abort).toHaveBeenCalledTimes(1)
+    expect(abortCtrl.abort).toHaveBeenCalled()
   })
 
   test("does not run `promiseFn` on mount when `initialValue` is provided", async () => {
