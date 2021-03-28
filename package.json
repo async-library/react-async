@@ -80,8 +80,5 @@
     "react-async": "10.0.0-alpha.0",
     "react-dom": "16.13.1",
     "typescript": "3.8.3"
-  },
-  "resolutions": {
-    "@types/react": "16.9.13"
   }
 }
