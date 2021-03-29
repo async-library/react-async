@@ -59,7 +59,7 @@ const fetchPerson = async ({ id }, { signal }) => {
 }
 
 const Person = ({ id }) => {
-  const { data, error } = useAsync({ promiseFn: fetchPerson, id })
+  const { data, error } = useAsync({ promiseFn: fetchPerson, watch: id, id })
   if (error) return error.message
   if (data) return `Hi, my name is ${data.name}!`
   return null
@@ -74,7 +74,8 @@ Notice the incoming parameters to `fetchPerson`. The `promiseFn` will be invoked
 `AbortController`. `props` are the options you passed to `useAsync`, which is why you can access the `id` property
 using [object destructuring]. The `AbortController` is created by React Async to enable [abortable fetch], so the
 underlying request will be aborted when the promise is cancelled (e.g. when a new one starts or we leave the page). We
-have to pass its `AbortSignal` down to `fetch` in order to wire this up.
+have to pass its `AbortSignal` down to `fetch` in order to wire this up. Last, we pass `id` as the value of the
+`watch` parameter so that the promise is invoked again when the id changes.
 
 [states and fates]: https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md
 [object destructuring]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#Object_destructuring
