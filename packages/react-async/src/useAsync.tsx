@@ -1,6 +1,15 @@
-import React, { useCallback, useDebugValue, useEffect, useMemo, useRef, useReducer } from "react"
+import React, {
+  useCallback,
+  useDebugValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useReducer,
+  useState,
+} from "react"
 
 import globalScope, { MockAbortController, noop } from "./globalScope"
+import loopPreventer from "./loopPreventer"
 import {
   neverSettle,
   ActionTypes,
@@ -57,6 +66,9 @@ function useAsync<T>(arg1: AsyncOptions<T> | PromiseFn<T>, arg2?: AsyncOptions<T
   const lastOptions = useRef<AsyncOptions<T>>(options)
   const lastPromise = useRef<Promise<T>>(neverSettle)
   const abortController = useRef<AbortController>(new MockAbortController())
+  const [preventLoop] = useState(loopPreventer)
+
+  preventLoop()
 
   const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
   const { reducer, dispatcher = devToolsDispatcher } = options

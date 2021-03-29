@@ -2,6 +2,7 @@ import React from "react"
 
 import globalScope, { MockAbortController } from "./globalScope"
 import { IfInitial, IfPending, IfFulfilled, IfRejected, IfSettled } from "./helpers"
+import loopPreventer from "./loopPreventer"
 import propTypes from "./propTypes"
 import {
   neverSettle,
@@ -101,6 +102,7 @@ export function createInstance<T>(
     private promise?: Promise<T> = neverSettle
     private abortController: AbortController = new MockAbortController()
     private debugLabel?: string
+    private preventLoop: () => void
     private dispatch: (action: AsyncAction<T>, ...args: any[]) => void
 
     constructor(props: Props) {
@@ -131,6 +133,7 @@ export function createInstance<T>(
         setError: this.setError,
       }
       this.debugLabel = props.debugLabel || defaultOptions.debugLabel
+      this.preventLoop = loopPreventer()
 
       const { devToolsDispatcher } = globalScope.__REACT_ASYNC__
       const _reducer = props.reducer || defaultOptions.reducer
@@ -275,6 +278,7 @@ export function createInstance<T>(
     }
 
     render() {
+      this.preventLoop()
       const { children, suspense } = this.props
       if (suspense && this.state.isPending && this.promise !== neverSettle) {
         // Rely on Suspense to handle the loading state
