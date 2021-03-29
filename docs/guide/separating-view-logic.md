@@ -14,7 +14,7 @@ const fetchPerson = async ({ id }, { signal }) => {
   return response.json()
 }
 
-const Person = ({ id }) => {
+const Person = ({ id, children }) => {
   const state = useAsync({ promiseFn: fetchPerson, id })
   return children(state)
 }
