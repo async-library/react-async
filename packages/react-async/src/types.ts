@@ -108,6 +108,7 @@ export type AsyncFulfilled<T, S = AbstractState<T>> = S & {
   startedAt: Date
   finishedAt: Date
   status: "fulfilled"
+  statusCode: number
   isInitial: false
   isPending: false
   isLoading: false
@@ -123,6 +124,7 @@ export type AsyncRejected<T, S = AbstractState<T>> = S & {
   startedAt: Date
   finishedAt: Date
   status: "rejected"
+  statusCode: number
   isInitial: false
   isPending: false
   isLoading: false

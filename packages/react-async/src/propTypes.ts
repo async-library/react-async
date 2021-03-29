@@ -14,6 +14,7 @@ const stateObject =
     startedAt: PropTypes.instanceOf(Date),
     finishedAt: PropTypes.instanceOf(Date),
     status: PropTypes.oneOf(["initial", "pending", "fulfilled", "rejected"]),
+    statusCode: PropTypes.number,
     isInitial: PropTypes.bool,
     isPending: PropTypes.bool,
     isLoading: PropTypes.bool,
