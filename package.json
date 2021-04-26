@@ -68,7 +68,7 @@
     "eslint-plugin-prettier": "3.1.3",
     "eslint-plugin-promise": "4.2.1",
     "eslint-plugin-react": "7.19.0",
-    "eslint-plugin-react-hooks": "2.5.1",
+    "eslint-plugin-react-hooks": "4.2.0",
     "jest": "24.9.0",
     "lerna": "3.20.2",
     "node-jq": "1.11.1",
